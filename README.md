@@ -10,7 +10,7 @@ lineFollower.py: Code for the line following challenge
 
 ### Initio code
 
-Several of the Python files are downloaded from the 4tronix web site to work with the Initio and Robohat hrdware.
+Several of the Python files are downloaded from the 4tronix web site to work with the Initio and Robohat hardware.
 
 ## See Also
 
