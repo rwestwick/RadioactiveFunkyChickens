@@ -8,6 +8,9 @@ These are the Python files for the RadioactiveFunkyChickens teams PiWars robot.
 
 lineFollower.py: Code for the line following challenge
 
+### Initio code
+
+Several of the Python files are downloaded from the 4tronix web site to work with the Initio and Robohat hrdware.
 
 ## See Also
 
