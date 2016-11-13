@@ -14,7 +14,7 @@ Several of the Python files are downloaded from the 4tronix web site to work wit
 
 ## See Also
 
-- [RadioactiveFunkyCheckens Blog] (https://radioactivefunkychickens.wordpress.com/)
+- [RadioactiveFunkyChickens Blog] (https://radioactivefunkychickens.wordpress.com/)
 - [PiWars] (http://piwars.org/)
 - [Raspberry Pi] (http://www.raspberrypi.org/)
 - [4tronix Initio Home Page] (http://4tronix.co.uk/blog/?p=169) 
