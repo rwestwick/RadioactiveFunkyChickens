@@ -15,29 +15,41 @@ def doServos():
 
 # Set initial variables
 speed = 40
-minRange = 5
+minRange = 10
 pan = 0
 tilt = 1
-tVal = 0 # 0 degrees is centre
-pVal = 0 # 0 degrees is centre
+tVal = 0 # 0 degrees is horizontal centre
+pVal = 0 # 0 degrees is vertical centre
 
 # Initialise robohat controller
 robohat.init()
 
-# Set servos to point sonar to point straight forward
-doServos() # Look straight ahead
+# Set servos to point sonar to initial chosen direction
+doServos()
 
 # Measure current distance
 dist = robohat.getDistance()
-print "Distance to wall, ", dist
+print "Distance to wall, ", int(dist)
 time.sleep(1)
 
-while dist >= minRange:
-    # robohat.forward(speed)
-    print "Distance to wall, ", dist
-    time.sleep(0.5)
-    dist = robohat.getDistance()
+try:
+    while True:
+        if dist >= minRange:
+            robohat.forward(speed)
+            print "Stepping forward"
+            print "Distance to wall, ", int(dist)
+            time.sleep(0.5)
+            dist = robohat.getDistance()
+        else:
+            robohat.stop()
+            print "hello handsome"
+            dist = robohat.getDistance()
+            print "Distance to wall, ", int(dist)
+            time.sleep(0.5)
 
-print "I have decided to stop!!"
+except KeyboardInterrupt:
+    print "Exiting"
+    pass
 
-robohat.cleanup()
+finally: # cleanup is run even if ^c is typed
+    robohat.cleanup()
