@@ -8,30 +8,52 @@
 import robohat
 import sys, time
 
+##########################
+# Define local functions #
+##########################
+
 # Define servo movement function
 def doServos():
     robohat.setServo(pan, pVal)
     robohat.setServo(tilt, tVal)
+    return
 
-def lookLeftAndRight():
-    pVal = -10
-    robohat.setServo(tilt, -30)
-    time.sleep(1)
+# Measure left and right wall distances
+def lookLeftAndRight(wallList): # wallList passed by reference
+
+    # Measure left wall
+    robohat.setServo(tilt, -90)
+    time.sleep(0.5)
     leftDistance = robohat.getDistance()
-    print "Left distance, ", leftDistance
-    robohat.setServo(tilt, 30)
-    time.sleep(1)
+
+    # Measure right wall
+    robohat.setServo(tilt, 90)
+    time.sleep(0.5)
     rightDistance = robohat.getDistance()
-    print "Right distance, ", rightDistance
+
+    # recenter servo
     robohat.setServo(tilt, 0)
 
+    # Update wall measurements
+    wallList[0] = leftDistance
+    wallList[1] = rightDistance
+    
+    return 
+
+##########################
+# Main program           #
+##########################
+
 # Set initial variables
-speed = 40
-minRange = 20
-pan = 0
-tilt = 1
-tVal = 0 # 0 degrees is horizontal centre
-pVal = 0 # 0 degrees is vertical centre
+speed = 40            # Initial forward speed
+arcSpeed = 20         # Difference between left and right for correction
+minRange = 20         # Minimum range in front of robot
+pan = 0               # Value for setServo first argument for pan
+tilt = 1              # Value for setServo first argument for pan
+tVal = 0              # 0 degrees is horizontal centre
+pVal = 0              # 0 degrees is vertical centre
+wallList = [0, 0]     # Left and right wall distance List
+wallWidth = 52        # Width of the wall in cm (actual width on web-page = 522 mm)
 
 # Initialise robohat controller
 robohat.init()
@@ -39,27 +61,45 @@ robohat.init()
 # Set servos to point sonar to initial chosen direction
 doServos()
 
-# Measure current distance
-dist = robohat.getDistance()
-print "Distance to wall, ", int(dist)
-time.sleep(1)
+# Measure current distance to front wall
+frontDist = robohat.getDistance()
+print "Distance to front wall, ", int(frontDist)
 
+# Measure current distance to side walls
+lookLeftAndRight(wallList)
+print "Left and right wall distances: ", wallList
+
+# Calculate trough dimensions
+troughWidth = wallList[0] + wallList[1]
+print "Trough width: ", int(troughWidth)
+
+if ((troughWidth > (wallWidth + minRange)) or (troughWidth < (wallWidth - minRange))):
+     print "Trough walls not detected properly."
+
+# Control loop
 try:
     while True:
-        if dist >= minRange:
-            robohat.forward(speed)
-            print "Stepping forward"
-            print "Distance to wall, ", int(dist)
+        if (wallList[0] < minRange):
+            print "Distance to left wall, ", int(wallList[0])
+            print "Turning right."
+            # robohat.turnForward((speed + arcSpeed), speed)
             time.sleep(0.5)
-            dist = robohat.getDistance()
-        else:
-            robohat.stop()
-            print "hello handsome"
-            dist = robohat.getDistance()
-            print "Distance to wall, ", int(dist)
-            time.sleep(0.5) 
+        elif (wallList[1] < minRange):
+            print "Distance to right wall, ", int(wallList[1])
+            print "Turning left."
+            # robohat.turnForward()robohat.turnForward(speed, (speed + arcSpeed))
+            time.sleep(0.5)
 
+        # Move forward and remeasure
+        # robohat.forward(speed)
+        time.sleep(1)
+        lookLeftAndRight(wallList)
+        print "Left and right wall distances: ", wallList
+        
 except KeyboardInterrupt:
+    robohat.stop()
+    doServos()
+    time.sleep(1)
     print "Exiting"
     pass
 
