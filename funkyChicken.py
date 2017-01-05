@@ -13,6 +13,7 @@
 # cleanup(): Sets all motors and LEDs off and sets GPIO to standard values
 #======================================================================
 
+
 #======================================================================
 # Wheel Sensor Functions
 #
@@ -52,11 +53,47 @@ running = True
 countL = 0
 countR = 0
 
+#======================================================================
+# Existing robohat.py sensor pins - J5 Pin Numbers
+#
+#======================================================================
+
+# Pins 35, 36 Left Motor
+# Pins 32, 33 Right Motor
+L1 = 36
+L2 = 35
+R1 = 33
+R2 = 32
+
+# Define obstacle sensors and line sensors
+# These can be on any input pins, but this library assumes the following layout
+# which matches the build instructions
+irFL = 7
+irFR = 11
+# lineLeft = 29
+# lineRight = 13
+
+# Define Sonar Pin (Uses same pin for both Ping and Echo)
+sonar = 38
+
+#======================================================================
+# New robohat sensor pins - J5 Pin Numbers
+#
+#======================================================================
+
 # Define Sonar Pins
-sonarLeftInp = 8
+sonarLeftInp = 15
 sonarLeftOut = 9
-sonarRightInp = 10
-sonarRightOut = 11
+sonarRightInp = 12
+sonarRightOut = 31
+
+# Define Wheel Sensor Pins
+# Orange or Brown to the selected pin (in fact, each wheel has 2 sensors
+# that are slightly out of phase so you can get direction of travel from them,
+# but you will then need 2 pins for each sensor)
+# N.B. Need to change variable names to avoid confusion!
+lineLeft = 29
+lineRight = 13 
 
 # Global variables for mathematical functions
 lengthOfList = 5
@@ -91,6 +128,8 @@ def cleanup():
 #======================================================================
 # Wheel Sensor Functions
 
+# p, q, a, b are global variables for software PWM,
+# e.g. p = GPIO.PWM(L1, 20) as used in pi2go.py and robohat.py
 def stopL():
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(0)
