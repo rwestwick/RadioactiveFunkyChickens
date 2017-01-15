@@ -225,8 +225,6 @@ def stepSpinR(speed, counts):
 
 #======================================================================
 # UltraSonic Functions
-sonarRightInp = 10
-sonarRightOut = 11
 
 # getLeftDistance(): Returns the distance in cm to the nearest reflecting object on the left
 def getLeftDistance():
@@ -266,12 +264,12 @@ def getRightDistance():
     start = time.time()
     count=time.time()
     
-    GPIO.setup(sonarRightOut,GPIO.IN)
-    while GPIO.input(sonarRightOut)==0 and time.time()-count<0.1:
+    GPIO.setup(sonarRightInp,GPIO.IN)
+    while GPIO.input(sonarRightInp)==0 and time.time()-count<0.1:
         start = time.time()
     count=time.time()
     stop=count
-    while GPIO.input(sonarRightOut)==1 and time.time()-count<0.1:
+    while GPIO.input(sonarRightInp)==1 and time.time()-count<0.1:
         stop = time.time()
         
     # Calculate pulse length
