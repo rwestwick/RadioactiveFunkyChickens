@@ -2,7 +2,7 @@
 #
 # Python Module for Robohat/Initio sensors not in 4tronix code.
 # Additional functions for new sensors such as additional ultrasonic
-# Library for staright line speed test
+# Library for straight line speed test
 #
 #======================================================================
 
@@ -35,7 +35,7 @@
 
 
 # Import all necessary libraries
-# Not importing robohat, but copying needed functions and init
+# Not importing robohat, but copying needed functions
 from __future__ import division # Used for floating point division in Python 2.7
 import RPi.GPIO as GPIO
 import time
@@ -291,6 +291,65 @@ class leftUltraSensor():
         while GPIO.input(sonarInpLeft)==1 and time.time()-count<0.1:
             stop = time.time()
 
+        # Calculate pulse length
+        elapsed = stop-start
+
+        # Distance pulse travelled in that time is time
+        # multiplied by the speed of sound 34000(cm/s) divided by 2
+        distance = elapsed * 17000
+        # print("Left distance: " + str(distance))
+        
+        # Add latest distance to queue
+        if (self.q.qsize() > QSIZE) :
+            self.q.get()
+        self.q.put(distance)
+     
+        # Calculate running average
+        total = 0
+        for val in self.q.queue:
+            total = total + val
+     
+        average = total / self.q.qsize()
+        # print("Left average: " + str(average))
+        
+        return average
+
+class frontUltraSensor():
+
+    def __init__(self):
+        # Use physical pin numbering
+        GPIO.setmode(GPIO.BOARD)
+
+        # Disable warnings
+        GPIO.setwarnings(False)
+
+        # Initilise Queue
+        self.q = Queue.Queue()
+        
+        for i in xrange(0,QSIZE):
+            self.q.put(QINITIAL)
+
+    def Measurement(self):
+
+        # Initialise GPIO pins
+        GPIO.setup(sonar, GPIO.OUT)
+        
+        # Send 10us pulse to trigger
+        GPIO.output(sonar, True)
+        time.sleep(0.00001)
+        GPIO.output(sonar, False)
+        start = time.time()
+        count=time.time()
+
+        # Measure echo
+        GPIO.setup(sonar,GPIO.IN)
+        while GPIO.input(sonar)==0 and time.time()-count<0.1:
+            start = time.time()
+        count=time.time()
+        stop=count
+        while GPIO.input(sonar)==1 and time.time()-count<0.1:
+            stop = time.time()
+            
         # Calculate pulse length
         elapsed = stop-start
 
