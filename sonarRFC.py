@@ -26,11 +26,14 @@
 #======================================================================
 
 #======================================================================
-# UltraSonic Functions
+# UltraSonic Classes and Functions
 #
-# getLeftDistance(): Returns the distance in cm to the nearest reflecting object on the left
-# getRightDistance(): Returns the distance in cm to the nearest reflecting object on the right
-# getDistance(). Returns the distance in cm to the nearest reflecting object. 0 == no object
+# class rightUltraSensor(): Right hand side ultrasonic sensor
+#       .Measurement() : Returns the distance in cm to the nearest reflecting object
+# class leftUltraSensor(): Left hand side ultrasonic sensor
+#       .Measurement() : Returns the distance in cm to the nearest reflecting object
+# class frontUltraSensor(): Front ultrasonic sensor
+#       .Measurement() : Returns the distance in cm to the nearest reflecting object
 #======================================================================
 
 
@@ -196,6 +199,7 @@ def turnReverse(leftSpeed, rightSpeed):
 #======================================================================
 # UltraSonic Functions
 
+# Right hand side ultrasonic sensor
 class rightUltraSensor():
 
     def __init__(self):
@@ -215,7 +219,7 @@ class rightUltraSensor():
         for i in xrange(0,QSIZE):
             self.q.put(QINITIAL)
 
-    def Measurement(self):
+    def Measurement(self):     # Returns the distance in cm to the nearest reflecting object
 
         # Send 10us pulse to trigger
         GPIO.output(sonarOutRight, True)
@@ -255,6 +259,7 @@ class rightUltraSensor():
         
         return average
 
+# Left hand side ultrasonic sensor
 class leftUltraSensor():
 
     def __init__(self):
@@ -274,7 +279,7 @@ class leftUltraSensor():
         for i in xrange(0,QSIZE):
             self.q.put(QINITIAL)
 
-    def Measurement(self):
+    def Measurement(self):    # Returns the distance in cm to the nearest reflecting object
 
         # Send 10us pulse to trigger
         GPIO.output(sonarOutLeft, True)
@@ -314,6 +319,7 @@ class leftUltraSensor():
         
         return average
 
+# Front ultrasonic sensor
 class frontUltraSensor():
 
     def __init__(self):
@@ -329,7 +335,7 @@ class frontUltraSensor():
         for i in xrange(0,QSIZE):
             self.q.put(QINITIAL)
 
-    def Measurement(self):
+    def Measurement(self):    # Returns the distance in cm to the nearest reflecting object
 
         # Initialise GPIO pins
         GPIO.setup(sonar, GPIO.OUT)
