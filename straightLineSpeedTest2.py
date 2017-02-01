@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# straightLineSpeedTest.py needs to be run from the command line
+# straightLineSpeedTest2.py needs to be run from the command line
 #
 # This code is for use in the Straight Line Speed Test - PiWars 2017 challenge
 # http://piwars.org/
@@ -169,5 +169,5 @@ except KeyboardInterrupt:
     print("Stopping the race")
 
 # Sets all motors off and sets GPIO to standard values
-sonarRFC.cleanup()
-
+finally:
+    sonarRFC.cleanup()
