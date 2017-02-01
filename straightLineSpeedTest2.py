@@ -11,6 +11,16 @@
 import sonarRFC
 import time
 
+# Set initial constant values
+
+speed = 60                # Initial forward speed
+arcSpeed = 20             # Difference between left and right for correction
+wallWidth = 52            # Width of the wall in cm (actual width on web-page = 522 mm)
+robotWidth = 12           # Width of the robot in cm
+firstBufferWidth = 20     # First steer correction distance to nearest wall
+secondBufferWidth = 10    # Second steer correction distance to nearest wall
+loopTime = 2.0            # Correction loop speed in seconds. This could be zero!
+
 ##########################
 # Define local functions #
 ##########################
@@ -47,19 +57,48 @@ def readkey(getchar_fn=None):
 # End of single character reading
 #======================================================================
 
+#======================================================================
+# Calaculate angle to wall
+import math # https://docs.python.org/2/library/math.html
+
+# wallAngle(distanceOne, distanceTwo): returns angle from front to rear line of robot to
+#                                      the wall in degrees (90deg means robot is driving
+#                                      parallel to the walls)
+#                                      N.B. Angle does not tell if robot is pointing to or away
+#                                      from wall.
+#                                      inputs:
+#                                       distanceOne - Ultrasonic measurement from one side of robot
+#                                       distanceTwo - Ultrasonic measurement from other side of robot
+# N.B. Calculation is based on inputs both being in cm and walls being wallWidth apart.
+
+def wallAngle(distanceOne, distanceTwo):
+    yOne = distanceOne + (robotWidth/2)
+    yTwo = distanceTwo + (robotWidth/2)
+
+    hypotenuse = yOne + yTwo
+
+    theta = math.degrees(math.asin(wallWidth/hypotenuse))
+    
+    return theta
+
+# distanceFromWall(distanceOne, theta): returns distance from front to rear line of robot to
+#                                       the wall that is at theta degrees angle to wall at a
+#                                       distance of distance distanceOne.
+#                                       Unit of returned value is the same as input e.g. cm
+
+def distanceFromWall(distanceOne, theta):
+    hypotenuse = distanceOne + (robotWidth/2)
+
+    wallDistance = hypotenuse * math.sin(math.radians(theta))
+
+    return wallDistance
+
+# End of angle to wall calculations
+#======================================================================
 
 ##########################
 # Main program           #
 ##########################
-
-# Set initial variables
-speed = 60                # Initial forward speed
-arcSpeed = 20             # Difference between left and right for correction
-wallWidth = 52            # Width of the wall in cm (actual width on web-page = 522 mm)
-robotWidth = 12           # Width of the robot in cm
-firstBufferWidth = 20     # First steer correction distance to nearest wall
-secondBufferWidth = 10    # Second steer correction distance to nearest wall
-loopTime = 2.0            # Correction loop speed in seconds. This could be zero!
 
 # Initialise motors
 sonarRFC.initMotors()
@@ -69,6 +108,15 @@ viewLeft = sonarRFC.leftUltraSensor()
 viewRight = sonarRFC.rightUltraSensor()
 
 time.sleep(1)
+
+# Sanity check the distance from edge of robot to walls
+initialLeftDistance = viewLeft.Measurement()
+initialRightDistance = viewRight.Measurement()
+
+if ((initialLeftDistance + initialRightDistance + robotWidth) > (wallWidth * 1.2)):
+    print("The walls are too far apart!")
+else:
+    print("The walls are not too far apart!")
 
 # Waiting for start of race
 print("To start race press 'Space' key.")
@@ -84,13 +132,18 @@ sonarRFC.forward(speed)
 
 print("Their off! Press Control^C to finish")
 
+# Try to avoid the walls!
 try:
     while True:
         # Calculate the distance from edge of robot to walls
         leftDistance = viewLeft.Measurement()
-        print("Average left distance: " + str(int(leftDistance)) + " cm")
+        print("Average measured left distance: " + str(int(leftDistance)) + " cm")
         rightDistance = viewRight.Measurement()
-        print("Average right distance: " + str(int(rightDistance)) + " cm")
+        print("Average measured right distance: " + str(int(rightDistance)) + " cm")
+        angleFromWall = wallAngle(leftDistance, rightDistance)
+        print("Angle from the wall: " + str(int(angleFromWall)) + " deg")
+        spaceFromLeftWall = distanceFromWall(leftDistance, angleFromWall)
+        print("Actual distance from the left wall: " + str(int(spaceFromLeftWall)) + " cm")
 
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
