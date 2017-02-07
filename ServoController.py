@@ -27,55 +27,55 @@ import logging
 import os
 import time
 
-# Define pins for Pan/Tilt
-PAN_SERVO = 0
-TILT_SERVO = 1
-
 module_logger = logging.getLogger("__main__.ServoController")
 
 
 class ServoController:
     """
     """
-    
+    # Define pins for Pan/Tilt
+    PAN_SERVO = 0
+    TILT_SERVO = 1
+
     def __init__(self):
         """
         """
         self.ServosActive = False
         module_logger.info("Setting up ServoController Module")
 
-    def startServos():
+    def startServos(self):
         """
         """
-        startServod()
-        
-    def startServod():
-        """
-        """
-        SCRIPTPATH = os.path.split(os.path.realpath(__file__))[0]
-        initString = "sudo " + SCRIPTPATH +'/servod --pcm --idle-timeout=20000 --p1pins="18,22" > /dev/null'
-        os.system(initString)
-        self.ServosActive = True
+        if self.ServosActive == False:
+            SCRIPTPATH = os.path.split(os.path.realpath(__file__))[0]
+            initString = "sudo " + SCRIPTPATH +'/servod --pcm --idle-timeout=20000 --p1pins="18,22" > /dev/null'
+            os.system(initString)
+            self.ServosActive = True
 
-    def stopServos():
-        """
-        """
-        stopServod()
-
-    def stopServod():
+    def stopServos(self):
         """
         """
         os.system("sudo pkill -f servod")
         self.ServosActive = False
 
-    def setServo(Servo, Degrees):
+    def setServo(self, servo, degrees):
         """
         """
         if self.ServosActive == False:
-            startServos()
-        pinServod(Servo, Degrees) # for now, simply pass on the input values
-
-    def pinServod(pin, degrees):
+            self.startServos()
+        self.pinServod(servo, degrees) # for now, simply pass on the input values
+    
+    def setPanServer(self, degrees):
+        """
+        """
+        self.setServo(self.PAN_SERVO, degrees)
+        
+    def setTiltServer(self, degrees):
+        """
+        """
+        self.setServo(self.TILT_SERVO, degrees)
+        
+    def pinServod(self, pin, degrees):
         """
         """
         pinString = "echo " + str(pin) + "=" + str(50+ ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
@@ -84,24 +84,26 @@ class ServoController:
     
 if __name__ == "__main__":
     try:
-        ServoController servo
+        servo = ServoController()
+        
+        servo.setPanServer(0)
         servo.startServos()
-        servo.setServo(PAN_SERVO, 0)
+        servo.setPanServer(0)
         time.sleep(1)
-        servo.setServo(PAN_SERVO, 90)
+        servo.setPanServer(90)
         time.sleep(1)
-        servo.setServo(PAN_SERVO, -90)
+        servo.setPanServer(-90)
         time.sleep(1)
-        servo.setServo(PAN_SERVO, 0)
+        servo.setPanServer(0)
         time.sleep(1)
 
-        servo.setServo(TILT_SERVO, 0)
+        servo.setTiltServer(0)
         time.sleep(1)
-        servo.setServo(TILT_SERVO, 90)
+        servo.setTiltServer(90)
         time.sleep(1)
-        servo.setServo(TILT_SERVO, -90)
+        servo.setTiltServer(-90)
         time.sleep(1)
-        servo.setServo(TILT_SERVO, 0)
+        servo.setTiltServer(0)
     except KeyboardInterrupt:
         pass
     finally:
