@@ -41,8 +41,9 @@ class UltraonicSensor():
         for i in xrange(0, self.QSIZE):
             self.q.put(self.QINITIAL)
 
-    def Measurement(self):    # Returns the distance in cm to the nearest reflecting object
+    def Measurement(self):
         """
+        Returns the distance in cm to the nearest reflecting object
         """
         # If the two pins are actually the same, then
         # they need to be switched between input and
