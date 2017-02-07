@@ -5,6 +5,7 @@ from __future__ import division # Used for floating point division in Python 2.7
 import RPi.GPIO as GPIO
 import logging
 import Queue
+import time
 
 module_logger = logging.getLogger("__main__.UltraonicSensor")
 
@@ -37,8 +38,8 @@ class UltraonicSensor():
         # Initilise Queue
         self.q = Queue.Queue()
 
-        for i in xrange(0,QSIZE):
-            self.q.put(QINITIAL)
+        for i in xrange(0, self.QSIZE):
+            self.q.put(self.QINITIAL)
 
     def Measurement(self):    # Returns the distance in cm to the nearest reflecting object
         """
@@ -47,7 +48,7 @@ class UltraonicSensor():
         # they need to be switched between input and
         # output
         if self.sonarOut == self.sonarInp:
-            GPIO.setupself.sonarOut, GPIO.OUT)
+            GPIO.setup(self.sonarOut, GPIO.OUT)
 
         # Send 10us pulse to trigger
         GPIO.output(self.sonarOut, True)
@@ -78,7 +79,7 @@ class UltraonicSensor():
         distance = elapsed * 17000
 
         # Add latest distance to queue
-        if (self.q.qsize() > QSIZE) :
+        if (self.q.qsize() > self.QSIZE) :
             self.q.get()
         self.q.put(distance)
 
@@ -102,13 +103,13 @@ if __name__ == "__main__":
         # Define Sonar Pin (Uses same pin for both Ping and Echo)
         sonarSingleIO = 38
 
-        UltraonicSensor proxity_two_io_left(sonarInpLeft, sonarOutLeft)
+        proxity_two_io_left = UltraonicSensor(sonarInpLeft, sonarOutLeft)
         print("proxity_two_io_left: ", proxity_two_io_left.Measurement())
         
-        UltraonicSensor proxity_two_io_right(sonarInpRight, sonarOutRight)
+        proxity_two_io_right = UltraonicSensor(sonarInpRight, sonarOutRight)
         print("proxity_two_io_right: ", proxity_two_io_right.Measurement())
 
-        UltraonicSensor proxity_one_io(sonarSingleIO, sonarSingleIO)
+        proxity_one_io = UltraonicSensor(sonarSingleIO, sonarSingleIO)
         print("proxity_one_io: ", proxity_one_io.Measurement())
     except KeyboardInterrupt:
         pass
