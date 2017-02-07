@@ -1,16 +1,7 @@
 #!/usr/bin/python
-#
-#======================================================================
-# Motor Functions
-#
-# stop(): Stops both motors
-# forward(speed): Sets both motors to move forward at speed. 0 <= speed <= 100
-# reverse(speed): Sets both motors to reverse at speed. 0 <= speed <= 100
-# spinLeft(speed): Sets motors to turn opposite directions at speed. 0 <= speed <= 100
-# spinRight(speed): Sets motors to turn opposite directions at speed. 0 <= speed <= 100
-# turnForward(leftSpeed, rightSpeed): Moves forwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
-# turnreverse(leftSpeed, rightSpeed): Moves backwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
-#======================================================================
+
+"""
+"""
 
 import RPi.GPIO as GPIO
 import time
@@ -20,12 +11,13 @@ module_logger = logging.getLogger("__main__.MotorController")
 
 
 class MotorController:
+
     """
     """
-    
-    #======================================================================
+
+    # ======================================================================
     # Existing robohat.py sensor pins - J5 Pin Numbers
-    #======================================================================
+    # ======================================================================
     # Pins 35, 36 Left Motor
     # Pins 32, 33 Right Motor
     LEFT_FORWARD = 36
@@ -46,7 +38,7 @@ class MotorController:
         # Disable warnings
         GPIO.setwarnings(False)
 
-        #use pwm on inputs so motors don't go too fast
+        # use pwm on inputs so motors don't go too fast
         GPIO.setup(self.LEFT_FORWARD, GPIO.OUT)
         self.p = GPIO.PWM(self.LEFT_FORWARD, self.START_FREQ)
         self.p.start(0)
@@ -62,9 +54,11 @@ class MotorController:
         GPIO.setup(self.RIGHT_BACKWARD, GPIO.OUT)
         self.b = GPIO.PWM(self.RIGHT_BACKWARD, self.START_FREQ)
         self.b.start(0)
-        
-    # cleanup(). Sets all motors off and sets GPIO to standard values
+
     def cleanup(self):
+        """
+        Sets all motors off and sets GPIO to standard values
+        """
         self.stop()
         time.sleep(1)
         GPIO.cleanup()
@@ -77,7 +71,7 @@ class MotorController:
         self.q.ChangeDutyCycle(0)
         self.a.ChangeDutyCycle(0)
         self.b.ChangeDutyCycle(0)
-        
+
     def forward(self, speed):
         """
         Move each wheel forward
@@ -87,7 +81,7 @@ class MotorController:
         self.q.ChangeDutyCycle(0)
         self.a.ChangeDutyCycle(speed)
         self.b.ChangeDutyCycle(0)
-        
+
     def reverse(self, speed):
         """
         Move each wheel forward
@@ -107,7 +101,7 @@ class MotorController:
         self.q.ChangeDutyCycle(speed)
         self.a.ChangeDutyCycle(speed)
         self.b.ChangeDutyCycle(0)
-        
+
     def spinRight(self, speed):
         """
         Causes the Robot to rotate right as fast as possible
@@ -117,14 +111,14 @@ class MotorController:
         self.q.ChangeDutyCycle(0)
         self.a.ChangeDutyCycle(0)
         self.b.ChangeDutyCycle(speed)
-    
+
     def oneWheelRight(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.turnForward(speed, 0)
-        
+
     def oneWheelLeft(self, speed):
         """
         Causes the Robot to turn right using just one wheel
@@ -134,23 +128,25 @@ class MotorController:
 
     def turnForward(self, leftSpeed, rightSpeed):
         """
-        Moves forwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
+        Moves forwards in an arc by setting different speeds.
+        0 <= leftSpeed,rightSpeed <= 100
         """
         self.p.ChangeDutyCycle(leftSpeed)
         self.q.ChangeDutyCycle(0)
         self.a.ChangeDutyCycle(rightSpeed)
         self.b.ChangeDutyCycle(0)
-        
+
     def turnReverse(self, leftSpeed, rightSpeed):
         """
-        Moves backwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
+        Moves backwards in an arc by setting different speeds.
+        0 <= leftSpeed,rightSpeed <= 100
         """
         self.p.ChangeDutyCycle(0)
         self.q.ChangeDutyCycle(leftSpeed)
         self.a.ChangeDutyCycle(0)
         self.b.ChangeDutyCycle(rightSpeed)
 
-    
+
 if __name__ == "__main__":
     try:
         mcontroller = MotorController()

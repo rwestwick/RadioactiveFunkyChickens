@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """
 """
 
@@ -6,12 +8,14 @@ import logging
 
 module_logger = logging.getLogger("__main__.IRSensor")
 
-#irFL = 7
-#irFR = 11
-#lineLeft = 29
-#lineRight = 13
+# irFL = 7
+# irFR = 11
+# lineLeft = 29
+# lineRight = 13
+
 
 class IRSensor:
+
     """
     """
 
@@ -21,12 +25,12 @@ class IRSensor:
         """
         self.gpio_id = id
         module_logger.info("Setting up IRSensor Module")
-        
-        #use physical pin numbering
+
+        # use physical pin numbering
         GPIO.setmode(GPIO.BOARD)
 
-        #set up digital line detectors as inputs
-        GPIO.setup(self.gpio_id, GPIO.IN) 
+        # set up digital line detectors as inputs
+        GPIO.setup(self.gpio_id, GPIO.IN)
 
     def irActive(self):
         """
@@ -36,8 +40,8 @@ class IRSensor:
             return True
         else:
             return False
-        
-    
+
+
 if __name__ == "__main__":
     try:
         sensor = IRSensor(7)

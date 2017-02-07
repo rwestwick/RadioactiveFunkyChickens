@@ -1,27 +1,15 @@
 #!/usr/bin/python
-#
-# Python Module to externalise all Initio/RoboHAT specific hardware
-#
-# Created by Gareth Davies, Feb 2016
-# Copyright 4tronix
-#
-# This code is in the public domain and may be freely copied and used
-# No warranty is provided or implied
-#
-#======================================================================
 
-#======================================================================
-# Servo Functions
-# 
-# startServos(). Initialises the servo background process
-# stop Servos(). terminates the servo background process
-# setServo(Servo, Degrees). Sets the servo to position in degrees -90 to +90
-#======================================================================
+"""
+Python Module to externalise all Initio/RoboHAT specific hardware
+Created by Gareth Davies, Feb 2016
+Copyright 4tronix
 
-
-#======================================================================
-# Servo Functions
-# Pirocon/Microcon/RoboHAT use ServoD to control servos
+This code is in the public domain and may be freely copied and used
+No warranty is provided or implied
+Servo Functions
+Pirocon/Microcon/RoboHAT use ServoD to control servos
+"""
 
 import logging
 import os
@@ -31,6 +19,7 @@ module_logger = logging.getLogger("__main__.ServoController")
 
 
 class ServoController:
+
     """
     """
     # Define pins for Pan/Tilt
@@ -46,9 +35,10 @@ class ServoController:
     def startServos(self):
         """
         """
-        if self.ServosActive == False:
+        if self.ServosActive is False:
             SCRIPTPATH = os.path.split(os.path.realpath(__file__))[0]
-            initString = "sudo " + SCRIPTPATH +'/servod --pcm --idle-timeout=20000 --p1pins="18,22" > /dev/null'
+            SERVOD_CMD = '/servod --pcm --idle-timeout=20000 --p1pins="18,22"'
+            initString = "sudo " + SCRIPTPATH + SERVOD_CMD + ' > /dev/null'
             os.system(initString)
             self.ServosActive = True
 
@@ -61,31 +51,32 @@ class ServoController:
     def setServo(self, servo, degrees):
         """
         """
-        if self.ServosActive == False:
+        if self.ServosActive is False:
             self.startServos()
-        self.pinServod(servo, degrees) # for now, simply pass on the input values
-    
+        self.pinServod(servo, degrees)
+
     def setPanServer(self, degrees):
         """
         """
         self.setServo(self.PAN_SERVO, degrees)
-        
+
     def setTiltServer(self, degrees):
         """
         """
         self.setServo(self.TILT_SERVO, degrees)
-        
+
     def pinServod(self, pin, degrees):
         """
         """
-        pinString = "echo " + str(pin) + "=" + str(50+ ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
+        pinString = "echo " + str(pin) + "=" + str(
+            50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
         os.system(pinString)
 
-    
+
 if __name__ == "__main__":
     try:
         servo = ServoController()
-        
+
         servo.setPanServer(0)
         servo.startServos()
         servo.setPanServer(0)

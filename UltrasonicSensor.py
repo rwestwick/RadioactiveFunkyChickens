@@ -1,7 +1,10 @@
+#!/usr/bin/python
+
 """
 """
 
-from __future__ import division # Used for floating point division in Python 2.7
+# Used for floating point division in Python 2.7
+from __future__ import division
 import RPi.GPIO as GPIO
 import logging
 import Queue
@@ -11,18 +14,24 @@ module_logger = logging.getLogger("__main__.UltraonicSensor")
 
 
 class UltraonicSensor():
+
     """
     """
     # Running average settings
     QSIZE = 8
-    QINITIAL = 30.0 # Based on wall to wall distance of ~60cm
+    QINITIAL = 30.0  # Based on wall to wall distance of ~60cm
 
     def __init__(self, input_pin, output_pin):
         """
         """
         self.sonarInp = input_pin
         self.sonarOut = output_pin
-        module_logger.info("Setting up UltraonicSensor Module (in:", input_pin, ", out:", output_pin, ")")
+        module_logger.info(
+            "Setting up UltraonicSensor Module (in:",
+            input_pin,
+            ", out:",
+            output_pin,
+            ")")
 
         # Use physical pin numbering
         GPIO.setmode(GPIO.BOARD)
@@ -33,7 +42,7 @@ class UltraonicSensor():
         if self.sonarOut != self.sonarInp:
             # Initialise GPIO pins
             GPIO.setup(self.sonarOut, GPIO.OUT)
-            GPIO.setup(self.sonarInp,GPIO.IN)
+            GPIO.setup(self.sonarInp, GPIO.IN)
 
         # Initilise Queue
         self.q = Queue.Queue()
@@ -56,7 +65,7 @@ class UltraonicSensor():
         time.sleep(0.00001)
         GPIO.output(self.sonarOut, False)
         start = time.time()
-        count=time.time()
+        count = time.time()
 
         # If the two pins are actually the same, then
         # they need to be switched between input and
@@ -65,11 +74,11 @@ class UltraonicSensor():
             GPIO.setup(self.sonarInp, GPIO.IN)
 
         # Measure echo
-        while GPIO.input(self.sonarInp)==0 and time.time()-count<0.1:
+        while GPIO.input(self.sonarInp) == 0 and time.time() - count < 0.1:
             start = time.time()
-        count=time.time()
-        stop=count
-        while GPIO.input(self.sonarInp)==1 and time.time()-count<0.1:
+        count = time.time()
+        stop = count
+        while GPIO.input(self.sonarInp) == 1 and time.time() - count < 0.1:
             stop = time.time()
 
         # Calculate pulse length
@@ -80,7 +89,7 @@ class UltraonicSensor():
         distance = elapsed * 17000
 
         # Add latest distance to queue
-        if (self.q.qsize() > self.QSIZE) :
+        if (self.q.qsize() > self.QSIZE):
             self.q.get()
         self.q.put(distance)
 
@@ -95,18 +104,18 @@ class UltraonicSensor():
 if __name__ == "__main__":
     try:
         # UltraSonic physical pin numbers
-        sonarInpRight = 16 # Connected to Echo
-        sonarOutRight = 31 # Connected to Trig
+        sonarInpRight = 16  # Connected to Echo
+        sonarOutRight = 31  # Connected to Trig
 
-        sonarInpLeft = 15 # Connected to Echo
-        sonarOutLeft = 12 # Connected to Trig
-        
+        sonarInpLeft = 15  # Connected to Echo
+        sonarOutLeft = 12  # Connected to Trig
+
         # Define Sonar Pin (Uses same pin for both Ping and Echo)
         sonarSingleIO = 38
 
         proxity_two_io_left = UltraonicSensor(sonarInpLeft, sonarOutLeft)
         print("proxity_two_io_left: ", proxity_two_io_left.Measurement())
-        
+
         proxity_two_io_right = UltraonicSensor(sonarInpRight, sonarOutRight)
         print("proxity_two_io_right: ", proxity_two_io_right.Measurement())
 
