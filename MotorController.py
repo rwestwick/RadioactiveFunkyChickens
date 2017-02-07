@@ -110,14 +110,28 @@ class MotorController:
         
     def spinRight(self, speed):
         """
-        Causes the Robot to turn right using just one wheel
+        Causes the Robot to rotate right as fast as possible
         Sets motors to turn opposite directions at speed. 0 <= speed <= 100
         """
         self.p.ChangeDutyCycle(speed)
         self.q.ChangeDutyCycle(0)
         self.a.ChangeDutyCycle(0)
         self.b.ChangeDutyCycle(speed)
+    
+    def oneWheelRight(self, speed):
+        """
+        Causes the Robot to turn right using just one wheel
+        Sets just one side to turn. 0 <= speed <= 100
+        """
+        self.turnForward(speed, 0)
         
+    def oneWheelLeft(self, speed):
+        """
+        Causes the Robot to turn right using just one wheel
+        Sets just one side to turn. 0 <= speed <= 100
+        """
+        self.turnForward(0, speed)
+
     def turnForward(self, leftSpeed, rightSpeed):
         """
         Moves forwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
@@ -153,6 +167,11 @@ if __name__ == "__main__":
         mcontroller.turnForward(50, 50)
         time.sleep(1)
         mcontroller.turnReverse(50, 50)
+        time.sleep(1)
+        mcontroller.oneWheelLeft(50)
+        time.sleep(1)
+        mcontroller.oneWheelRight(50)
+
     except KeyboardInterrupt:
         pass
     finally:
