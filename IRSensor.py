@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
 """
+Class to interact with ir proximity sensors
 """
 
 import RPi.GPIO as GPIO
 import logging
 
-module_logger = logging.getLogger("__main__.IRSensor")
+MODULE_LOGGER = logging.getLogger("__main__.IRSensor")
 
 # irFL = 7
 # irFR = 11
@@ -14,17 +15,18 @@ module_logger = logging.getLogger("__main__.IRSensor")
 # lineRight = 13
 
 
-class IRSensor:
+class IRSensor(object):  # pylint: disable=too-few-public-methods
 
     """
+    Defines the interaction with the ir proximity sensors
     """
 
-    def __init__(self, id):
+    def __init__(self, gpio_id):
         """
         Initialise the parameters required for the IR Sensor
         """
-        self.gpio_id = id
-        module_logger.info("Setting up IRSensor Module")
+        self.gpio_id = gpio_id
+        MODULE_LOGGER.info("Setting up IRSensor Module")
 
         # use physical pin numbering
         GPIO.setmode(GPIO.BOARD)
@@ -32,7 +34,7 @@ class IRSensor:
         # set up digital line detectors as inputs
         GPIO.setup(self.gpio_id, GPIO.IN)
 
-    def irActive(self):
+    def ir_active(self):
         """
         Returns state of Left IR Obstacle sensor
         """
@@ -44,8 +46,8 @@ class IRSensor:
 
 if __name__ == "__main__":
     try:
-        sensor = IRSensor(7)
-        print("irActive: ", sensor.irActive())
+        SENSOR = IRSensor(7)
+        print("ir_active: ", SENSOR.ir_active())
     except KeyboardInterrupt:
         pass
     finally:

@@ -7,7 +7,7 @@ Copyright 4tronix
 
 This code is in the public domain and may be freely copied and used
 No warranty is provided or implied
-Servo Functions
+servo_controller Functions
 Pirocon/Microcon/RoboHAT use ServoD to control servos
 """
 
@@ -15,12 +15,13 @@ import logging
 import os
 import time
 
-module_logger = logging.getLogger("__main__.ServoController")
+MODULE_LOGGER = logging.getLogger("__main__.ServoController")
 
 
-class ServoController:
+class ServoController(object):
 
     """
+    Class to control the two (pan/tilt) servos on the initio robot
     """
     # Define pins for Pan/Tilt
     PAN_SERVO = 0
@@ -28,74 +29,82 @@ class ServoController:
 
     def __init__(self):
         """
+        Initialises the required properties of the servo controller
         """
-        self.ServosActive = False
-        module_logger.info("Setting up ServoController Module")
+        self.servos_active = False
+        MODULE_LOGGER.info("Setting up ServoController Module")
 
-    def startServos(self):
+    def start_servos(self):
         """
+        Starts the servos using servod
         """
-        if self.ServosActive is False:
-            SCRIPTPATH = os.path.split(os.path.realpath(__file__))[0]
-            SERVOD_CMD = '/servod --pcm --idle-timeout=20000 --p1pins="18,22"'
-            initString = "sudo " + SCRIPTPATH + SERVOD_CMD + ' > /dev/null'
-            os.system(initString)
-            self.ServosActive = True
+        if self.servos_active is False:
+            script_path = os.path.split(os.path.realpath(__file__))[0]
+            servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="18,22"'
+            init_string = "sudo " + script_path + servod_cmd + ' > /dev/null'
+            os.system(init_string)
+            self.servos_active = True
 
-    def stopServos(self):
+    def stop_servos(self):
         """
+        Stops the servos by killing the servod binary
         """
         os.system("sudo pkill -f servod")
-        self.ServosActive = False
+        self.servos_active = False
 
-    def setServo(self, servo, degrees):
+    def set_servo(self, servo, degrees):
         """
+        Sets a specific servo to a position, starting the servo if required
         """
-        if self.ServosActive is False:
-            self.startServos()
-        self.pinServod(servo, degrees)
+        if self.servos_active is False:
+            self.start_servos()
+        self.pin_servod(servo, degrees)
 
-    def setPanServer(self, degrees):
+    def set_pan_servo(self, degrees):
         """
+        Sets the pan servo to a position
         """
-        self.setServo(self.PAN_SERVO, degrees)
+        self.set_servo(self.PAN_SERVO, degrees)
 
-    def setTiltServer(self, degrees):
+    def set_tilt_servo(self, degrees):
         """
+        Sets the tilt servo to a position
         """
-        self.setServo(self.TILT_SERVO, degrees)
+        self.set_servo(self.TILT_SERVO, degrees)
 
-    def pinServod(self, pin, degrees):
+    @staticmethod
+    def pin_servod(pin, degrees):
         """
+        Uses the servoblaster device to set the required angle
         """
-        pinString = "echo " + str(pin) + "=" + str(
+        pin_string = "echo " + str(pin) + "=" + str(
             50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
-        os.system(pinString)
+        os.system(pin_string)
 
 
 if __name__ == "__main__":
     try:
-        servo = ServoController()
+        SERVO_CONTROLLER = ServoController()
 
-        servo.setPanServer(0)
-        servo.startServos()
-        servo.setPanServer(0)
+        SERVO_CONTROLLER.set_pan_servo(0)
+        SERVO_CONTROLLER.start_servos()
+        SERVO_CONTROLLER.set_pan_servo(0)
         time.sleep(1)
-        servo.setPanServer(90)
+        SERVO_CONTROLLER.set_pan_servo(90)
         time.sleep(1)
-        servo.setPanServer(-90)
+        SERVO_CONTROLLER.set_pan_servo(-90)
         time.sleep(1)
-        servo.setPanServer(0)
+        SERVO_CONTROLLER.set_pan_servo(0)
         time.sleep(1)
 
-        servo.setTiltServer(0)
+        SERVO_CONTROLLER.set_tilt_servo(0)
         time.sleep(1)
-        servo.setTiltServer(90)
+        SERVO_CONTROLLER.set_tilt_servo(90)
         time.sleep(1)
-        servo.setTiltServer(-90)
+        SERVO_CONTROLLER.set_tilt_servo(-90)
         time.sleep(1)
-        servo.setTiltServer(0)
+        SERVO_CONTROLLER.set_tilt_servo(0)
     except KeyboardInterrupt:
         pass
     finally:
-        servo.stopServos()
+        SERVO_CONTROLLER.stop_servos()

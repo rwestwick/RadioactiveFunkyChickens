@@ -1,65 +1,66 @@
 #!/usr/bin/python
 
 """
+Provides ability to read the three sensors of the line
+follower module
 """
 
 import RPi.GPIO as GPIO
 import logging
+import IRSensor
 
-module_logger = logging.getLogger("__main__.LineFollowerSensor")
+MODULE_LOGGER = logging.getLogger("__main__.LineFollowerSensor")
 
 
-class LineFollowerSensor:
+class LineFollowerSensor(object):
 
     """
+    Provides ability to read the three sensors of the line
+    follower module
     """
 
     def __init__(self, left_sensor_id, middle_sensor_id, right_sensor_id):
         """
+        Initialises the class
         """
-        module_logger.info("Setting up LineFollowerSensor Module")
-        self.left_sensor_id = left_sensor_id
-        self.middle_sensor_id = middle_sensor_id
-        self.right_sensor_id = right_sensor_id
+        MODULE_LOGGER.info("Setting up LineFollowerSensor Module")
+        self.sensor_l = IRSensor.IRSensor(left_sensor_id)
+        self.sensor_m = IRSensor.IRSensor(middle_sensor_id)
+        self.sensor_r = IRSensor.IRSensor(right_sensor_id)
 
-        # Use BCM GPIO references
-        # instead of physical pin numbers
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
+    def get_l_state(self):
+        """
+        Get the state of the left sensor
+        """
+        return self.sensor_l.ir_active()
 
-        # Set pins as output and input
-        GPIO.setup(self.left_sensor_id, GPIO.IN)       # Switch as input
-        GPIO.setup(self.middle_sensor_id, GPIO.IN)       # Switch as input
-        GPIO.setup(self.right_sensor_id, GPIO.IN)       # Switch as input
+    def get_m_state(self):
+        """
+        Get the state of the middle sensor
+        """
+        return self.sensor_m.ir_active()
 
-    def GetLState(self):
+    def get_r_state(self):
         """
+        Get the state of the right sensor
         """
-        return GPIO.input(self.left_sensor_id)
-
-    def GetMState(self):
-        """
-        """
-        return GPIO.input(self.middle_sensor_id)
-
-    def GetRState(self):
-        """
-        """
-        return GPIO.input(self.right_sensor_id)
+        return self.sensor_r.ir_active()
 
 
 if __name__ == "__main__":
     try:
         # Define GPIO to use on Pi
-        GPIO_LINE_L = 16
-        GPIO_LINE_M = 21
-        GPIO_LINE_R = 20
+        GPIO_LINE_L = 36
+        GPIO_LINE_M = 40
+        GPIO_LINE_R = 38
 
-        linefollower = LineFollowerSensor(
-            GPIO_LINE_L, GPIO_LINE_M, GPIO_LINE_R)
-        print("linefollower::left: ", linefollower.GetLState())
-        print("linefollower::right: ", linefollower.GetRState())
-        print("linefollower::middle: ", linefollower.GetMState())
+        LINEFOLLOWER = LineFollowerSensor(
+            GPIO_LINE_L,
+            GPIO_LINE_M,
+            GPIO_LINE_R)
+        print("LINEFOLLOWER::left: ", LINEFOLLOWER.get_l_state())
+        print("LINEFOLLOWER::right: ", LINEFOLLOWER.get_r_state())
+        print("LINEFOLLOWER::middle: ", LINEFOLLOWER.get_m_state())
     except KeyboardInterrupt:
         pass
     finally:
