@@ -28,5 +28,6 @@ cloc --by-file \
      --xml \
      --out=./cloc.xml \
      --exclude-dir=.git,.svn \
+	 *.py
 
 echo "**************** $(date) - cloc complete ****************"
