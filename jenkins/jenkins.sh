@@ -1,2 +1,2 @@
-find . -name \*.py | xargs pylint
-find . -name \*.py | xargs flake8
+find . -name \*.py | xargs pylint > pylint.txt
+find . -name \*.py | xargs flake8 > flake8.txt
