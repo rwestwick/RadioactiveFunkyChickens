@@ -6,10 +6,10 @@ Class defines how to interract with the Ultrasonic sensor
 
 # Used for floating point division in Python 2.7
 from __future__ import division
-import RPi.GPIO as GPIO
 import Queue
 import time
 import logging
+import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import GPIOLayout
 

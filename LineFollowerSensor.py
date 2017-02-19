@@ -5,8 +5,8 @@ Provides ability to read the three sensors of the line
 follower module
 """
 
-import RPi.GPIO as GPIO
 import logging
+import RPi.GPIO as GPIO
 import IRSensor
 import SetupConsoleLogger
 import GPIOLayout

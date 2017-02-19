@@ -4,9 +4,9 @@
 Provides ability to control the motors on the robot.
 """
 
-import RPi.GPIO as GPIO
 import time
 import logging
+import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import GPIOLayout
 
