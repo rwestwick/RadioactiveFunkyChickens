@@ -25,23 +25,23 @@ class MotorController(object):
     SPEED_SLOW = 40
     SPEED_VERYSLOW = 30
     SPEED_VERYVERYSLOW = 20
-
-    # ======================================================================
-    # Existing robohat.py sensor pins - J5 Pin Numbers
-    # ======================================================================
-    # Pins 35, 36 Left Motor
-    # Pins 32, 33 Right Motor
-    LEFT_FORWARD = 36
-    LEFT_BACKWARD = 35
-    RIGHT_FORWARD = 33
-    RIGHT_BACKWARD = 32
     START_FREQ = 25
 
-    def __init__(self):
+    def __init__(self, left_forward, left_backward, right_forward, right_backward):
         """
         Initialises GPIO pins
         """
         MODULE_LOGGER.info("Setting up MotorController Module")
+        log_string = "Setting up MotorController Module (lf:" + \
+            str(left_forward) + \
+            ", lb:" + \
+            str(left_backward) + \
+            ", rf:" + \
+            str(right_forward) + \
+            ", rb:" + \
+            str(right_backward) + \
+            ")"
+        MODULE_LOGGER.info(log_string)
 
         # Use physical pin numbering
         GPIO.setmode(GPIO.BOARD)
@@ -50,24 +50,25 @@ class MotorController(object):
         GPIO.setwarnings(False)
 
         # use pwm on inputs so motors don't go too fast
-        GPIO.setup(self.LEFT_FORWARD, GPIO.OUT)
-        self.motor_left_forward = GPIO.PWM(self.LEFT_FORWARD,
+        GPIO.setup(left_forward, GPIO.OUT)
+        self.motor_left_forward = GPIO.PWM(left_forward,
                                            self.START_FREQ)
         self.motor_left_forward.start(0)
 
-        GPIO.setup(self.LEFT_BACKWARD, GPIO.OUT)
-        self.motor_left_backward = GPIO.PWM(self.LEFT_BACKWARD,
+        GPIO.setup(left_backward, GPIO.OUT)
+        self.motor_left_backward = GPIO.PWM(left_backward,
                                             self.START_FREQ)
         self.motor_left_backward.start(0)
 
-        GPIO.setup(self.RIGHT_FORWARD, GPIO.OUT)
-        self.motor_right_forward = GPIO.PWM(self.RIGHT_FORWARD,
+        GPIO.setup(right_forward, GPIO.OUT)
+        self.motor_right_forward = GPIO.PWM(right_forward,
                                             self.START_FREQ)
         self.motor_right_forward.start(0)
 
-        GPIO.setup(self.RIGHT_BACKWARD, GPIO.OUT)
-        self.motor_right_backward = GPIO.PWM(self.RIGHT_BACKWARD,
+        GPIO.setup(right_backward, GPIO.OUT)
+        self.motor_right_backward = GPIO.PWM(right_backward,
                                              self.START_FREQ)
+
         self.motor_right_backward.start(0)
 
     def cleanup(self):
@@ -163,9 +164,15 @@ class MotorController(object):
 
 
 if __name__ == "__main__":
+    LEFT_FORWARD = 36
+    LEFT_BACKWARD = 35
+    RIGHT_FORWARD = 33
+    RIGHT_BACKWARD = 32
+
+    MCONTROLLER = MotorController(LEFT_FORWARD, LEFT_BACKWARD,
+                                  RIGHT_FORWARD, RIGHT_BACKWARD)
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-        MCONTROLLER = MotorController()
         MCONTROLLER.stop()
         time.sleep(1)
         MODULE_LOGGER.info("forward 50%")

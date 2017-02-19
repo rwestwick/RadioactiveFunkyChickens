@@ -14,6 +14,7 @@ import KeyboardCharacterReader
 import MotorController
 import UltrasonicSensor
 import SetupConsoleLogger
+import GPIOLayout
 
 # Create a logger to both file and stdout
 logger = logging.getLogger(__name__)
@@ -66,16 +67,12 @@ def distanceFromWall(distanceOne, theta):
 
 
 # Create necessary sensor objects
-SONAR_INPUT_RIGHT = 16  # Connected to Echo
-SONAR_OUTPUT_RIGHT = 31  # Connected to Trig
-SONAR_INPUT_LEFT = 15  # Connected to Echo
-SONAR_OUTPUT_LEFT = 12  # Connected to Trig
 viewLeft = UltrasonicSensor.UltrasonicSensor(
-    SONAR_INPUT_LEFT,
-    SONAR_OUTPUT_LEFT)
+    GPIOLayout.SONAR_LEFT_RX_PIN,
+    GPIOLayout.SONAR_LEFT_TX_PIN)
 viewRight = UltrasonicSensor.UltrasonicSensor(
-    SONAR_INPUT_RIGHT,
-    SONAR_OUTPUT_RIGHT)
+    GPIOLayout.SONAR_RIGHT_RX_PIN,
+    GPIOLayout.SONAR_RIGHT_TX_PIN)
 
 time.sleep(1)
 

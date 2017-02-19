@@ -32,7 +32,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         else:
             self.sonar_out = input_pin
 
-        log_string = "Setting up UltraonicSensor Module (in:" + \
+        log_string = "Setting up UltrasonicSensor Module (in:" + \
             str(input_pin) + \
             ", out:" + \
             str(output_pin) + \
