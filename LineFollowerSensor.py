@@ -61,9 +61,9 @@ if __name__ == "__main__":
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
         LINEFOLLOWER = LineFollowerSensor(
-            GPIOLayout.LINE_FOLLOWER_LEFT,
-            GPIOLayout.LINE_FOLLOWER_MIDDLE,
-            GPIOLayout.LINE_FOLLOWER_RIGHT)
+            GPIOLayout.LINE_FOLLOWER_LEFT_PIN,
+            GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
+            GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
 
         MODULE_LOGGER.info("LINEFOLLOWER::left: " +
                            str(LINEFOLLOWER.get_l_state()))

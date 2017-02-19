@@ -33,7 +33,12 @@ loopTime = 0.1          # Correction loop speed in seconds.
                         # This could be zero!
 
 # Initialise motors
-robotmove = None
+robotmove = MotorController.MotorController(
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+
 
 def wallAngle(distanceOne, distanceTwo):
     """
@@ -68,13 +73,8 @@ def distanceFromWall(distanceOne, theta):
     return wallDistance
 
 def main():
-    # Initialise motors
-    robotmove = MotorController.MotorController(
-        GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-        GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-        GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-        GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
-
+    """
+    """
     # Create necessary sensor objects
     viewLeft = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_LEFT_RX_PIN,
