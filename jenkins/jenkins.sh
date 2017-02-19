@@ -10,12 +10,12 @@ rm -f flake8.txt
 # Run the pep8 utilities
 #--------------------------------------------------------------
 echo "**************** $(date) - Running pylint ****************"
-find . -name \*.py | xargs pylint --rcfile=jenkins/pylint.cfg > pylint.txt
+find . -name \*.py ! -path '*test*' | xargs pylint --rcfile=jenkins/pylint.cfg > pylint.txt
 echo "**************** $(date) - pylint complete ****************"
 
 
 echo "**************** $(date) - Running flake8 ****************"
-find . -name \*.py | xargs flake8 > flake8.txt
+find . -name \*.py ! -path '*test*' | xargs flake8 > flake8.txt
 echo "**************** $(date) - flake8 complete ****************"
 
 
