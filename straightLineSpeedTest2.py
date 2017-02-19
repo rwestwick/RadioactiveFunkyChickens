@@ -22,7 +22,7 @@ SetupConsoleLogger.setup_console_logger(logger)
 
 # Set initial constant values
 
-speed = 100             # Initial forward speed
+speed = MotorController.SPEED_FASTEST # Initial forward speed
 arcSpeed = 100          # Difference between left and right for correction
 wallWidth = 52          # Width of the wall in cm
                         # (actual width on web-page = 522 mm)
@@ -128,13 +128,13 @@ try:
             time.sleep(0.1)
             robotmove.forward(speed)
             time.sleep(0.1)
-            print("Steering right")
+            logger.info("Steering right")
         elif (rightDistance < firstBufferWidth):
             robotmove.turn_forward((speed - arcSpeed), speed)
             time.sleep(0.1)
             robotmove.forward(speed)
             time.sleep(0.1)
-            print("Steering left")
+            logger.info("Steering left")
         elif ((rightDistance < secondBufferWidth) and
               (leftDistance < secondBufferWidth)):
             robotmove.stop()

@@ -11,20 +11,20 @@ import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.MotorController")
 
+# Define some basic speed settings
+SPEED_FASTEST = 100
+SPEED_FAST = 80
+SPEED_MEDIUM = 50
+SPEED_SLOW = 40
+SPEED_VERYSLOW = 30
+SPEED_VERYVERYSLOW = 20
+
 
 class MotorController(object):
 
     """
     Provides ability to control the motors on the robot.
     """
-
-    # Define some basic speed settings
-    SPEED_FASTEST = 100
-    SPEED_FAST = 80
-    SPEED_MEDIUM = 50
-    SPEED_SLOW = 40
-    SPEED_VERYSLOW = 30
-    SPEED_VERYVERYSLOW = 20
     START_FREQ = 25
 
     def __init__(self, left_forward, left_backward, right_forward, right_backward):
