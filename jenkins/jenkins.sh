@@ -7,7 +7,7 @@ rm -f flake8.txt
 
 
 #--------------------------------------------------------------
-# Run the pep8 utilities 
+# Run the pep8 utilities
 #--------------------------------------------------------------
 echo "**************** $(date) - Running pylint ****************"
 find . -name \*.py | xargs pylint --rcfile=jenkins/pylint.cfg > pylint.txt
@@ -28,6 +28,6 @@ cloc --by-file \
      --xml \
      --out=./cloc.xml \
      --exclude-dir=.git,.svn \
-	 *.py
+	 .
 
 echo "**************** $(date) - cloc complete ****************"
