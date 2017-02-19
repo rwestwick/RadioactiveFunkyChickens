@@ -39,7 +39,7 @@
 
 # Import all necessary libraries
 # Not importing robohat, but copying needed functions
-from __future__ import division # Used for floating point division in Python 2.7
+from __future__ import division  # Used for floating point division in Python 2.7
 import RPi.GPIO as GPIO
 import time
 import Queue
@@ -73,15 +73,15 @@ sonar = 38
 #======================================================================
 
 # UltraSonic physical pin numbers
-sonarInpRight = 16 # Connected to Echo
-sonarOutRight = 31 # Connected to Trig
+sonarInpRight = 16  # Connected to Echo
+sonarOutRight = 31  # Connected to Trig
 
-sonarInpLeft = 15 # Connected to Echo
-sonarOutLeft = 12 # Connected to Trig
+sonarInpLeft = 15  # Connected to Echo
+sonarOutLeft = 12  # Connected to Trig
 
 # Running average settings
 QSIZE = 8
-QINITIAL = 30.0 # Based on wall to wall distance of ~60cm
+QINITIAL = 30.0  # Based on wall to wall distance of ~60cm
 
 
 #======================================================================
@@ -99,7 +99,7 @@ def initMotors():
     # Disable warnings
     GPIO.setwarnings(False)
 
-    #use pwm on inputs so motors don't go too fast
+    # use pwm on inputs so motors don't go too fast
     GPIO.setup(L1, GPIO.OUT)
     p = GPIO.PWM(L1, 20)
     p.start(0)
@@ -137,8 +137,10 @@ def stop():
     q.ChangeDutyCycle(0)
     a.ChangeDutyCycle(0)
     b.ChangeDutyCycle(0)
-    
+
 # forward(speed): Sets both motors to move forward at speed. 0 <= speed <= 100
+
+
 def forward(speed):
     p.ChangeDutyCycle(speed)
     q.ChangeDutyCycle(0)
@@ -146,8 +148,10 @@ def forward(speed):
     b.ChangeDutyCycle(0)
     p.ChangeFrequency(speed + 5)
     a.ChangeFrequency(speed + 5)
-    
+
 # reverse(speed): Sets both motors to reverse at speed. 0 <= speed <= 100
+
+
 def reverse(speed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(speed)
@@ -156,7 +160,10 @@ def reverse(speed):
     q.ChangeFrequency(speed + 5)
     b.ChangeFrequency(speed + 5)
 
-# spinLeft(speed): Sets motors to turn opposite directions at speed. 0 <= speed <= 100
+# spinLeft(speed): Sets motors to turn opposite directions at speed. 0 <=
+# speed <= 100
+
+
 def spinLeft(speed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(speed)
@@ -164,8 +171,11 @@ def spinLeft(speed):
     b.ChangeDutyCycle(0)
     q.ChangeFrequency(speed + 5)
     a.ChangeFrequency(speed + 5)
-    
-# spinRight(speed): Sets motors to turn opposite directions at speed. 0 <= speed <= 100
+
+# spinRight(speed): Sets motors to turn opposite directions at speed. 0 <=
+# speed <= 100
+
+
 def spinRight(speed):
     p.ChangeDutyCycle(speed)
     q.ChangeDutyCycle(0)
@@ -173,8 +183,11 @@ def spinRight(speed):
     b.ChangeDutyCycle(speed)
     p.ChangeFrequency(speed + 5)
     b.ChangeFrequency(speed + 5)
-    
-# turnForward(leftSpeed, rightSpeed): Moves forwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
+
+# turnForward(leftSpeed, rightSpeed): Moves forwards in an arc by setting
+# different speeds. 0 <= leftSpeed,rightSpeed <= 100
+
+
 def turnForward(leftSpeed, rightSpeed):
     p.ChangeDutyCycle(leftSpeed)
     q.ChangeDutyCycle(0)
@@ -182,8 +195,11 @@ def turnForward(leftSpeed, rightSpeed):
     b.ChangeDutyCycle(0)
     p.ChangeFrequency(leftSpeed + 5)
     a.ChangeFrequency(rightSpeed + 5)
-    
-# turnReverse(leftSpeed, rightSpeed): Moves backwards in an arc by setting different speeds. 0 <= leftSpeed,rightSpeed <= 100
+
+# turnReverse(leftSpeed, rightSpeed): Moves backwards in an arc by setting
+# different speeds. 0 <= leftSpeed,rightSpeed <= 100
+
+
 def turnReverse(leftSpeed, rightSpeed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(leftSpeed)
@@ -208,15 +224,15 @@ class rightUltraSensor():
 
         # Disable warnings
         GPIO.setwarnings(False)
-            
+
         # Initialise GPIO pins
         GPIO.setup(sonarOutRight, GPIO.OUT)
-        GPIO.setup(sonarInpRight,GPIO.IN)
+        GPIO.setup(sonarInpRight, GPIO.IN)
 
         # Initilise Queue
         self.q = Queue.Queue()
-        
-        for i in xrange(0,QSIZE):
+
+        for i in xrange(0, QSIZE):
             self.q.put(QINITIAL)
 
     def Measurement(self):     # Returns the distance in cm to the nearest reflecting object
@@ -226,40 +242,42 @@ class rightUltraSensor():
         time.sleep(0.00001)
         GPIO.output(sonarOutRight, False)
         start = time.time()
-        count=time.time()
+        count = time.time()
 
         # Measure echo
-        while GPIO.input(sonarInpRight)==0 and time.time()-count<0.1:
+        while GPIO.input(sonarInpRight) == 0 and time.time() - count < 0.1:
             start = time.time()
-        count=time.time()
-        stop=count
-        while GPIO.input(sonarInpRight)==1 and time.time()-count<0.1:
+        count = time.time()
+        stop = count
+        while GPIO.input(sonarInpRight) == 1 and time.time() - count < 0.1:
             stop = time.time()
 
         # Calculate pulse length
-        elapsed = stop-start
+        elapsed = stop - start
 
         # Distance pulse travelled in that time is time
         # multiplied by the speed of sound 34000(cm/s) divided by 2
         distance = elapsed * 17000
         # print("Right distance: " + str(distance))
-        
+
         # Add latest distance to queue
-        if (self.q.qsize() > QSIZE) :
+        if (self.q.qsize() > QSIZE):
             self.q.get()
         self.q.put(distance)
-     
+
         # Calculate running average
         total = 0
         for val in self.q.queue:
             total = total + val
-     
+
         average = total / self.q.qsize()
         # print("Right average: " + str(average))
-        
+
         return average
 
 # Left hand side ultrasonic sensor
+
+
 class leftUltraSensor():
 
     def __init__(self):
@@ -268,15 +286,15 @@ class leftUltraSensor():
 
         # Disable warnings
         GPIO.setwarnings(False)
-            
+
         # Initialise GPIO pins
         GPIO.setup(sonarOutLeft, GPIO.OUT)
-        GPIO.setup(sonarInpLeft,GPIO.IN)
+        GPIO.setup(sonarInpLeft, GPIO.IN)
 
         # Initilise Queue
         self.q = Queue.Queue()
-        
-        for i in xrange(0,QSIZE):
+
+        for i in xrange(0, QSIZE):
             self.q.put(QINITIAL)
 
     def Measurement(self):    # Returns the distance in cm to the nearest reflecting object
@@ -286,40 +304,42 @@ class leftUltraSensor():
         time.sleep(0.00001)
         GPIO.output(sonarOutLeft, False)
         start = time.time()
-        count=time.time()
+        count = time.time()
 
         # Measure echo
-        while GPIO.input(sonarInpLeft)==0 and time.time()-count<0.1:
+        while GPIO.input(sonarInpLeft) == 0 and time.time() - count < 0.1:
             start = time.time()
-        count=time.time()
-        stop=count
-        while GPIO.input(sonarInpLeft)==1 and time.time()-count<0.1:
+        count = time.time()
+        stop = count
+        while GPIO.input(sonarInpLeft) == 1 and time.time() - count < 0.1:
             stop = time.time()
 
         # Calculate pulse length
-        elapsed = stop-start
+        elapsed = stop - start
 
         # Distance pulse travelled in that time is time
         # multiplied by the speed of sound 34000(cm/s) divided by 2
         distance = elapsed * 17000
         # print("Left distance: " + str(distance))
-        
+
         # Add latest distance to queue
-        if (self.q.qsize() > QSIZE) :
+        if (self.q.qsize() > QSIZE):
             self.q.get()
         self.q.put(distance)
-     
+
         # Calculate running average
         total = 0
         for val in self.q.queue:
             total = total + val
-     
+
         average = total / self.q.qsize()
         # print("Left average: " + str(average))
-        
+
         return average
 
 # Front ultrasonic sensor
+
+
 class frontUltraSensor():
 
     def __init__(self):
@@ -331,55 +351,53 @@ class frontUltraSensor():
 
         # Initilise Queue
         self.q = Queue.Queue()
-        
-        for i in xrange(0,QSIZE):
+
+        for i in xrange(0, QSIZE):
             self.q.put(QINITIAL)
 
     def Measurement(self):    # Returns the distance in cm to the nearest reflecting object
 
         # Initialise GPIO pins
         GPIO.setup(sonar, GPIO.OUT)
-        
+
         # Send 10us pulse to trigger
         GPIO.output(sonar, True)
         time.sleep(0.00001)
         GPIO.output(sonar, False)
         start = time.time()
-        count=time.time()
+        count = time.time()
 
         # Measure echo
-        GPIO.setup(sonar,GPIO.IN)
-        while GPIO.input(sonar)==0 and time.time()-count<0.1:
+        GPIO.setup(sonar, GPIO.IN)
+        while GPIO.input(sonar) == 0 and time.time() - count < 0.1:
             start = time.time()
-        count=time.time()
-        stop=count
-        while GPIO.input(sonar)==1 and time.time()-count<0.1:
+        count = time.time()
+        stop = count
+        while GPIO.input(sonar) == 1 and time.time() - count < 0.1:
             stop = time.time()
-            
+
         # Calculate pulse length
-        elapsed = stop-start
+        elapsed = stop - start
 
         # Distance pulse travelled in that time is time
         # multiplied by the speed of sound 34000(cm/s) divided by 2
         distance = elapsed * 17000
         # print("Left distance: " + str(distance))
-        
+
         # Add latest distance to queue
-        if (self.q.qsize() > QSIZE) :
+        if (self.q.qsize() > QSIZE):
             self.q.get()
         self.q.put(distance)
-     
+
         # Calculate running average
         total = 0
         for val in self.q.queue:
             total = total + val
-     
+
         average = total / self.q.qsize()
         # print("Left average: " + str(average))
-        
+
         return average
 
-# End of UltraSonic Functions    
+# End of UltraSonic Functions
 #======================================================================
-
-

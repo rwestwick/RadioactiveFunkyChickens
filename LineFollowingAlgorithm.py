@@ -12,15 +12,17 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)25s - %(levelname)s - %(message)s')
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)25s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 robotmove = MotorController.MotorController()
 
+
 def main():
     logger.info("Line Follower With Move")
-    foundline     = False
-    lastturnleft  = False
+    foundline = False
+    lastturnleft = False
     lastturnright = False
     linefollower = LineFollowerSensor.LineFollowerSensor()
 
@@ -31,15 +33,15 @@ def main():
 
         if foundline == False:
             robotmove.forward(robotmove.SPEED_SLOW)
-            if LSTATE == 1 or MSTATE == 1 or RSTATE == 1: 
+            if LSTATE == 1 or MSTATE == 1 or RSTATE == 1:
                 foundline = True
         else:
             if LSTATE == 0 and MSTATE == 0 and RSTATE == 0:
                 logger.info("No Line")
-                if lastturnleft == True:
+                if lastturnleft:
                     logger.info("  Hard Left Search")
                     robotmove.spin_left(robotmove.SPEED_VERYVERYSLOW)
-                elif lastturnright == True:
+                elif lastturnright:
                     logger.info("  Hard Right Search")
                     robotmove.spin_right(robotmove.SPEED_VERYVERYSLOW)
                 else:

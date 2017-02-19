@@ -1,8 +1,7 @@
-import sys, time
+import time
 import robohat
 
 robohat.init()
-
 
 
 try:
@@ -25,7 +24,7 @@ try:
             lastLineL = newLineL
             lastLineR = newLineR
         time.sleep(0.1)
-                          
+
 except KeyboardInterrupt:
     print
 

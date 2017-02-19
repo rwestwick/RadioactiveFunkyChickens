@@ -6,20 +6,24 @@
 
 # Import required libraries
 import robohat
-import sys, time
+import time
 
-##########################
+#
 # Define local functions #
-##########################
+#
 
 # Define servo movement function
+
+
 def doServos():
     robohat.setServo(pan, pVal)
     robohat.setServo(tilt, tVal)
     return
 
 # Measure left and right wall distances
-def lookLeftAndRight(wallList): # wallList passed by reference
+
+
+def lookLeftAndRight(wallList):  # wallList passed by reference
 
     # Measure left wall
     robohat.setServo(tilt, -90)
@@ -37,12 +41,12 @@ def lookLeftAndRight(wallList): # wallList passed by reference
     # Update wall measurements
     wallList[0] = leftDistance
     wallList[1] = rightDistance
-    
-    return 
 
-##########################
+    return
+
+#
 # Main program           #
-##########################
+#
 
 # Set initial variables
 speed = 40            # Initial forward speed
@@ -74,7 +78,7 @@ troughWidth = wallList[0] + wallList[1]
 print "Trough width: ", int(troughWidth)
 
 if ((troughWidth > (wallWidth + minRange)) or (troughWidth < (wallWidth - minRange))):
-     print "Trough walls not detected properly."
+    print "Trough walls not detected properly."
 
 # Control loop
 try:
@@ -87,7 +91,8 @@ try:
         elif (wallList[1] < minRange):
             print "Distance to right wall, ", int(wallList[1])
             print "Turning left."
-            # robohat.turnForward()robohat.turnForward(speed, (speed + arcSpeed))
+            # robohat.turnForward()robohat.turnForward(speed, (speed +
+            # arcSpeed))
             time.sleep(0.5)
 
         # Move forward and remeasure
@@ -95,13 +100,12 @@ try:
         time.sleep(1)
         lookLeftAndRight(wallList)
         print "Left and right wall distances: ", wallList
-        
+
 except KeyboardInterrupt:
     robohat.stop()
     doServos()
     time.sleep(1)
     print "Exiting"
-    pass
 
-finally: # cleanup is run even if ^c is typed
+finally:  # cleanup is run even if ^c is typed
     robohat.cleanup()

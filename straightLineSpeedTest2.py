@@ -9,7 +9,7 @@ http://piwars.org/
 # Import required libraries
 import time
 import logging
-import math # https://docs.python.org/2/library/math.html
+import math
 import KeyboardCharacterReader
 import MotorController
 import UltrasonicSensor
@@ -23,11 +23,13 @@ SetupConsoleLogger.setup_console_logger(logger)
 
 speed = 60                # Initial forward speed
 arcSpeed = 20             # Difference between left and right for correction
-wallWidth = 52            # Width of the wall in cm (actual width on web-page = 522 mm)
+wallWidth = 52            # Width of the wall in cm
+                          # (actual width on web-page = 522 mm)
 robotWidth = 12           # Width of the robot in cm
 firstBufferWidth = 20     # First steer correction distance to nearest wall
 secondBufferWidth = 10    # Second steer correction distance to nearest wall
-loopTime = 2.0            # Correction loop speed in seconds. This could be zero!
+loopTime = 2.0            # Correction loop speed in seconds.
+                          # This could be zero!
 
 
 def wallAngle(distanceOne, distanceTwo):
@@ -41,12 +43,13 @@ def wallAngle(distanceOne, distanceTwo):
     inputs:
     distanceOne - Ultrasonic measurement from one side of robot
     distanceTwo - Ultrasonic measurement from other side of robot
-    N.B. Calculation is based on inputs both being in cm and walls being wallWidth apart.
+    N.B. Calculation is based on inputs both being in cm and walls being
+    wallWidth apart.
     """
-    yOne = distanceOne + (robotWidth/2)
-    yTwo = distanceTwo + (robotWidth/2)
+    yOne = distanceOne + (robotWidth / 2)
+    yTwo = distanceTwo + (robotWidth / 2)
     hypotenuse = yOne + yTwo
-    theta = math.degrees(math.asin(wallWidth/hypotenuse))
+    theta = math.degrees(math.asin(wallWidth / hypotenuse))
     return theta
 
 
@@ -57,7 +60,7 @@ def distanceFromWall(distanceOne, theta):
     distance of distance distanceOne.
     Unit of returned value is the same as input e.g. cm
     """
-    hypotenuse = distanceOne + (robotWidth/2)
+    hypotenuse = distanceOne + (robotWidth / 2)
     wallDistance = hypotenuse * math.sin(math.radians(theta))
     return wallDistance
 
@@ -67,8 +70,12 @@ SONAR_INPUT_RIGHT = 16  # Connected to Echo
 SONAR_OUTPUT_RIGHT = 31  # Connected to Trig
 SONAR_INPUT_LEFT = 15  # Connected to Echo
 SONAR_OUTPUT_LEFT = 12  # Connected to Trig
-viewLeft = UltrasonicSensor.UltrasonicSensor(SONAR_INPUT_LEFT, SONAR_OUTPUT_LEFT)
-viewRight = UltrasonicSensor.UltrasonicSensor(SONAR_INPUT_RIGHT, SONAR_OUTPUT_RIGHT)
+viewLeft = UltrasonicSensor.UltrasonicSensor(
+    SONAR_INPUT_LEFT,
+                SONAR_OUTPUT_LEFT)
+viewRight = UltrasonicSensor.UltrasonicSensor(
+    SONAR_INPUT_RIGHT,
+                SONAR_OUTPUT_RIGHT)
 
 time.sleep(1)
 
@@ -76,7 +83,8 @@ time.sleep(1)
 initialLeftDistance = viewLeft.measurement()
 initialRightDistance = viewRight.measurement()
 
-if ((initialLeftDistance + initialRightDistance + robotWidth) > (wallWidth * 1.2)):
+if ((initialLeftDistance + initialRightDistance + robotWidth) >
+        (wallWidth * 1.2)):
     logger.warn("The walls are too far apart!")
 else:
     logger.info("The walls are not too far apart!")
@@ -85,10 +93,10 @@ else:
 logger.info("To start race press 'Space' key.")
 
 while True:
-        keyp = KeyboardCharacterReader.readkey()
-        if keyp == ' ':
-            logger.info("Go")
-            break
+    keyp = KeyboardCharacterReader.readkey()
+    if keyp == ' ':
+        logger.info("Go")
+        break
 
 # Initialise motors
 robotmove = MotorController.MotorController()
@@ -101,15 +109,18 @@ logger.info("They're off! Press Control^C to finish")
 # Try to avoid the walls!
 try:
     while True:
-        # Calculate the distance from edge of robot to walls
+    # Calculate the distance from edge of robot to walls
         leftDistance = viewLeft.measurement()
-        logger.info("Average measured left distance: " + str(int(leftDistance)) + " cm")
+        logger.info("Average measured left distance: " +
+                    str(int(leftDistance)) + " cm")
         rightDistance = viewRight.measurement()
-        logger.info("Average measured right distance: " + str(int(rightDistance)) + " cm")
+        logger.info("Average measured right distance: " +
+                    str(int(rightDistance)) + " cm")
         angleFromWall = wallAngle(leftDistance, rightDistance)
         logger.info("Angle from the wall: " + str(int(angleFromWall)) + " deg")
         spaceFromLeftWall = distanceFromWall(leftDistance, angleFromWall)
-        logger.info("Actual distance from the left wall: " + str(int(spaceFromLeftWall)) + " cm")
+        logger.info("Actual distance from the left wall: " +
+                    str(int(spaceFromLeftWall)) + " cm")
 
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
@@ -118,7 +129,8 @@ try:
         elif (rightDistance < firstBufferWidth):
             robotmove.turn_forward((speed - arcSpeed), speed)
             logger.info("Steering left")
-        elif ((rightDistance < secondBufferWidth) and (leftDistance < secondBufferWidth)):
+        elif ((rightDistance < secondBufferWidth) and
+              (leftDistance < secondBufferWidth)):
             robotmove.stop()
             logger.info("The walls are caving in!")
         elif ((rightDistance > wallWidth) and (leftDistance > wallWidth)):
@@ -127,10 +139,10 @@ try:
         else:
             robotmove.forward(speed)
             logger.info("Storming forward!")
-        
+
         # Loop delay
         time.sleep(loopTime)
-        
+
 except KeyboardInterrupt:
     logger.info("Stopping the race")
 

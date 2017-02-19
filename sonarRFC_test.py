@@ -19,13 +19,10 @@ for i in range(20):
     leftDistance = viewLeft.Measurement()
     rightDistance = viewRight.Measurement()
     frontDistance = viewFront.Measurement()
-    
+
     print("Average left distance: " + str(leftDistance) + " cm")
     time.sleep(1)
     print("Average right distance: " + str(rightDistance) + " cm")
     time.sleep(1)
     print("Average front distance: " + str(frontDistance) + " cm")
     time.sleep(1)
-
-
-

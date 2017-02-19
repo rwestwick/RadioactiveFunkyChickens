@@ -8,6 +8,7 @@ import sys
 import tty
 import termios
 
+
 def readchar():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -19,6 +20,7 @@ def readchar():
     if ch == '0x03':
         raise KeyboardInterrupt
     return ch
+
 
 def readkey(getchar_fn=None):
     getchar = getchar_fn or readchar

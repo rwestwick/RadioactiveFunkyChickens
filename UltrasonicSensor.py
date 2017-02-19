@@ -130,7 +130,7 @@ if __name__ == "__main__":
         PROXITY_TWO_IO_LEFT = UltrasonicSensor(SONAR_INPUT_LEFT,
                                                SONAR_OUTPUT_LEFT)
         MODULE_LOGGER.info("PROXITY_TWO_IO_LEFT: " +
-                        str(PROXITY_TWO_IO_LEFT.measurement()))
+                           str(PROXITY_TWO_IO_LEFT.measurement()))
 
         PROXITY_TWO_IO_RIGHT = UltrasonicSensor(SONAR_INPUT_RIGHT,
                                                 SONAR_OUTPUT_RIGHT)

@@ -6,13 +6,14 @@
 # Run using: sudo python motorTest2.py
 
 
-import robohat, time
+import robohat
 
 #======================================================================
 # Reading single character by forcing stdin to raw mode
 import sys
 import tty
 import termios
+
 
 def readchar():
     fd = sys.stdin.fileno()
@@ -25,6 +26,7 @@ def readchar():
     if ch == '0x03':
         raise KeyboardInterrupt
     return ch
+
 
 def readkey(getchar_fn=None):
     getchar = getchar_fn or readchar
@@ -69,10 +71,10 @@ try:
             robohat.spinLeft(speed)
             print 'Spin Left', speed
         elif keyp == '.' or keyp == '>' or keyp == '+':
-            speed = min(100, speed+10)
+            speed = min(100, speed + 10)
             print 'Speed+', speed
         elif keyp == ',' or keyp == '<' or keyp == '-':
-            speed = max (0, speed-10)
+            speed = max(0, speed - 10)
             print 'Speed-', speed
         elif keyp == ' ' or keyp == '*':
             robohat.stop()
@@ -85,4 +87,3 @@ except KeyboardInterrupt:
 
 finally:
     robohat.cleanup()
-    

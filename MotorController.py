@@ -19,7 +19,7 @@ class MotorController(object):
     """
 
     # Define some basic speed settings
-    SPEED_FASTEST  = 100
+    SPEED_FASTEST = 100
     SPEED_FAST = 80
     SPEED_MEDIUM = 50
     SPEED_SLOW = 40
