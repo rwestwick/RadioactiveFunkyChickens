@@ -124,15 +124,15 @@ try:
 
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
-            sonarRFC.turnForward(speed, (speed - arcSpeed))
+            robotmove.turnForward(speed, (speed - arcSpeed))
             time.sleep(0.1)
-            sonarRFC.forward(speed)
+            robotmove.forward(speed)
             time.sleep(0.1)
             print("Steering right")
         elif (rightDistance < firstBufferWidth):
-            sonarRFC.turnForward((speed - arcSpeed), speed)
+            robotmove.turnForward((speed - arcSpeed), speed)
             time.sleep(0.1)
-            sonarRFC.forward(speed)
+            robotmove.forward(speed)
             time.sleep(0.1)
             print("Steering left")
         elif ((rightDistance < secondBufferWidth) and
