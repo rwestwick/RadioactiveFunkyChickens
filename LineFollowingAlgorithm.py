@@ -87,7 +87,8 @@ def main():
                 lastturnright = False
             elif (LSTATE == 1 and MSTATE == 1 and RSTATE == 0):
                 logger.info("Left and middle - Turn Left")
-                robotmove.one_wheel_left(MotorController.SPEED_SLOW)
+                robotmove.turn_forward(MotorController.SPEED_SLOW / 2,
+                 				       MotorController.SPEED_SLOW)
                 lastturnleft = True
                 lastturnright = False
             elif (LSTATE == 0 and MSTATE == 0 and RSTATE == 1):
@@ -97,7 +98,8 @@ def main():
                 lastturnright = True
             elif (LSTATE == 0 and MSTATE == 1 and RSTATE == 1):
                 logger.info("Right and middle - Turn Right")
-                robotmove.one_wheel_right(MotorController.SPEED_SLOW)
+                robotmove.turn_forward(MotorController.SPEED_SLOW,
+                 				       MotorController.SPEED_SLOW / 2)
                 lastturnleft = False
                 lastturnright = True
             elif LSTATE == 1 and MSTATE == 1 and RSTATE == 1:
