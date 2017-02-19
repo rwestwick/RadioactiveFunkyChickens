@@ -22,14 +22,14 @@ SetupConsoleLogger.setup_console_logger(logger)
 
 # Set initial constant values
 
-speed = 60              # Initial forward speed
-arcSpeed = 20           # Difference between left and right for correction
+speed = 100             # Initial forward speed
+arcSpeed = 100          # Difference between left and right for correction
 wallWidth = 52          # Width of the wall in cm
                         # (actual width on web-page = 522 mm)
 robotWidth = 12         # Width of the robot in cm
-firstBufferWidth = 20   # First steer correction distance to nearest wall
+firstBufferWidth = 30   # First steer correction distance to nearest wall
 secondBufferWidth = 10  # Second steer correction distance to nearest wall
-loopTime = 2.0          # Correction loop speed in seconds.
+loopTime = 0.1          # Correction loop speed in seconds.
                         # This could be zero!
 
 
@@ -50,7 +50,7 @@ def wallAngle(distanceOne, distanceTwo):
     yOne = distanceOne + (robotWidth / 2)
     yTwo = distanceTwo + (robotWidth / 2)
     hypotenuse = yOne + yTwo
-    theta = math.degrees(math.asin(wallWidth / hypotenuse))
+    theta = math.degrees(math.asin(math.floor((wallWidth / hypotenuse))) # Rounds down to nearest integer
     return theta
 
 
@@ -124,11 +124,17 @@ try:
 
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
-            robotmove.turn_forward(speed, (speed - arcSpeed))
-            logger.info("Steering right")
+            sonarRFC.turnForward(speed, (speed - arcSpeed))
+            time.sleep(0.1)
+            sonarRFC.forward(speed)
+            time.sleep(0.1)
+            print("Steering right")
         elif (rightDistance < firstBufferWidth):
-            robotmove.turn_forward((speed - arcSpeed), speed)
-            logger.info("Steering left")
+            sonarRFC.turnForward((speed - arcSpeed), speed)
+            time.sleep(0.1)
+            sonarRFC.forward(speed)
+            time.sleep(0.1)
+            print("Steering left")
         elif ((rightDistance < secondBufferWidth) and
               (leftDistance < secondBufferWidth)):
             robotmove.stop()
