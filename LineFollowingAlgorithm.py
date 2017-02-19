@@ -7,16 +7,17 @@ Provides an algorithm for following a black line on a white background.
 import logging
 import MotorController
 import LineFollowerSensor
+import SetupConsoleLogger
+import GPIOLayout
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)25s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
-robotmove = MotorController.MotorController()
+SetupConsoleLogger.setup_console_logger(logger)
+
+# Initialise motors
+robotmove = MotorController.MotorController(GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
+                                            GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+                                            GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
+                                            GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
 def main():
@@ -24,7 +25,10 @@ def main():
     foundline = False
     lastturnleft = False
     lastturnright = False
-    linefollower = LineFollowerSensor.LineFollowerSensor()
+    linefollower = LineFollowerSensor.LineFollowerSensor(
+        GPIOLayout.LINE_FOLLOWER_LEFT,
+        GPIOLayout.LINE_FOLLOWER_MIDDLE,
+        GPIOLayout.LINE_FOLLOWER_RIGHT)
 
     while True:
         LSTATE = linefollower.get_l_state()
