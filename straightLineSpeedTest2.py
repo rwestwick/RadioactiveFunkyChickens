@@ -17,20 +17,20 @@ import SetupConsoleLogger
 import GPIOLayout
 
 # Create a logger to both file and stdout
-logger = logging.getLogger(__name__)
-SetupConsoleLogger.setup_console_logger(logger)
+LOGGER = logging.getLogger(__name__)
+SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
 
-speed = MotorController.SPEED_FASTEST # Initial forward speed
+speed = MotorController.SPEED_FASTEST  # Initial forward speed
 arcSpeed = 100          # Difference between left and right for correction
-wallWidth = 52          # Width of the wall in cm
-                        # (actual width on web-page = 522 mm)
+# Width of the wall in cm (actual width on web-page = 522 mm)
+wallWidth = 52
 robotWidth = 12         # Width of the robot in cm
 firstBufferWidth = 20   # First steer correction distance to nearest wall
 secondBufferWidth = 10  # Second steer correction distance to nearest wall
-loopTime = 0.1          # Correction loop speed in seconds.
-                        # This could be zero!
+# Correction loop speed in seconds. This could be zero!
+loopTime = 0.1
 
 # Initialise motors
 robotmove = MotorController.MotorController(
@@ -57,7 +57,8 @@ def wallAngle(distanceOne, distanceTwo):
     yOne = distanceOne + (robotWidth / 2)
     yTwo = distanceTwo + (robotWidth / 2)
     hypotenuse = yOne + yTwo
-    theta = math.degrees(math.asin(math.floor(wallWidth / hypotenuse))) # Rounds down to nearest integer
+    # Rounds down to nearest integer
+    theta = math.degrees(math.asin(math.floor(wallWidth / hypotenuse)))
     return theta
 
 
@@ -71,6 +72,7 @@ def distanceFromWall(distanceOne, theta):
     hypotenuse = distanceOne + (robotWidth / 2)
     wallDistance = hypotenuse * math.sin(math.radians(theta))
     return wallDistance
+
 
 def main():
     """
@@ -89,18 +91,18 @@ def main():
 
     if ((initialLeftDistance + initialRightDistance + robotWidth) >
             (wallWidth * 1.2)):
-        logger.warn("The walls are too far apart!")
+        LOGGER.warn("The walls are too far apart!")
     else:
-        logger.info("The walls are not too far apart!")
+        LOGGER.info("The walls are not too far apart!")
 
     # Waiting for start of race
-    logger.info("To start race press 'Space' key.")
+    LOGGER.info("To start race press 'Space' key.")
 
     while True:
         keyp = KeyboardCharacterReader.readkey()
         if keyp == ' ':
-            logger.info("Go")
-            logger.info("They're off! Press Control^C to finish")
+            LOGGER.info("Go")
+            LOGGER.info("They're off! Press Control^C to finish")
             break
 
     # Drive forward at full speed in order to find the line.
@@ -110,15 +112,15 @@ def main():
     while True:
         # Calculate the distance from edge of robot to walls
         leftDistance = viewLeft.measurement()
-        logger.info("Average measured left distance: " +
+        LOGGER.info("Average measured left distance: " +
                     str(int(leftDistance)) + " cm")
         rightDistance = viewRight.measurement()
-        logger.info("Average measured right distance: " +
+        LOGGER.info("Average measured right distance: " +
                     str(int(rightDistance)) + " cm")
         angleFromWall = wallAngle(leftDistance, rightDistance)
-        logger.info("Angle from the wall: " + str(int(angleFromWall)) + " deg")
+        LOGGER.info("Angle from the wall: " + str(int(angleFromWall)) + " deg")
         spaceFromLeftWall = distanceFromWall(leftDistance, angleFromWall)
-        logger.info("Actual distance from the left wall: " +
+        LOGGER.info("Actual distance from the left wall: " +
                     str(int(spaceFromLeftWall)) + " cm")
 
         # Decide which way to steer
@@ -127,32 +129,33 @@ def main():
             time.sleep(0.2)
             robotmove.forward(speed)
             time.sleep(0.2)
-            logger.info("Steering right")
+            LOGGER.info("Steering right")
         elif (rightDistance < firstBufferWidth):
             robotmove.turn_forward((speed - arcSpeed), speed)
             time.sleep(0.2)
             robotmove.forward(speed)
             time.sleep(0.2)
-            logger.info("Steering left")
+            LOGGER.info("Steering left")
         elif ((rightDistance < secondBufferWidth) and
               (leftDistance < secondBufferWidth)):
             robotmove.stop()
-            logger.info("The walls are caving in!")
+            LOGGER.info("The walls are caving in!")
         elif ((rightDistance > wallWidth) and (leftDistance > wallWidth)):
             robotmove.stop()
-            logger.info("I'm in the clear!")
+            LOGGER.info("I'm in the clear!")
         else:
             robotmove.forward(speed)
-            logger.info("Storming forward!")
+            LOGGER.info("Storming forward!")
 
         # Loop delay
         time.sleep(loopTime)
+
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        logger.info("Stopping the Straight Line Test")
+        LOGGER.info("Stopping the Straight Line Test")
     finally:
-        logger.info("Straight Line Test Finished")
+        LOGGER.info("Straight Line Test Finished")
         robotmove.cleanup()
