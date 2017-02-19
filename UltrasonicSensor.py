@@ -10,8 +10,8 @@ import RPi.GPIO as GPIO
 import Queue
 import time
 import logging
-from . import SetupConsoleLogger
-from . import GPIOLayout
+import SetupConsoleLogger
+import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.UltrasonicSensor")
 

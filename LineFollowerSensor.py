@@ -7,9 +7,9 @@ follower module
 
 import RPi.GPIO as GPIO
 import logging
-from . import IRSensor
-from . import SetupConsoleLogger
-from . import GPIOLayout
+import IRSensor
+import SetupConsoleLogger
+import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.LineFollowerSensor")
 

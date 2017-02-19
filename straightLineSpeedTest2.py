@@ -10,11 +10,11 @@ http://piwars.org/
 import time
 import logging
 import math
-from . import KeyboardCharacterReader
-from . import MotorController
-from . import UltrasonicSensor
-from . import SetupConsoleLogger
-from . import GPIOLayout
+import KeyboardCharacterReader
+import MotorController
+import UltrasonicSensor
+import SetupConsoleLogger
+import GPIOLayout
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
