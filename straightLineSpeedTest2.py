@@ -27,7 +27,7 @@ arcSpeed = 100          # Difference between left and right for correction
 wallWidth = 52          # Width of the wall in cm
                         # (actual width on web-page = 522 mm)
 robotWidth = 12         # Width of the robot in cm
-firstBufferWidth = 30   # First steer correction distance to nearest wall
+firstBufferWidth = 20   # First steer correction distance to nearest wall
 secondBufferWidth = 10  # Second steer correction distance to nearest wall
 loopTime = 0.1          # Correction loop speed in seconds.
                         # This could be zero!
