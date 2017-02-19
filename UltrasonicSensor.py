@@ -7,9 +7,11 @@ Class defines how to interract with the Ultrasonic sensor
 # Used for floating point division in Python 2.7
 from __future__ import division
 import RPi.GPIO as GPIO
-import logging
 import Queue
 import time
+import logging
+import SetupConsoleLogger
+import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.UltrasonicSensor")
 
@@ -25,7 +27,10 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
 
     def __init__(self, input_pin, output_pin=None):
         """
+        Initialises the class
         """
+        GPIO.setwarnings(False)
+
         self.sonar_in = input_pin
         if output_pin is not None:
             self.sonar_out = output_pin
@@ -109,35 +114,19 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
 
 if __name__ == "__main__":
     try:
-        MODULE_LOGGER.setLevel(logging.DEBUG)
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.INFO)
-        formatter = logging.Formatter(
-            '%(asctime)s - %(name)25s - %(levelname)s - %(message)s')
-        console_handler.setFormatter(formatter)
-        MODULE_LOGGER.addHandler(console_handler)
+        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
-        # UltraSonic physical pin numbers
-        SONAR_INPUT_RIGHT = 16  # Connected to Echo
-        SONAR_OUTPUT_RIGHT = 31  # Connected to Trig
-
-        SONAR_INPUT_LEFT = 15  # Connected to Echo
-        SONAR_OUTPUT_LEFT = 12  # Connected to Trig
-
-        # Define Sonar Pin (Uses same pin for both Ping and Echo)
-        SONAR_SINGLE_IO = 38
-
-        PROXITY_TWO_IO_LEFT = UltrasonicSensor(SONAR_INPUT_LEFT,
-                                               SONAR_OUTPUT_LEFT)
+        PROXITY_TWO_IO_LEFT = UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
+                                               GPIOLayout.SONAR_LEFT_TX_PIN)
         MODULE_LOGGER.info("PROXITY_TWO_IO_LEFT: " +
                            str(PROXITY_TWO_IO_LEFT.measurement()))
 
-        PROXITY_TWO_IO_RIGHT = UltrasonicSensor(SONAR_INPUT_RIGHT,
-                                                SONAR_OUTPUT_RIGHT)
+        PROXITY_TWO_IO_RIGHT = UltrasonicSensor(GPIOLayout.SONAR_RIGHT_RX_PIN,
+                                                GPIOLayout.SONAR_RIGHT_TX_PIN)
         MODULE_LOGGER.info("PROXITY_TWO_IO_RIGHT: " +
                            str(PROXITY_TWO_IO_RIGHT.measurement()))
 
-        PROXITY_ONE_IO = UltrasonicSensor(SONAR_SINGLE_IO)
+        PROXITY_ONE_IO = UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_PIN)
         MODULE_LOGGER.info("PROXITY_ONE_IO: " +
                            str(PROXITY_ONE_IO.measurement()))
     except KeyboardInterrupt:

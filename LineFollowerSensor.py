@@ -9,6 +9,7 @@ import RPi.GPIO as GPIO
 import logging
 import IRSensor
 import SetupConsoleLogger
+import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.LineFollowerSensor")
 
@@ -25,6 +26,13 @@ class LineFollowerSensor(object):
         Initialises the class
         """
         MODULE_LOGGER.info("Setting up LineFollowerSensor Module")
+
+        # Use physical pin numbering
+        GPIO.setmode(GPIO.BOARD)
+
+        # Disable warnings
+        GPIO.setwarnings(False)
+
         self.sensor_l = IRSensor.IRSensor(left_sensor_id)
         self.sensor_m = IRSensor.IRSensor(middle_sensor_id)
         self.sensor_r = IRSensor.IRSensor(right_sensor_id)
@@ -52,15 +60,11 @@ if __name__ == "__main__":
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
-        # Define GPIO to use on Pi
-        GPIO_LINE_L = 36
-        GPIO_LINE_M = 40
-        GPIO_LINE_R = 38
-
         LINEFOLLOWER = LineFollowerSensor(
-            GPIO_LINE_L,
-            GPIO_LINE_M,
-            GPIO_LINE_R)
+            GPIOLayout.LINE_FOLLOWER_LEFT,
+            GPIOLayout.LINE_FOLLOWER_MIDDLE,
+            GPIOLayout.LINE_FOLLOWER_RIGHT)
+
         MODULE_LOGGER.info("LINEFOLLOWER::left: " +
                            str(LINEFOLLOWER.get_l_state()))
         MODULE_LOGGER.info("LINEFOLLOWER::right: " +

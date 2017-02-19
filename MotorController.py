@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 import time
 import logging
 import SetupConsoleLogger
+import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.MotorController")
 
@@ -31,7 +32,6 @@ class MotorController(object):
         """
         Initialises GPIO pins
         """
-        MODULE_LOGGER.info("Setting up MotorController Module")
         log_string = "Setting up MotorController Module (lf:" + \
             str(left_forward) + \
             ", lb:" + \
@@ -78,6 +78,7 @@ class MotorController(object):
         self.stop()
         time.sleep(1)
         GPIO.cleanup()
+        MODULE_LOGGER.info("Cleaned up MotorController")
 
     def stop(self):
         """
@@ -164,40 +165,40 @@ class MotorController(object):
 
 
 if __name__ == "__main__":
-    LEFT_FORWARD = 36
-    LEFT_BACKWARD = 35
-    RIGHT_FORWARD = 33
-    RIGHT_BACKWARD = 32
+    MCONTROLLER = None
 
-    MCONTROLLER = MotorController(LEFT_FORWARD, LEFT_BACKWARD,
-                                  RIGHT_FORWARD, RIGHT_BACKWARD)
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
+        MCONTROLLER = MotorController(GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
+                                      GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+                                      GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
+                                      GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+
         MCONTROLLER.stop()
         time.sleep(1)
         MODULE_LOGGER.info("forward 50%")
-        MCONTROLLER.forward(50)
+        MCONTROLLER.forward(SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("reverse 50%")
-        MCONTROLLER.reverse(50)
+        MCONTROLLER.reverse(SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("spin_left 50%")
-        MCONTROLLER.spin_left(50)
+        MCONTROLLER.spin_left(SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("spin_right 50%")
-        MCONTROLLER.spin_right(50)
+        MCONTROLLER.spin_right(SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("turn_forward 50%")
-        MCONTROLLER.turn_forward(50, 50)
+        MCONTROLLER.turn_forward(SPEED_MEDIUM, SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("turn_reverse 50%")
-        MCONTROLLER.turn_reverse(50, 50)
+        MCONTROLLER.turn_reverse(SPEED_MEDIUM, SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("one_wheel_left 50%")
-        MCONTROLLER.one_wheel_left(50)
+        MCONTROLLER.one_wheel_left(SPEED_MEDIUM)
         time.sleep(1)
         MODULE_LOGGER.info("one_wheel_right 50%")
-        MCONTROLLER.one_wheel_right(50)
+        MCONTROLLER.one_wheel_right(SPEED_MEDIUM)
     except KeyboardInterrupt:
         pass
     finally:

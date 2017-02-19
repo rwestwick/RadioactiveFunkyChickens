@@ -10,11 +10,6 @@ import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.IRSensor")
 
-# irFL = 7
-# irFR = 11
-# lineLeft = 29
-# lineRight = 13
-
 
 class IRSensor(object):  # pylint: disable=too-few-public-methods
 
@@ -29,8 +24,11 @@ class IRSensor(object):  # pylint: disable=too-few-public-methods
         self.gpio_id = gpio_id
         MODULE_LOGGER.info("Setting up IRSensor Module")
 
-        # use physical pin numbering
+        # Use physical pin numbering
         GPIO.setmode(GPIO.BOARD)
+
+        # Disable warnings
+        GPIO.setwarnings(False)
 
         # set up digital line detectors as inputs
         GPIO.setup(self.gpio_id, GPIO.IN)
@@ -48,8 +46,8 @@ class IRSensor(object):  # pylint: disable=too-few-public-methods
 if __name__ == "__main__":
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-
-        SENSOR = IRSensor(7)
+        IR_PIN = 7
+        SENSOR = IRSensor(IR_PIN)
         MODULE_LOGGER.info("ir_active: " + str(SENSOR.ir_active()))
     except KeyboardInterrupt:
         pass

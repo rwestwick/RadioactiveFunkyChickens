@@ -32,6 +32,8 @@ secondBufferWidth = 10  # Second steer correction distance to nearest wall
 loopTime = 0.1          # Correction loop speed in seconds.
                         # This could be zero!
 
+# Initialise motors
+robotmove = None
 
 def wallAngle(distanceOne, distanceTwo):
     """
@@ -65,49 +67,46 @@ def distanceFromWall(distanceOne, theta):
     wallDistance = hypotenuse * math.sin(math.radians(theta))
     return wallDistance
 
+def main():
+    # Initialise motors
+    robotmove = MotorController.MotorController(
+        GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
+        GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+        GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
+        GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
-# Create necessary sensor objects
-viewLeft = UltrasonicSensor.UltrasonicSensor(
-    GPIOLayout.SONAR_LEFT_RX_PIN,
-    GPIOLayout.SONAR_LEFT_TX_PIN)
-viewRight = UltrasonicSensor.UltrasonicSensor(
-    GPIOLayout.SONAR_RIGHT_RX_PIN,
-    GPIOLayout.SONAR_RIGHT_TX_PIN)
+    # Create necessary sensor objects
+    viewLeft = UltrasonicSensor.UltrasonicSensor(
+        GPIOLayout.SONAR_LEFT_RX_PIN,
+        GPIOLayout.SONAR_LEFT_TX_PIN)
+    viewRight = UltrasonicSensor.UltrasonicSensor(
+        GPIOLayout.SONAR_RIGHT_RX_PIN,
+        GPIOLayout.SONAR_RIGHT_TX_PIN)
 
-time.sleep(1)
+    # Sanity check the distance from edge of robot to walls
+    initialLeftDistance = viewLeft.measurement()
+    initialRightDistance = viewRight.measurement()
 
-# Sanity check the distance from edge of robot to walls
-initialLeftDistance = viewLeft.measurement()
-initialRightDistance = viewRight.measurement()
+    if ((initialLeftDistance + initialRightDistance + robotWidth) >
+            (wallWidth * 1.2)):
+        logger.warn("The walls are too far apart!")
+    else:
+        logger.info("The walls are not too far apart!")
 
-if ((initialLeftDistance + initialRightDistance + robotWidth) >
-        (wallWidth * 1.2)):
-    logger.warn("The walls are too far apart!")
-else:
-    logger.info("The walls are not too far apart!")
+    # Waiting for start of race
+    logger.info("To start race press 'Space' key.")
 
-# Waiting for start of race
-logger.info("To start race press 'Space' key.")
+    while True:
+        keyp = KeyboardCharacterReader.readkey()
+        if keyp == ' ':
+            logger.info("Go")
+            logger.info("They're off! Press Control^C to finish")
+            break
 
-while True:
-    keyp = KeyboardCharacterReader.readkey()
-    if keyp == ' ':
-        logger.info("Go")
-        break
+    # Drive forward at full speed in order to find the line.
+    robotmove.forward(speed)
 
-# Initialise motors
-robotmove = MotorController.MotorController(GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-                                            GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-                                            GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-                                            GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
-
-# Drive forward at full speed
-robotmove.forward(speed)
-
-logger.info("They're off! Press Control^C to finish")
-
-# Try to avoid the walls!
-try:
+    # Try to avoid the walls!
     while True:
         # Calculate the distance from edge of robot to walls
         leftDistance = viewLeft.measurement()
@@ -149,9 +148,11 @@ try:
         # Loop delay
         time.sleep(loopTime)
 
-except KeyboardInterrupt:
-    logger.info("Stopping the race")
-
-# Sets all motors off and sets GPIO to standard values
-finally:
-    robotmove.cleanup()
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger.info("Stopping the Straight Line Test")
+    finally:
+        logger.info("Straight Line Test Finished")
+        robotmove.cleanup()
