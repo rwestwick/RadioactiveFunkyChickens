@@ -125,15 +125,15 @@ try:
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
             robotmove.turn_forward(speed, (speed - arcSpeed))
-            time.sleep(0.1)
+            time.sleep(0.2)
             robotmove.forward(speed)
-            time.sleep(0.1)
+            time.sleep(0.2)
             logger.info("Steering right")
         elif (rightDistance < firstBufferWidth):
             robotmove.turn_forward((speed - arcSpeed), speed)
-            time.sleep(0.1)
+            time.sleep(0.2)
             robotmove.forward(speed)
-            time.sleep(0.1)
+            time.sleep(0.2)
             logger.info("Steering left")
         elif ((rightDistance < secondBufferWidth) and
               (leftDistance < secondBufferWidth)):
