@@ -32,88 +32,12 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="straightLineSpeedTest2.py" pinned="false" current-in-tab="true">
         <entry file="file://Z:/straightLineSpeedTest2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="31" column="24" lean-forward="false" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServoController.py" pinned="false" current-in-tab="false">
-        <entry file="file://Z:/ServoController.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11">
-              <caret line="88" column="25" lean-forward="false" selection-start-line="88" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MotorController.py" pinned="false" current-in-tab="false">
-        <entry file="file://Z:/MotorController.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2760">
-              <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-              <folding>
-                <marker date="1487468394047" expanded="true" signature="253:5360" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="511:774" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="911:2084" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="920:965" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="2108:2258" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="2117:2193" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="2279:2555" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="2288:2347" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="2586:2927" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="2595:2711" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="2958:3294" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="2967:3078" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="3327:3703" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="3336:3487" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="3737:4114" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="3746:3898" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="4153:4327" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="4162:4291" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="4365:4539" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="4374:4503" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="4593:4949" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="4602:4722" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="5003:5360" ph="..." />
-                <marker date="1487468394047" expanded="true" signature="5012:5133" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1487468394047" expanded="true" signature="5398:6364" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LineFollowerSensor.py" pinned="false" current-in-tab="false">
-        <entry file="file://Z:/LineFollowerSensor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-635">
-              <caret line="10" column="15" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IRSensor.py" pinned="false" current-in-tab="false">
-        <entry file="file://Z:/IRSensor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="55" column="12" lean-forward="false" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UltrasonicSensor.py" pinned="false" current-in-tab="false">
-        <entry file="file://Z:/UltrasonicSensor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="123" column="20" lean-forward="false" selection-start-line="123" selection-start-column="20" selection-end-line="123" selection-end-column="20" />
+            <state relative-caret-position="51">
+              <caret line="21" column="29" lean-forward="true" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -132,8 +56,8 @@
       <file leaf-file-name="jenkins.sh" pinned="false" current-in-tab="false">
         <entry file="file://Z:/jenkins/jenkins.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="16" column="65" lean-forward="true" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+            <state relative-caret-position="272">
+              <caret line="16" column="65" lean-forward="false" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
               <folding />
             </state>
           </provider>
@@ -156,6 +80,8 @@
         <option value="Z:/UltrasonicSensor.py" />
         <option value="Z:/jenkins/autopep8.sh" />
         <option value="Z:/jenkins/jenkins.sh" />
+        <option value="Z:/Helpers/__init__.py" />
+        <option value="Z:/__init__.py" />
         <option value="Z:/straightLineSpeedTest2.py" />
       </list>
     </option>
@@ -200,31 +126,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Z:" />
+              <option name="myItemId" value="Z" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Z:" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Z:" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Z:" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jenkins" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -235,6 +147,11 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="C:/Python36/python.exe" />
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="Z:\" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -391,19 +308,19 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2614679" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -418,25 +335,9 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://Z:/SetConsoleLogger.py">
+    <entry file="file://Z:/straightLineSpeedTest2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://Z:/SetupConsoleLogger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="24" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://Z:/servo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-459">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -444,7 +345,7 @@
     </entry>
     <entry file="file://Z:/ServoController.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11">
+        <state relative-caret-position="1496">
           <caret line="88" column="25" lean-forward="false" selection-start-line="88" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding />
         </state>
@@ -452,41 +353,15 @@
     </entry>
     <entry file="file://Z:/MotorController.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2760">
+        <state relative-caret-position="153">
           <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding>
-            <marker date="1487468394047" expanded="true" signature="253:5360" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="511:774" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="911:2084" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="920:965" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="2108:2258" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="2117:2193" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="2279:2555" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="2288:2347" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="2586:2927" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="2595:2711" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="2958:3294" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="2967:3078" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="3327:3703" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="3336:3487" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="3737:4114" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="3746:3898" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="4153:4327" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="4162:4291" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="4365:4539" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="4374:4503" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="4593:4949" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="4602:4722" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="5003:5360" ph="..." />
-            <marker date="1487468394047" expanded="true" signature="5012:5133" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1487468394047" expanded="true" signature="5398:6364" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://Z:/LineFollowerSensor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-635">
+        <state relative-caret-position="170">
           <caret line="10" column="15" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
@@ -494,7 +369,7 @@
     </entry>
     <entry file="file://Z:/IRSensor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
+        <state relative-caret-position="935">
           <caret line="55" column="12" lean-forward="false" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
           <folding />
         </state>
@@ -502,7 +377,7 @@
     </entry>
     <entry file="file://Z:/UltrasonicSensor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
+        <state relative-caret-position="2091">
           <caret line="123" column="20" lean-forward="false" selection-start-line="123" selection-start-column="20" selection-end-line="123" selection-end-column="20" />
           <folding />
         </state>
@@ -518,16 +393,119 @@
     </entry>
     <entry file="file://Z:/jenkins/jenkins.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
+        <state relative-caret-position="272">
           <caret line="16" column="65" lean-forward="true" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/SetConsoleLogger.py" />
+    <entry file="file://Z:/SetupConsoleLogger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="24" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/servo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-459">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/ServoController.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1496">
+          <caret line="88" column="25" lean-forward="false" selection-start-line="88" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/MotorController.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/LineFollowerSensor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="15" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/IRSensor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="935">
+          <caret line="55" column="12" lean-forward="false" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/UltrasonicSensor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2091">
+          <caret line="123" column="20" lean-forward="false" selection-start-line="123" selection-start-column="20" selection-end-line="123" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/jenkins/autopep8.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/jenkins/jenkins.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="65" lean-forward="false" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/Helpers/SetupConsoleLogger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/Helpers/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/Helpers/KeyboardCharacterReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" column="13" lean-forward="true" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://Z:/straightLineSpeedTest2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="31" column="24" lean-forward="false" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
+        <state relative-caret-position="51">
+          <caret line="21" column="29" lean-forward="true" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
           <folding />
         </state>
       </provider>
