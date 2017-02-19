@@ -7,6 +7,7 @@ Provides ability to control the motors on the robot.
 import RPi.GPIO as GPIO
 import time
 import logging
+import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.MotorController")
 
@@ -163,25 +164,33 @@ class MotorController(object):
 
 if __name__ == "__main__":
     try:
+        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         MCONTROLLER = MotorController()
         MCONTROLLER.stop()
         time.sleep(1)
+        MODULE_LOGGER.info("forward 50%")
         MCONTROLLER.forward(50)
         time.sleep(1)
+        MODULE_LOGGER.info("reverse 50%")
         MCONTROLLER.reverse(50)
         time.sleep(1)
+        MODULE_LOGGER.info("spin_left 50%")
         MCONTROLLER.spin_left(50)
         time.sleep(1)
+        MODULE_LOGGER.info("spin_right 50%")
         MCONTROLLER.spin_right(50)
         time.sleep(1)
+        MODULE_LOGGER.info("turn_forward 50%")
         MCONTROLLER.turn_forward(50, 50)
         time.sleep(1)
+        MODULE_LOGGER.info("turn_reverse 50%")
         MCONTROLLER.turn_reverse(50, 50)
         time.sleep(1)
+        MODULE_LOGGER.info("one_wheel_left 50%")
         MCONTROLLER.one_wheel_left(50)
         time.sleep(1)
+        MODULE_LOGGER.info("one_wheel_right 50%")
         MCONTROLLER.one_wheel_right(50)
-
     except KeyboardInterrupt:
         pass
     finally:

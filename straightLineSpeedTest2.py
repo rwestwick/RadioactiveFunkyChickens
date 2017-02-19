@@ -13,15 +13,11 @@ import math # https://docs.python.org/2/library/math.html
 import KeyboardCharacterReader
 import MotorController
 import UltrasonicSensor
+import SetupConsoleLogger
 
 # Create a logger to both file and stdout
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)25s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
+SetupConsoleLogger.setup_console_logger(logger)
 
 # Set initial constant values
 

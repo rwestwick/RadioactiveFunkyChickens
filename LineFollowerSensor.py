@@ -8,6 +8,7 @@ follower module
 import RPi.GPIO as GPIO
 import logging
 import IRSensor
+import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.LineFollowerSensor")
 
@@ -49,6 +50,8 @@ class LineFollowerSensor(object):
 
 if __name__ == "__main__":
     try:
+        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
+
         # Define GPIO to use on Pi
         GPIO_LINE_L = 36
         GPIO_LINE_M = 40
@@ -58,9 +61,12 @@ if __name__ == "__main__":
             GPIO_LINE_L,
             GPIO_LINE_M,
             GPIO_LINE_R)
-        print("LINEFOLLOWER::left: ", LINEFOLLOWER.get_l_state())
-        print("LINEFOLLOWER::right: ", LINEFOLLOWER.get_r_state())
-        print("LINEFOLLOWER::middle: ", LINEFOLLOWER.get_m_state())
+        MODULE_LOGGER.info("LINEFOLLOWER::left: " +
+                           str (LINEFOLLOWER.get_l_state()))
+        MODULE_LOGGER.info("LINEFOLLOWER::right: " +
+                           str (LINEFOLLOWER.get_r_state()))
+        MODULE_LOGGER.info("LINEFOLLOWER::middle: " +
+                           str (LINEFOLLOWER.get_m_state()))
     except KeyboardInterrupt:
         pass
     finally:

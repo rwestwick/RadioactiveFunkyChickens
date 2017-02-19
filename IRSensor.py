@@ -6,6 +6,7 @@ Class to interact with ir proximity sensors
 
 import RPi.GPIO as GPIO
 import logging
+import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.IRSensor")
 
@@ -46,8 +47,10 @@ class IRSensor(object):  # pylint: disable=too-few-public-methods
 
 if __name__ == "__main__":
     try:
+        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
+
         SENSOR = IRSensor(7)
-        print("ir_active: ", SENSOR.ir_active())
+        MODULE_LOGGER.info("ir_active: " + str(SENSOR.ir_active()))
     except KeyboardInterrupt:
         pass
     finally:

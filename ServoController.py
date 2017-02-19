@@ -14,6 +14,7 @@ Pirocon/Microcon/RoboHAT use ServoD to control servos
 import logging
 import os
 import time
+import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.ServoController")
 
@@ -51,6 +52,7 @@ class ServoController(object):
         """
         os.system("sudo pkill -f servod")
         self.servos_active = False
+        MODULE_LOGGER.info("ServoController Module Stopped")
 
     def set_servo(self, servo, degrees):
         """
@@ -84,6 +86,7 @@ class ServoController(object):
 
 if __name__ == "__main__":
     try:
+        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         SERVO_CONTROLLER = ServoController()
 
         SERVO_CONTROLLER.set_pan_servo(0)

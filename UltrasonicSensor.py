@@ -109,6 +109,14 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
 
 if __name__ == "__main__":
     try:
+        MODULE_LOGGER.setLevel(logging.DEBUG)
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)25s - %(levelname)s - %(message)s')
+        console_handler.setFormatter(formatter)
+        MODULE_LOGGER.addHandler(console_handler)
+
         # UltraSonic physical pin numbers
         SONAR_INPUT_RIGHT = 16  # Connected to Echo
         SONAR_OUTPUT_RIGHT = 31  # Connected to Trig
@@ -121,14 +129,17 @@ if __name__ == "__main__":
 
         PROXITY_TWO_IO_LEFT = UltrasonicSensor(SONAR_INPUT_LEFT,
                                                SONAR_OUTPUT_LEFT)
-        print("PROXITY_TWO_IO_LEFT: ", PROXITY_TWO_IO_LEFT.measurement())
+        MODULE_LOGGER.info("PROXITY_TWO_IO_LEFT: " +
+                        str(PROXITY_TWO_IO_LEFT.measurement()))
 
         PROXITY_TWO_IO_RIGHT = UltrasonicSensor(SONAR_INPUT_RIGHT,
                                                 SONAR_OUTPUT_RIGHT)
-        print("PROXITY_TWO_IO_RIGHT: ", PROXITY_TWO_IO_RIGHT.measurement())
+        MODULE_LOGGER.info("PROXITY_TWO_IO_RIGHT: " +
+                           str(PROXITY_TWO_IO_RIGHT.measurement()))
 
         PROXITY_ONE_IO = UltrasonicSensor(SONAR_SINGLE_IO)
-        print("PROXITY_ONE_IO: ", PROXITY_ONE_IO.measurement())
+        MODULE_LOGGER.info("PROXITY_ONE_IO: " +
+                           str(PROXITY_ONE_IO.measurement()))
     except KeyboardInterrupt:
         pass
     finally:
