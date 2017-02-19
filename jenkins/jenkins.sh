@@ -27,7 +27,7 @@ echo "**************** $(date) - Running cloc ****************"
 cloc --by-file \
      --xml \
      --out=./cloc.xml \
-     --exclude-dir=.git,.svn \
+     --exclude-dir=.git,.svn,.idea \
 	 .
 
 echo "**************** $(date) - cloc complete ****************"
