@@ -38,21 +38,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="straightLineSpeedTest2.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="straightLineSpeedTest2.py" pinned="false" current-in-tab="false">
         <entry file="file://Z:/straightLineSpeedTest2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="29" column="20" lean-forward="false" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="20" />
+            <state relative-caret-position="130">
+              <caret line="24" column="24" lean-forward="false" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LineFollowingAlgorithm.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="LineFollowingAlgorithm.py" pinned="false" current-in-tab="true">
         <entry file="file://Z:/LineFollowingAlgorithm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-595">
-              <caret line="34" column="43" lean-forward="true" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
+            <state relative-caret-position="706">
+              <caret line="109" column="26" lean-forward="true" selection-start-line="109" selection-start-column="26" selection-end-line="109" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -157,9 +157,9 @@
         <option value="Z:/__init__.py" />
         <option value="Z:/GPIOLayout.py" />
         <option value="Z:/UltrasonicSensor.py" />
-        <option value="Z:/LineFollowingAlgorithm.py" />
         <option value="Z:/MotorController.py" />
         <option value="Z:/straightLineSpeedTest2.py" />
+        <option value="Z:/LineFollowingAlgorithm.py" />
       </list>
     </option>
   </component>
@@ -622,14 +622,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://Z:/LineFollowingAlgorithm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-595">
-          <caret line="34" column="43" lean-forward="true" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://Z:/MotorController.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -640,8 +632,16 @@
     </entry>
     <entry file="file://Z:/straightLineSpeedTest2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="29" column="20" lean-forward="false" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="20" />
+        <state relative-caret-position="130">
+          <caret line="24" column="24" lean-forward="false" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/LineFollowingAlgorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="706">
+          <caret line="109" column="26" lean-forward="true" selection-start-line="109" selection-start-column="26" selection-end-line="109" selection-end-column="26" />
           <folding />
         </state>
       </provider>
