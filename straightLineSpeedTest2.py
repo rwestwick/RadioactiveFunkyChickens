@@ -96,7 +96,10 @@ while True:
         break
 
 # Initialise motors
-robotmove = MotorController.MotorController()
+robotmove = MotorController.MotorController(GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
+                                            GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+                                            GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
+                                            GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 # Drive forward at full speed
 robotmove.forward(speed)
