@@ -21,15 +21,15 @@ SetupConsoleLogger.setup_console_logger(logger)
 
 # Set initial constant values
 
-speed = 60                # Initial forward speed
-arcSpeed = 20             # Difference between left and right for correction
-wallWidth = 52            # Width of the wall in cm
-                          # (actual width on web-page = 522 mm)
-robotWidth = 12           # Width of the robot in cm
-firstBufferWidth = 20     # First steer correction distance to nearest wall
-secondBufferWidth = 10    # Second steer correction distance to nearest wall
-loopTime = 2.0            # Correction loop speed in seconds.
-                          # This could be zero!
+speed = 60              # Initial forward speed
+arcSpeed = 20           # Difference between left and right for correction
+wallWidth = 52          # Width of the wall in cm
+                        # (actual width on web-page = 522 mm)
+robotWidth = 12         # Width of the robot in cm
+firstBufferWidth = 20   # First steer correction distance to nearest wall
+secondBufferWidth = 10  # Second steer correction distance to nearest wall
+loopTime = 2.0          # Correction loop speed in seconds.
+                        # This could be zero!
 
 
 def wallAngle(distanceOne, distanceTwo):
@@ -72,10 +72,10 @@ SONAR_INPUT_LEFT = 15  # Connected to Echo
 SONAR_OUTPUT_LEFT = 12  # Connected to Trig
 viewLeft = UltrasonicSensor.UltrasonicSensor(
     SONAR_INPUT_LEFT,
-                SONAR_OUTPUT_LEFT)
+    SONAR_OUTPUT_LEFT)
 viewRight = UltrasonicSensor.UltrasonicSensor(
     SONAR_INPUT_RIGHT,
-                SONAR_OUTPUT_RIGHT)
+    SONAR_OUTPUT_RIGHT)
 
 time.sleep(1)
 
@@ -109,7 +109,7 @@ logger.info("They're off! Press Control^C to finish")
 # Try to avoid the walls!
 try:
     while True:
-    # Calculate the distance from edge of robot to walls
+        # Calculate the distance from edge of robot to walls
         leftDistance = viewLeft.measurement()
         logger.info("Average measured left distance: " +
                     str(int(leftDistance)) + " cm")
