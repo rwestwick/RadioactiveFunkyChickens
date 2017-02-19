@@ -28,7 +28,11 @@ class MotorController(object):
     """
     START_FREQ = 25
 
-    def __init__(self, left_forward, left_backward, right_forward, right_backward):
+    def __init__(self,
+                 left_forward,
+                 left_backward,
+                 right_forward,
+                 right_backward):
         """
         Initialises GPIO pins
         """
