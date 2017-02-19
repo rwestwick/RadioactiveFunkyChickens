@@ -14,7 +14,7 @@ Pirocon/Microcon/RoboHAT use ServoD to control servos
 import logging
 import os
 import time
-import SetupConsoleLogger
+from . import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.ServoController")
 

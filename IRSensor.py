@@ -6,7 +6,7 @@ Class to interact with ir proximity sensors
 
 import RPi.GPIO as GPIO
 import logging
-import SetupConsoleLogger
+from . import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.IRSensor")
 

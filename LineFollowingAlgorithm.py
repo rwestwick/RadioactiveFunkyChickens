@@ -5,11 +5,11 @@ Provides an algorithm for following a black line on a white background.
 """
 
 import logging
-import MotorController
-import LineFollowerSensor
-import SetupConsoleLogger
-import GPIOLayout
-import KeyboardCharacterReader
+from . import MotorController
+from . import LineFollowerSensor
+from . import SetupConsoleLogger
+from . import GPIOLayout
+from . import KeyboardCharacterReader
 
 
 # Create a logger to both file and stdout
@@ -68,16 +68,14 @@ def main():
 
             elif LSTATE == 0 and MSTATE == 1 and RSTATE == 0:
                 LOGGER.info("Found Middle")
-                """
-                if lastturnleft == True:
-                    logger.info("  Small Hard Right Adjustment")
-                    robotmove.SetSpeedVeryVerySlow()
-                    robotmove.TurnBackRight()
-                elif lastturnright == True:
-                    logger.info("  Small Hard Left Adjustment")
-                    robotmove.SetSpeedVeryVerySlow()
-                    robotmove.TurnBackLeft()
-                """
+                # if lastturnleft == True:
+                #     logger.info("  Small Hard Right Adjustment")
+                #     robotmove.SetSpeedVeryVerySlow()
+                #     robotmove.TurnBackRight()
+                # elif lastturnright == True:
+                #     logger.info("  Small Hard Left Adjustment")
+                #     robotmove.SetSpeedVeryVerySlow()
+                #     robotmove.TurnBackLeft()
                 LOGGER.info("  Forward")
                 robotmove.forward(MotorController.SPEED_FAST)
                 lastturnleft = False

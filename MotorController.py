@@ -7,8 +7,8 @@ Provides ability to control the motors on the robot.
 import RPi.GPIO as GPIO
 import time
 import logging
-import SetupConsoleLogger
-import GPIOLayout
+from . import SetupConsoleLogger
+from . import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.MotorController")
 
