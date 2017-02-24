@@ -8,7 +8,8 @@
 # Run using: sudo python motorTest.py
 
 
-import robohat, time
+import robohat
+import time
 
 speed = 80
 print "Tests the motors at speed = 80%"
@@ -42,4 +43,3 @@ except KeyboardInterrupt:
 
 finally:
     robohat.cleanup()
-    

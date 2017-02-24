@@ -6,13 +6,14 @@
 # Run using: sudo python motorTest2.py
 
 
-import robohat, time
+import robohat
 
 #======================================================================
 # Reading single character by forcing stdin to raw mode
 import sys
 import tty
 import termios
+
 
 def readchar():
     fd = sys.stdin.fileno()
@@ -25,6 +26,7 @@ def readchar():
     if ch == '0x03':
         raise KeyboardInterrupt
     return ch
+
 
 def readkey(getchar_fn=None):
     getchar = getchar_fn or readchar
@@ -43,9 +45,8 @@ def readkey(getchar_fn=None):
 speed = 60
 
 print "Tests the motors by using the arrow keys to control"
-print "Use , or < or - to slow down"
-print "Use . or > or + to speed up"
-print "Use * to stop and / to quit"
+print "Use , or < to slow down"
+print "Use . or > to speed up"
 print "Speed changes take effect when the next arrow key is pressed"
 print "Press Ctrl-C to end"
 print
@@ -68,16 +69,16 @@ try:
         elif keyp == 'a' or ord(keyp) == 19:
             robohat.spinLeft(speed)
             print 'Spin Left', speed
-        elif keyp == '.' or keyp == '>' or keyp == '+':
-            speed = min(100, speed+10)
+        elif keyp == '.' or keyp == '>':
+            speed = min(100, speed + 10)
             print 'Speed+', speed
-        elif keyp == ',' or keyp == '<' or keyp == '-':
-            speed = max (0, speed-10)
+        elif keyp == ',' or keyp == '<':
+            speed = max(0, speed - 10)
             print 'Speed-', speed
-        elif keyp == ' ' or keyp == '*':
+        elif keyp == ' ':
             robohat.stop()
             print 'Stop'
-        elif ord(keyp) == 3 or keyp == '/':
+        elif ord(keyp) == 3:
             break
 
 except KeyboardInterrupt:
@@ -85,4 +86,3 @@ except KeyboardInterrupt:
 
 finally:
     robohat.cleanup()
-    

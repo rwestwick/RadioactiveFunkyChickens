@@ -6,9 +6,11 @@
 
 # Import required libraries
 import robohat
-import sys, time
+import time
 
 # Define servo movement function
+
+
 def doServos():
     robohat.setServo(pan, pVal)
     robohat.setServo(tilt, tVal)
@@ -18,8 +20,8 @@ speed = 40
 minRange = 10
 pan = 0
 tilt = 1
-tVal = 0 # 0 degrees is horizontal centre
-pVal = 0 # 0 degrees is vertical centre
+tVal = 0  # 0 degrees is horizontal centre
+pVal = 0  # 0 degrees is vertical centre
 
 # Initialise robohat controller
 robohat.init()
@@ -49,7 +51,6 @@ try:
 
 except KeyboardInterrupt:
     print "Exiting"
-    pass
 
-finally: # cleanup is run even if ^c is typed
+finally:  # cleanup is run even if ^c is typed
     robohat.cleanup()

@@ -11,7 +11,6 @@ try:
 
 except KeyboardInterrupt:
     print
-    pass
 
 finally:
     robohat.cleanup()

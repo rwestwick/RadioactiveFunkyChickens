@@ -9,9 +9,10 @@
 # Run using: sudo python motorTesta.py
 
 
-import time, RPi.GPIO as gpio
+import time
+import RPi.GPIO as gpio
 
-#Motors
+# Motors
 L1 = 36
 L2 = 35
 R1 = 33
@@ -30,11 +31,13 @@ def forward():
     gpio.output(R1, 1)
     gpio.output(R2, 0)
 
+
 def reverse():
     gpio.output(L1, 0)
     gpio.output(L2, 1)
     gpio.output(R1, 0)
     gpio.output(R2, 1)
+
 
 def spinLeft():
     gpio.output(L1, 0)
@@ -42,11 +45,13 @@ def spinLeft():
     gpio.output(R1, 1)
     gpio.output(R2, 0)
 
+
 def spinRight():
     gpio.output(L1, 1)
     gpio.output(L2, 0)
     gpio.output(R1, 0)
     gpio.output(R2, 1)
+
 
 def stop():
     gpio.output(L1, 0)
@@ -82,4 +87,3 @@ except KeyboardInterrupt:
 
 finally:
     gpio.cleanup()
-    
