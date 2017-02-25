@@ -127,15 +127,15 @@ def main():
         if (leftDistance < firstBufferWidth):
             LOGGER.info("Steering right"+str((speed - arcSpeed)))
             robotmove.turn_forward(speed, (speed - arcSpeed))
-            time.sleep(0.5)
+            time.sleep(0.2)
             robotmove.forward(speed)
-            time.sleep(0.5)
+            time.sleep(0.2)
         elif (rightDistance < firstBufferWidth):
             LOGGER.info("Steering left"+str((speed - arcSpeed)))
             robotmove.turn_forward((speed - arcSpeed), speed)
-            time.sleep(0.5)
+            time.sleep(0.2)
             robotmove.forward(speed)
-            time.sleep(0.5)
+            time.sleep(0.2)
         else:
             robotmove.forward(speed)
             LOGGER.info("Storming forward!")
