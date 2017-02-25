@@ -62,7 +62,7 @@ def wallAngle(distanceOne, distanceTwo):
     if (wallRatio > 1.0):
         wallRatio = 1.0
         
-    theta = math.degrees(math.asin(wallRatio)))
+    theta = math.degrees(math.asin(wallRatio))
     return theta
 
 
