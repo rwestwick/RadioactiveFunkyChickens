@@ -118,35 +118,24 @@ def main():
         leftDistance = viewLeft.measurement()
         LOGGER.info("Average measured left distance: " +
                     str(int(leftDistance)) + " cm")
+					
         rightDistance = viewRight.measurement()
         LOGGER.info("Average measured right distance: " +
                     str(int(rightDistance)) + " cm")
-        angleFromWall = wallAngle(leftDistance, rightDistance)
-        LOGGER.info("Angle from the wall: " + str(int(angleFromWall)) + " deg")
-        spaceFromLeftWall = distanceFromWall(leftDistance, angleFromWall)
-        LOGGER.info("Actual distance from the left wall: " +
-                    str(int(spaceFromLeftWall)) + " cm")
-
+					
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
+            LOGGER.info("Steering right"+str((speed - arcSpeed)))
             robotmove.turn_forward(speed, (speed - arcSpeed))
-            time.sleep(0.2)
+            time.sleep(0.5)
             robotmove.forward(speed)
-            time.sleep(0.2)
-            LOGGER.info("Steering right")
+            time.sleep(0.5)
         elif (rightDistance < firstBufferWidth):
+            LOGGER.info("Steering left"+str((speed - arcSpeed)))
             robotmove.turn_forward((speed - arcSpeed), speed)
-            time.sleep(0.2)
+            time.sleep(0.5)
             robotmove.forward(speed)
-            time.sleep(0.2)
-            LOGGER.info("Steering left")
-        elif ((rightDistance < secondBufferWidth) and
-              (leftDistance < secondBufferWidth)):
-            robotmove.stop()
-            LOGGER.info("The walls are caving in!")
-        elif ((rightDistance > wallWidth) and (leftDistance > wallWidth)):
-            robotmove.stop()
-            LOGGER.info("I'm in the clear!")
+            time.sleep(0.5)
         else:
             robotmove.forward(speed)
             LOGGER.info("Storming forward!")
