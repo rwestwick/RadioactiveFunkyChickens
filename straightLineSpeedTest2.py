@@ -58,7 +58,7 @@ def wallAngle(distanceOne, distanceTwo):
     yTwo = distanceTwo + (robotWidth / 2)
     hypotenuse = yOne + yTwo
     # Rounds down to nearest integer
-    wallRatio = wallWidth / hyptenuse
+    wallRatio = wallWidth / hypotenuse
     if (wallRatio > 1.0):
         wallRatio = 1.0
         
