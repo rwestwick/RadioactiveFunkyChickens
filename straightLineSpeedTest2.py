@@ -9,7 +9,6 @@ http://piwars.org/
 # Import required libraries
 import time
 import logging
-import math
 import KeyboardCharacterReader
 import MotorController
 import UltrasonicSensor
@@ -40,46 +39,6 @@ robotmove = MotorController.MotorController(
     GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
-
-
-def wallAngle(distanceOne, distanceTwo):
-    """
-    Calculate angle to wall
-    returns angle from front to rear line of robot to
-    the wall in degrees (90deg means robot is driving
-    parallel to the walls)
-    N.B. Angle does not tell if robot is pointing to or away
-    from wall.
-    inputs:
-    distanceOne - Ultrasonic measurement from one side of robot
-    distanceTwo - Ultrasonic measurement from other side of robot
-    N.B. Calculation is based on inputs both being in cm and walls being
-    wallWidth apart.
-    """
-    yOne = distanceOne + (robotWidth / 2)
-    yTwo = distanceTwo + (robotWidth / 2)
-    hypotenuse = yOne + yTwo
-    
-    # Rounds down numbers greater than one to one
-    wallRatio = wallWidth / hypotenuse
-    if (wallRatio > 1.0):
-        wallRatio = 1.0
-        
-    theta = math.degrees(math.asin(wallRatio))
-    return theta
-
-
-def distanceFromWall(distanceOne, theta):
-    """
-    returns distance from front to rear line of robot to
-    the wall that is at theta degrees angle to wall at a
-    distance of distance distanceOne.
-    Unit of returned value is the same as input e.g. cm
-    """
-    hypotenuse = distanceOne + (robotWidth / 2)
-    wallDistance = hypotenuse * math.sin(math.radians(theta))
-    return wallDistance
-
 
 def main():
     """
