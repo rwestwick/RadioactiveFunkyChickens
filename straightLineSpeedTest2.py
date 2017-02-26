@@ -31,6 +31,8 @@ firstBufferWidth = 20   # First steer correction distance to nearest wall
 secondBufferWidth = 10  # Second steer correction distance to nearest wall
 # Correction loop speed in seconds. This could be zero!
 loopTime = 0.1
+# Angle correction delay time in seconds
+correctionTime = 0.2
 
 # Initialise motors
 robotmove = MotorController.MotorController(
@@ -57,7 +59,8 @@ def wallAngle(distanceOne, distanceTwo):
     yOne = distanceOne + (robotWidth / 2)
     yTwo = distanceTwo + (robotWidth / 2)
     hypotenuse = yOne + yTwo
-    # Rounds down to nearest integer
+    
+    # Rounds down numbers greater than one to one
     wallRatio = wallWidth / hypotenuse
     if (wallRatio > 1.0):
         wallRatio = 1.0
@@ -127,15 +130,15 @@ def main():
         if (leftDistance < firstBufferWidth):
             LOGGER.info("Steering right"+str((speed - arcSpeed)))
             robotmove.turn_forward(speed, (speed - arcSpeed))
-            time.sleep(0.2)
+            time.sleep(correctionTime)
             robotmove.forward(speed)
-            time.sleep(0.2)
+            time.sleep(correctionTime)
         elif (rightDistance < firstBufferWidth):
             LOGGER.info("Steering left"+str((speed - arcSpeed)))
             robotmove.turn_forward((speed - arcSpeed), speed)
-            time.sleep(0.2)
+            time.sleep(correctionTime)
             robotmove.forward(speed)
-            time.sleep(0.2)
+            time.sleep(correctionTime)
         else:
             robotmove.forward(speed)
             LOGGER.info("Storming forward!")
