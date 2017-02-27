@@ -31,6 +31,7 @@ def wallAngle(distanceOne, distanceTwo, wallWidth):
     inputs:
     distanceOne - Ultrasonic measurement from one side of robot
     distanceTwo - Ultrasonic measurement from other side of robot
+    wallWidth - Shortest distance between the two measured parallel walls
     N.B. Calculation is based on inputs both being in cm and walls being
     wallWidth apart.
     """
