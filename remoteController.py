@@ -34,6 +34,7 @@ def main():
     """
     # Set initial values
     speed = MotorController.SPEED_FASTEST  # Initial forward speed
+    direction = ""
     
     # Give remote control keys
     print "Steer robot by using the arrow keys to control"
@@ -58,21 +59,25 @@ def main():
         # Go forward if 'w' or forward arrow key pressed
         if keyp == 'w' or ord(keyp) == 16:
             robotmove.forward(speed)
+            direction = "forward"
             LOGGER.info("Forward at speed " + str(speed))
             
         # Go backwards if 'z' or reverse arrow key pressed
         elif keyp == 'z' or ord(keyp) == 17:
             robotmove.reverse(speed)
+            direction = "reverse"
             LOGGER.info("Reverse at speed " + str(speed))
 
         # Spin right if 's' or right arrow key pressed
         elif keyp == 's' or ord(keyp) == 18:
             robotmove.spin_right(speed)
+            direction = "spin_right"
             LOGGER.info("Spin right at speed " + str(speed))
             
         # Spin left if 'a' or left arrow key pressed
         elif keyp == 'a' or ord(keyp) == 19:
             robotmove.spin_left(speed)
+            direction = "spin_left"
             LOGGER.info("Spin left at speed " + str(speed))
             
         # Speed up by 10 if '.' or '>' key pressed
