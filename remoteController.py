@@ -29,12 +29,26 @@ robotmove = MotorController.MotorController(
     GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
+def changeSpeed(currentDirection, newSpeed):
+    """
+    """
+    if currentDirection == 'forward':
+        robotmove.forward(newSpeed)
+    elif currentDirection == 'reverse':
+        robotmove.reverse(newSpeed)
+    elif currentDirection == 'spin_right':
+        robotmove.spin_right(newSpeed)
+    elif currentDirection == 'spin_left':
+        robotmove.spin_left(newSpeed)
+    else:
+        LOGGER.info("Incorrect currentDirection = " + str(currentDirection))
+    
 def main():
     """
     """
     # Set initial values
     speed = MotorController.SPEED_FASTEST  # Initial forward speed
-    direction = ""
+    direction = ' '
     
     # Give remote control keys
     print "Steer robot by using the arrow keys to control"
@@ -59,35 +73,37 @@ def main():
         # Go forward if 'w' or forward arrow key pressed
         if keyp == 'w' or ord(keyp) == 16:
             robotmove.forward(speed)
-            direction = "forward"
+            direction = 'forward'
             LOGGER.info("Forward at speed " + str(speed))
             
         # Go backwards if 'z' or reverse arrow key pressed
         elif keyp == 'z' or ord(keyp) == 17:
             robotmove.reverse(speed)
-            direction = "reverse"
+            direction = 'reverse'
             LOGGER.info("Reverse at speed " + str(speed))
 
         # Spin right if 's' or right arrow key pressed
         elif keyp == 's' or ord(keyp) == 18:
             robotmove.spin_right(speed)
-            direction = "spin_right"
+            direction = 'spin_right'
             LOGGER.info("Spin right at speed " + str(speed))
             
         # Spin left if 'a' or left arrow key pressed
         elif keyp == 'a' or ord(keyp) == 19:
             robotmove.spin_left(speed)
-            direction = "spin_left"
+            direction = 'spin_left'
             LOGGER.info("Spin left at speed " + str(speed))
             
         # Speed up by 10 if '.' or '>' key pressed
         elif keyp == '.' or keyp == '>':
             speed = min(100, speed + 10)
+            changeSpeed(direction, speed)
             LOGGER.info("Speed increased to " + str(speed))
 
         # Speed down by 10 if ',' or '<' key pressed
         elif keyp == ',' or keyp == '<':
             speed = max(0, speed - 10)
+            changeSpeed(direction, speed)
             LOGGER.info("Speed decreased to " + str(speed))
 
         # Stop if Space (' ') key pressed    
