@@ -1,4 +1,5 @@
 # Run from command line allows the window to close when 'q' is pressed
+from __future__ import division
 
 # Import OpenCV and NumPy
 import cv2
@@ -10,7 +11,7 @@ from picamera.array import PiRGBArray
 # Initialize the camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
-ROW_LENGTH = 20
+ROW_LENGTH = 10.0
 camera = PiCamera()
 camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
 camera.framerate = 10
@@ -36,22 +37,35 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     # Simple thresholding
     ret,threshImg = cv2.threshold(gray, 80, 255, cv2.THRESH_BINARY)
 
+##    print("Size of threshImg array: ", threshImg.shape)
+##
+##    startX = int((5.0/ROW_LENGTH) * CAMERA_WIDTH)
+##    stopX = int(((5.0+1.0)/ROW_LENGTH) * CAMERA_WIDTH) - 1.0
+##    startY = 0
+##    stopY = int((1.0/ROW_LENGTH) * CAMERA_HEIGHT) - 1.0
+##    square = threshImg[startX:stopX, startY:stopY]
+##
+##    print("Size of square array: ", square.shape)
+
     # show the frame    
     # cv2.imshow("Frame", gray)
     cv2.imshow("Frame", threshImg)
+    # cv2.imshow("Frame", square)
     key = cv2.waitKey(1) & 0xFF
 
-    for i in range(ROW_LENGTH):
+    for i in range(int(ROW_LENGTH)):
         # Image region of interest (ROI)
         startX = int((i/ROW_LENGTH) * CAMERA_WIDTH)
-        stopX = int((i+1)  * CAMERA_WIDTH) - 1
+        stopX = int((((i+1.0)/ROW_LENGTH)  * CAMERA_WIDTH) - 1)
         startY = 0
-        stopY = int((1/ROW_LENGTH) * CAMERA_HEIGHT) - 1
+        stopY = int(((1.0/ROW_LENGTH) * CAMERA_HEIGHT) - 1)
         
         square = threshImg[startX:stopX, startY:stopY]
 
+        # print(square)
+
         # Sum and mean of all the values in square array
-        rowValues[i] = int(np.sum(square))
+        rowValues[i] = int(np.mean(square))
 
         # Find indices of minimum value
         smallSquare = np.argmin(rowValues)
