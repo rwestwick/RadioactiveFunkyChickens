@@ -2,7 +2,7 @@
 
 """
 Tests the algorithms for detecting where the black line, on a white background,
-is in relation to the piCamera's vision.
+is in relation to the piCamera's frame.
 """
 
 # Run this program from the command line as it allows the window to close when 'q' is pressed
@@ -10,6 +10,7 @@ is in relation to the piCamera's vision.
 # https://www.python.org/dev/peps/pep-0238/
 # The future division statement, spelled "from __future__ import division", will change the / operator to mean true division
 # throughout the module.
+# This is needed for the row and column calculations for rectangle arrays to prevent rounding down to zero.
 from __future__ import division
 
 # Import needed libraries such as picamera OpenCV and NumPy
@@ -22,24 +23,26 @@ from picamera.array import PiRGBArray
 # Initialize the camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
-ROW_LENGTH = 10
-camera = PiCamera()
-camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
-camera.framerate = 10
+camera = PiCamera() # Initialize camera
+camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dosplays resolution
+# Can get framerates up to 60fps 640x480
+camera.framerate = 10 # If not set then defaults to 30fps
 camera.vflip = True
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]
-# Produces a 3-dimensional RGB array from an RGB capture.
+# Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
+# for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
 rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
 # Allow the camera time to warmup
 time.sleep(0.1)
 
-# Initialize rowValues array to do testing such that they are all initialised to be white
+# Initialize rowValues array to do testing such that they are all initialised to be white (255)
+ROW_LENGTH = 10 # Number of rectangles for black/white analysis
 rowMeanValues = np.ones(ROW_LENGTH) * 255
 
-# capture frames from the camera
+# Capture frames from the camera
 # http://picamera.readthedocs.io/en/release-1.10/api_camera.html
 # capture_continuous(output, format=None, use_video_port=False, resize=None, splitter_port=0, burst=False, **options)
 # The format, use_video_port, splitter_port, resize, and options parameters are the same as in capture()
@@ -86,6 +89,8 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     key = cv2.waitKey(1) & 0xFF
 
     # Capture number of white/black pixels in ROW_LENGTH rectanges along lower row of threshold frame
+    # N.B. May want to make this for several rows to track the line further in the horizon and
+    # allow for sharp 90deg turns.
     
     for i in range(ROW_LENGTH):
         
@@ -97,10 +102,11 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
         
         square = threshImg[startRow:stopRow, startCol:stopCol]
 
-        # Mean of all the values in square array
+        # Mean of all the values in rectangular "square" array
         rowMeanValues[i] = int(np.mean(square))
 
-        # Find indices of minimum mean value N.B. Black = 0, White = 255
+        # Find index of first minimum mean value N.B. Black = 0, White = 255
+        # As it is the first then if there are two fully black rectangles this could lead to errors
         smallSquare = np.argmin(rowMeanValues)
         print("The rectangle with the most black pixels is: ", str(smallSquare))
 
