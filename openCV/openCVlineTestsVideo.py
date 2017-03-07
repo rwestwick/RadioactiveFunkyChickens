@@ -39,8 +39,9 @@ rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 time.sleep(0.1)
 
 # Initialize rowValues array to do testing such that they are all initialised to be white (255)
-ROW_LENGTH = 10 # Number of rectangles for black/white analysis
-rowMeanValues = np.ones(ROW_LENGTH) * 255
+ROW_LENGTH = 10 # Number of rectangles per row for black/white analysis
+COL_LENGTH = 10 # Number of rectangles per column for black/white analysis
+MeanValues = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
 
 # Capture frames from the camera
 # http://picamera.readthedocs.io/en/release-1.10/api_camera.html
@@ -80,10 +81,11 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     
     lowerMiddleSquare = threshImg[startRow:stopRow, startCol:stopCol]
 
-    # show the frame    
-    cv2.imshow("GrayFrame", gray)
+    # show the frame
+    # cv2.imshow("ColourFrame", image)
+    # cv2.imshow("GrayFrame", gray)
     cv2.imshow("ThresholdFrame", threshImg)
-    cv2.imshow("Frame", lowerMiddleSquare)
+    # cv2.imshow("SmallFrame", lowerMiddleSquare)
 
     # Capture a key press. The function waits argument in ms for any keyboard event
     key = cv2.waitKey(1) & 0xFF
@@ -91,24 +93,33 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     # Capture number of white/black pixels in ROW_LENGTH rectanges along lower row of threshold frame
     # N.B. May want to make this for several rows to track the line further in the horizon and
     # allow for sharp 90deg turns.
-    
-    for i in range(ROW_LENGTH):
-        
-        # Image region of interest (ROI)
-        startRow = int(0.90 * CAMERA_HEIGHT)
-        stopRow  = int(1.00 * CAMERA_HEIGHT) - 1.0
-        startCol = int((i/ROW_LENGTH) * CAMERA_WIDTH)
-        stopCol  = int(((i+1)/ROW_LENGTH) * CAMERA_WIDTH) - 1.0
-        
-        square = threshImg[startRow:stopRow, startCol:stopCol]
 
-        # Mean of all the values in rectangular "square" array
-        rowMeanValues[i] = int(np.mean(square))
+    # Loop over all rows
+    for j in range(COL_LENGTH):
+        
+        # Loop over all columns
+        for i in range(ROW_LENGTH):
+        
+            # Image region of interest (ROI)
+            startRow = int((j/COL_LENGTH) * CAMERA_HEIGHT)
+            stopRow  = int(((j+1)/COL_LENGTH) * CAMERA_HEIGHT) - 1.0
+            startCol = int((i/ROW_LENGTH) * CAMERA_WIDTH)
+            stopCol  = int(((i+1)/ROW_LENGTH) * CAMERA_WIDTH) - 1.0
+            
+            square = threshImg[startRow:stopRow, startCol:stopCol]
 
-        # Find index of first minimum mean value N.B. Black = 0, White = 255
-        # As it is the first then if there are two fully black rectangles this could lead to errors
-        smallSquare = np.argmin(rowMeanValues)
-        print("The rectangle with the most black pixels is: ", str(smallSquare))
+            # Mean of all the values in rectangular "square" array
+            MeanValues[j, i] = int(np.mean(square))
+
+    # Find index of first minimum mean value per row N.B. Black = 0, White = 255
+    # As it is the first then if there are two fully black rectangles this could lead to errors
+    # print("The mean values array: ", MeanValues)
+    smallSquare = np.argmin(MeanValues[0, 0:(ROW_LENGTH-1)])
+    print("The rectangle with the most black pixels in top row is: ", str(smallSquare))
+    smallSquare = np.argmin(MeanValues[(COL_LENGTH-1), 0:(ROW_LENGTH-1)])
+    print("The rectangle with the most black pixels in bottom row is: ", str(smallSquare))
+
+    # time.sleep(10)
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
