@@ -74,6 +74,17 @@ class LineFollowerCamera(object):
         """
         Get the position of the line in the camera view
         """
+        for self.frame in self.camera.capture_continuous(self.rawCapture, format="rgb", use_video_port=True):
+            # grab the raw NumPy array respresenting the image, then intialize the timestap
+            # and occupied/unoccupied text
+            self.image = self.frame.array
+
+            # Capture a key press. The function waits argument in ms for any keyboard event
+            self.key = cv2.waitKey(1) & 0xFF
+
+            # if the 'q' key was pressed break from the loop
+            if self.key == ord("q"):
+                break
 
         return 5
 
@@ -94,6 +105,7 @@ if __name__ == "__main__":
 
         # Get Line Positions
         position = AngleCamera.getLinePosition()
+        print("The position is: ", position)
                            
     except KeyboardInterrupt:
         pass
