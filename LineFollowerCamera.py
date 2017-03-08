@@ -5,11 +5,27 @@ Provides ability to use the Raspberry Pi Camera to detect the line
 to follow for the line follwowing challenge in PiWars 2017
 """
 
+# https://www.python.org/dev/peps/pep-0238/
+# The future division statement, spelled "from __future__ import division", will change the / operator to mean true division
+# throughout the module.
+# This is needed for the row and column calculations for rectangle arrays to prevent rounding down to zero.
+from __future__ import division
+
+# Open relvant modules
 import logging
-import picamera
-import RPi.GPIO as GPIO
 import ServoController
 import SetupConsoleLogger
+import cv2
+import numpy as np
+import time
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+
+# Set constants
+CAMERA_WIDTH = 640
+CAMERA_HEIGHT = 480
+ROW_LENGTH = 10 # Number of rectangles per row for black/white analysis
+COL_LENGTH = 10 # Number of rectangles per column for black/white analysis
 
 # Create a logger to both file and stdout
 MODULE_LOGGER = logging.getLogger("__main__.LineFollowerCamera")
@@ -29,41 +45,58 @@ class LineFollowerCamera(object):
         MODULE_LOGGER.info("Setting up LineFollowerCamera Module")
 
         # Set camera to point in correct direction
-        SERVO_CONTROLLER = ServoController.ServoController()
-        SERVO_CONTROLLER.start_servos()
-        SERVO_CONTROLLER.set_pan_servo(0)
-        SERVO_CONTROLLER.set_tilt_servo(-45)
+        self.SERVO_CONTROLLER = ServoController.ServoController()
+        self.SERVO_CONTROLLER.start_servos()
+        self.SERVO_CONTROLLER.set_pan_servo(-45)
+        self.SERVO_CONTROLLER.set_tilt_servo(0)
 
         # Initise PiCamera
-        camera = picamera.PiCamera()
+        self.camera = PiCamera() # Initialize camera
+        self.camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dosplays resolution
+        # Can get framerates up to 60fps 640x480
+        self.camera.framerate = 10 # If not set then defaults to 30fps
+        self.camera.vflip = True
 
-    def getLineAngle(self):
-        """
-        Get the angle of the line
-        """
-        Angle = 45.0
+        # http://picamera.readthedocs.io/en/release-1.10/api_array.html
+        # class picamera.array.PiRGBArray(camera, size=None)[source]
+        # Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
+        # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
+        self.rawCapture = PiRGBArray(self.camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
+
+        # Allow the camera time to warmup
+        time.sleep(0.1)
+
+        # Initialize rowValues array to do testing such that they are all initialised to be white (255)
+        self.MeanValues = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
         
-        return Angle
+
+    def getLinePosition(self):
+        """
+        Get the position of the line in the camera view
+        """
+
+        return 5
+
 
     def cleanUp(self):
         """
         Stops the servos by calling the function
         """
-        SERVO_CONTROLLER.stop_servos()
+        self.SERVO_CONTROLLER.stop_servos()
 
 
 if __name__ == "__main__":
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
+        # Initialize camera
         AngleCamera = LineFollowerCamera()
 
-        CurrentAngle = AngleCamera.getLineAngle()
-
-        MODULE_LOGGER.info("Current angle of the line: " +
-                           str(int(CurrentAngle)) + " deg")
+        # Get Line Positions
+        position = AngleCamera.getLinePosition()
                            
     except KeyboardInterrupt:
         pass
     finally:
+        AngleCamera.cleanUp()
         MODULE_LOGGER.info("End of test")
