@@ -110,22 +110,10 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     
     ret,threshImg = cv2.threshold(gray, THRESHOLD, 255, cv2.THRESH_BINARY)
 
-    # For testing purposes not essential for algorithm
-    # Create a frame for lower middle part of video
-    # Top left is [0, 0] in [rows, columns]
-
-    startRow = int(0.90 * CAMERA_HEIGHT)
-    stopRow  = int(1.00 * CAMERA_HEIGHT) - 1.0
-    startCol = int(0.40 * CAMERA_WIDTH)
-    stopCol  = int(0.60 * CAMERA_WIDTH) - 1.0
-    
-    lowerMiddleSquare = threshImg[startRow:stopRow, startCol:stopCol]
-
     # show the frames - used for testing and not essential for algorithm and will not work will over SSH/X
     # cv2.imshow("ColourFrame", image)
     # cv2.imshow("GrayFrame", gray)
     cv2.imshow("ThresholdFrame", threshImg)
-    # cv2.imshow("SmallFrame", lowerMiddleSquare)
 
     # Capture a key press. The function waits argument in ms for any keyboard event
     key = cv2.waitKey(1) & 0xFF
