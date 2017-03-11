@@ -182,7 +182,7 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
         ROBOTMOVE.one_wheel_right(MotorController.SPEED_FAST)
     elif smallSquareBottom < int(ROW_LENGTH/2) and smallSquareBottom >= int(ROW_LENGTH/4):
         LOGGER.info("Turn Right medium. Index of mean row value: " + str(smallSquareBottom))
-        ROBOTMOVE.one_wheel_right(MotorController.SPEED_FAST)
+        ROBOTMOVE.one_wheel_right(MotorController.SPEED_MEDIUM)
 
     # Something is not quite right!?
     else:
