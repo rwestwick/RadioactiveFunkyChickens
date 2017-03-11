@@ -5,6 +5,7 @@ Provides an algorithm for following a black line on a white background.
 """
 
 import logging
+import time
 import MotorController
 import LineFollowerSensor
 import SetupConsoleLogger
@@ -48,9 +49,12 @@ def main():
         GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
 
     while True:
-        LSTATE = linefollower.get_l_state()
-        MSTATE = linefollower.get_m_state()
-        RSTATE = linefollower.get_r_state()
+        LSTATE = not linefollower.get_l_state()
+        MSTATE = not linefollower.get_m_state()
+        RSTATE = not linefollower.get_r_state()
+		
+        LOGGER.info(str(RSTATE) + " - " + str(MSTATE) +	" - " +	str(LSTATE))
+        #time.sleep(1)
 
         if foundline is False:
             ROBOTMOVE.forward(MotorController.SPEED_SLOW)
@@ -71,7 +75,7 @@ def main():
 
             elif LSTATE == 0 and MSTATE == 1 and RSTATE == 0:
                 LOGGER.info("Found Middle - Forward")
-                ROBOTMOVE.forward(MotorController.SPEED_FAST)
+                ROBOTMOVE.forward(MotorController.SPEED_VERYVERYSLOW)
                 lastturnleft = False
                 lastturnright = False
             elif LSTATE == 1 and MSTATE == 0 and RSTATE == 0:
@@ -102,7 +106,6 @@ def main():
             else:
                 LOGGER.error("Some other state")
                 ROBOTMOVE.reverse(MotorController.SPEED_MEDIUM)
-
 
 if __name__ == "__main__":
     try:
