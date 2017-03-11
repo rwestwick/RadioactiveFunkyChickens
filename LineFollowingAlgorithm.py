@@ -70,16 +70,7 @@ def main():
                     ROBOTMOVE.spin_right(MotorController.SPEED_VERYVERYSLOW)
 
             elif LSTATE == 0 and MSTATE == 1 and RSTATE == 0:
-                LOGGER.info("Found Middle")
-                # if lastturnleft == True:
-                #     logger.info("  Small Hard Right Adjustment")
-                #     robotmove.SetSpeedVeryVerySlow()
-                #     robotmove.TurnBackRight()
-                # elif lastturnright == True:
-                #     logger.info("  Small Hard Left Adjustment")
-                #     robotmove.SetSpeedVeryVerySlow()
-                #     robotmove.TurnBackLeft()
-                LOGGER.info("  Forward")
+                LOGGER.info("Found Middle - Forward")
                 ROBOTMOVE.forward(MotorController.SPEED_FAST)
                 lastturnleft = False
                 lastturnright = False
