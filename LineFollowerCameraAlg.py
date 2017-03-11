@@ -31,6 +31,7 @@ CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 ROW_LENGTH = 10 # Number of rectangles per row for black/white analysis
 COL_LENGTH = 10 # Number of rectangles per column for black/white analysis
+THRESHOLD = 50 # Used to classify gray as black or white. Lower number makes darker shades of grey go to white
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -107,7 +108,7 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     # cv2.THRESH_TOZERO
     # cv2.THRESH_TOZERO_INV
     
-    ret,threshImg = cv2.threshold(gray, 80, 255, cv2.THRESH_BINARY)
+    ret,threshImg = cv2.threshold(gray, THRESHOLD, 255, cv2.THRESH_BINARY)
 
     # For testing purposes not essential for algorithm
     # Create a frame for lower middle part of video
@@ -156,22 +157,34 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     # smallSquareTop = np.argmin(MeanValues[0, 0:(ROW_LENGTH-1)])
     # LOGGER.info("The rectangle with the most black pixels in top row is: ", str(smallSquareTop))
     smallSquareBottom = np.argmin(MeanValues[(COL_LENGTH-1), 0:(ROW_LENGTH-1)])
-    LOGGER.info("The rectangle with the most black pixels in bottom row is: ", str(smallSquareBottom))
+    LOGGER.info("The rectangle with the most black pixels in bottom row is: " + str(smallSquareBottom))
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
     rawCapture.truncate(0)
 
-    if smallSquareBottom == (ROW_LENGTH/2) or smallSquareBottom == ((ROW_LENGTH/2)-1): # Needed for even numbers to get middle two
-        LOGGER.info("Found Middle. Index of mean row value: " + str(smallSquareBottom))
-        LOGGER.info("Forward")
+    # Straight On
+    if smallSquareBottom == int(ROW_LENGTH/2) or smallSquareBottom == int((ROW_LENGTH/2)-1): # Needed for even numbers to get middle two
+        LOGGER.info("Go Forward. Index of mean row value: " + str(smallSquareBottom))
         ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
-    elif smallSquareBottom > ((ROW_LENGTH/2)-1):
-        LOGGER.info("Turn Left. Index of mean row value: " + str(smallSquareBottom))
+
+    # Go Right        
+    elif smallSquareBottom > (int(ROW_LENGTH*3/4)-1):
+        LOGGER.info("Turn Left fast. Index of mean row value: " + str(smallSquareBottom))
         ROBOTMOVE.one_wheel_left(MotorController.SPEED_FAST)
-    elif smallSquareBottom < (ROW_LENGTH/2):
-        LOGGER.info("Turn Right. Index of mean row value: " + str(smallSquareBottom))
+    elif smallSquareBottom > int(ROW_LENGTH/2) and smallSquareBottom <= (int(ROW_LENGTH*3/4)-1):
+        LOGGER.info("Turn Left medium. Index of mean row value: " + str(smallSquareBottom))
+        ROBOTMOVE.one_wheel_left(MotorController.SPEED_MEDIUM)
+
+    # Go Left
+    elif smallSquareBottom < int(ROW_LENGTH/4):
+        LOGGER.info("Turn Right fast. Index of mean row value: " + str(smallSquareBottom))
         ROBOTMOVE.one_wheel_right(MotorController.SPEED_FAST)
+    elif smallSquareBottom < int(ROW_LENGTH/2) and smallSquareBottom >= int(ROW_LENGTH/4):
+        LOGGER.info("Turn Right medium. Index of mean row value: " + str(smallSquareBottom))
+        ROBOTMOVE.one_wheel_right(MotorController.SPEED_FAST)
+
+    # Something is not quite right!?
     else:
         LOGGER.error("Some other state! Index of mean row value: " + str(smallSquareBottom))
         ROBOTMOVE.stop()
