@@ -19,6 +19,15 @@ import KeyboardCharacterReader
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
+# Set initial constant values
+ROBOT_LENGTH = 20 # Length of the robot (cm)
+ROBOT_WIDTH = 14 # Width of the robot (cm)
+FRONT_BUFFER = 10 # Shortest distance to front (cm)
+SIDE_BUFFER = 10 # Shortest distance to side (cm)
+CORRECTION_TIME = 0.2 # Angle correction delay time in seconds
+FIRST_WALL_LENGTH = 122 # Length of first wall (cm)
+SECOND_WALL_LENGTH = 204 # Length of first wall (cm)
+
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
     GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
@@ -52,7 +61,16 @@ def main():
             LOGGER.info("Go")
             break
 
-    while True:
+    # Take initial measurements
+    distanceLeft = viewLeft.measurement()
+    distanceRight = viewRight.measurement()
+    distanceFront = viewFront.measurement()
+
+    # Drive forward
+    ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+
+    # Steer to first wall
+    while distanceFront > FRONT_BUFFER:
         
 	# Take measurements
 	distanceLeft = viewLeft.measurement()
@@ -60,10 +78,33 @@ def main():
 	distanceFront = viewFront.measurement()
 	
         # Track distances
-        LOGGER.info("Left: " + str(distanceLeft) + " - Right: " + str(distanceRight) +
-                    " - Forward: " +	str(distanceFront) + " cm")
+        LOGGER.info("Left: " + str(int(distanceLeft)) + " - Right: " + str(int(distanceRight)) +
+                    " - Forward: " +	str(int(distanceFront)) + " cm")
 
-        time.sleep(1)
+        # time.sleep(1)
+
+        # Decide which way to steer
+        if (distanceLeft < SIDE_BUFFER):
+            LOGGER.info("Steering right")
+            ROBOTMOVE.turn_forward(MotorController.SPEED_MEDIUM, 0)
+            time.sleep(CORRECTION_TIME)
+            ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+        elif (distanceRight < SIDE_BUFFER):
+            LOGGER.info("Steering left")
+            ROBOTMOVE.turn_forward(0, MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+            ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+
+    ROBOTMOVE.stop()
+
+    # Spin right till side is looking down entrance
+    while (distanceRight < FIRST_WALL_LENGTH) and (distanceFront < (SECOND_WALL_LENGTH - SIDE_BUFFER - ROBOT_LENGTH)):
+        LOGGER.info("Spining right")
+        ROBOTMOVE.spin_right(MotorController.SPEED_MEDIUM)
+
+    ROBOTMOVE.stop()
 
 
 if __name__ == "__main__":
