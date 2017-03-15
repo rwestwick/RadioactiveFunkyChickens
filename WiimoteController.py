@@ -8,6 +8,9 @@ Obstacle Course
 Skittles
 Slightly Deranged Golf
 http://piwars.org/
+
+Need to install correct python modules, see
+https://help.ubuntu.com/community/CWiiD
 """
 
 # Import required libraries
