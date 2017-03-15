@@ -27,6 +27,8 @@ SIDE_BUFFER = 10 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.2 # Angle correction delay time in seconds
 FIRST_WALL_LENGTH = 122 # Length of first wall (cm)
 SECOND_WALL_LENGTH = 204 # Length of first wall (cm)
+MIDDLE_GAP_WIDTH = 36 # Gap between each pair of walls at the middle "S" point
+EXIT_GAP = 40 # Gap between each pair of walls at exit
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
@@ -69,8 +71,10 @@ def main():
     # Drive forward
     ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
 
-    # Steer to first wall
-    while distanceFront > FRONT_BUFFER:
+    LOGGER.info("First Curve")
+
+    # Track first right wall round bend
+    while True:
         
 	# Take measurements
 	distanceLeft = viewLeft.measurement()
@@ -84,7 +88,7 @@ def main():
         # time.sleep(1)
 
         # Decide which way to steer
-        if (distanceLeft < SIDE_BUFFER):
+        if (distanceRight > SIDE_BUFFER):
             LOGGER.info("Steering right")
             ROBOTMOVE.turn_forward(MotorController.SPEED_MEDIUM, 0)
             time.sleep(CORRECTION_TIME)
@@ -97,14 +101,90 @@ def main():
             ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
             time.sleep(CORRECTION_TIME)
 
-    ROBOTMOVE.stop()
+        # Will robot follow round the curve? Could use colour of walls and camera
+        # If yes, then stop when too close to bottom wall
+        if (distanceFront < FRONT_BUFFER):
+            break
 
-    # Spin right till side is looking down entrance
-    while (distanceRight < FIRST_WALL_LENGTH) and (distanceFront < (SECOND_WALL_LENGTH - SIDE_BUFFER - ROBOT_LENGTH)):
-        LOGGER.info("Spining right")
-        ROBOTMOVE.spin_right(MotorController.SPEED_MEDIUM)
+    LOGGER.info("Second Curve")
+    
+    # Decide to spin left
+    while True:
+        # Take measurements
+	distanceLeft = viewLeft.measurement()
+	distanceRight = viewRight.measurement()
+	distanceFront = viewFront.measurement()
+	
+        # Track distances
+        LOGGER.info("Left: " + str(int(distanceLeft)) + " - Right: " + str(int(distanceRight)) +
+                    " - Forward: " +	str(int(distanceFront)) + " cm")
 
-    ROBOTMOVE.stop()
+        LOGGER.info("Spin left")
+        ROBOTMOVE.spin_left(MotorController.SPEED_MEDIUM)
+
+        if distanceRight > (FRONT_BUFFER + (SIDE_BUFFER/2)):
+            break
+        
+    # Track right wall till near far wall
+    while True:
+        
+	# Take measurements
+	distanceLeft = viewLeft.measurement()
+	distanceRight = viewRight.measurement()
+	distanceFront = viewFront.measurement()
+	
+        # Track distances
+        LOGGER.info("Left: " + str(int(distanceLeft)) + " - Right: " + str(int(distanceRight)) +
+                    " - Forward: " +	str(int(distanceFront)) + " cm")
+
+        # time.sleep(1)
+
+        # Decide which way to steer
+        if (distanceRight > SIDE_BUFFER):
+            LOGGER.info("Steering right")
+            ROBOTMOVE.turn_forward(MotorController.SPEED_MEDIUM, 0)
+            time.sleep(CORRECTION_TIME)
+            ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+        elif (distanceRight < SIDE_BUFFER):
+            LOGGER.info("Steering left")
+            ROBOTMOVE.turn_forward(0, MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+            ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+
+        if (distanceFront < (EXIT_GAP * 2)):
+            break
+
+    # Track left wall till exit
+    while True:
+        
+	# Take measurements
+	distanceLeft = viewLeft.measurement()
+	distanceRight = viewRight.measurement()
+	distanceFront = viewFront.measurement()
+	
+        # Track distances
+        LOGGER.info("Left: " + str(int(distanceLeft)) + " - Right: " + str(int(distanceRight)) +
+                    " - Forward: " +	str(int(distanceFront)) + " cm")
+
+        # time.sleep(1)
+
+        # Decide which way to steer
+        if (distanceLeft > SIDE_BUFFER):
+            LOGGER.info("Steering left")
+            ROBOTMOVE.turn_forward(0, MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+            ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+        elif (distanceRight < SIDE_BUFFER):
+            LOGGER.info("Steering right")
+            ROBOTMOVE.turn_forward(MotorController.SPEED_MEDIUM, 0)
+            time.sleep(CORRECTION_TIME)
+            ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+            time.sleep(CORRECTION_TIME)
+
+        # Keep going until exit and need to stop with Ctrl^C
 
 
 if __name__ == "__main__":
