@@ -22,7 +22,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
     Class defines how to interract with the Ultrasonic sensor
     """
     # Running average settings
-    QSIZE = 4
+    QSIZE = 3
     QINITIAL = 30.0  # Based on wall to wall distance of ~60cm
 
     def __init__(self, input_pin, output_pin=None):
@@ -65,44 +65,46 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         """
         Returns the distance in cm to the nearest reflecting object
         """
-        # If the two pins are actually the same, then
-        # they need to be switched between input and
-        # output
-        if self.sonar_out == self.sonar_in:
-            GPIO.setup(self.sonar_out, GPIO.OUT)
 
-        # Send 10us pulse to trigger
-        GPIO.output(self.sonar_out, True)
-        time.sleep(0.00001)
-        GPIO.output(self.sonar_out, False)
-        start = time.time()
-        count = time.time()
+        for x in range(0, self.QSIZE):
+            # If the two pins are actually the same, then
+            # they need to be switched between input and
+            # output
+            if self.sonar_out == self.sonar_in:
+                GPIO.setup(self.sonar_out, GPIO.OUT)
 
-        # If the two pins are actually the same, then
-        # they need to be switched between input and
-        # output
-        if self.sonar_out == self.sonar_in:
-            GPIO.setup(self.sonar_in, GPIO.IN)
-
-        # Measure echo
-        while GPIO.input(self.sonar_in) == 0 and time.time() - count < 0.1:
+            # Send 10us pulse to trigger
+            GPIO.output(self.sonar_out, True)
+            time.sleep(0.00001)
+            GPIO.output(self.sonar_out, False)
             start = time.time()
-        count = time.time()
-        stop = count
-        while GPIO.input(self.sonar_in) == 1 and time.time() - count < 0.1:
-            stop = time.time()
+            count = time.time()
 
-        # Calculate pulse length
-        elapsed = stop - start
+            # If the two pins are actually the same, then
+            # they need to be switched between input and
+            # output
+            if self.sonar_out == self.sonar_in:
+                GPIO.setup(self.sonar_in, GPIO.IN)
 
-        # Distance pulse travelled in that time is time
-        # multiplied by the speed of sound 34000(cm/s) divided by 2
-        distance = elapsed * 17000
+            # Measure echo
+            while GPIO.input(self.sonar_in) == 0 and time.time() - count < 0.1:
+                start = time.time()
+            count = time.time()
+            stop = count
+            while GPIO.input(self.sonar_in) == 1 and time.time() - count < 0.1:
+                stop = time.time()
 
-        # Add latest distance to queue
-        if self.queue.qsize() > self.QSIZE:
-            self.queue.get()
-        self.queue.put(distance)
+            # Calculate pulse length
+            elapsed = stop - start
+
+            # Distance pulse travelled in that time is time
+            # multiplied by the speed of sound 34000(cm/s) divided by 2
+            distance = elapsed * 17000
+
+            # Add latest distance to queue
+            if self.queue.qsize() > self.QSIZE:
+                self.queue.get()
+            self.queue.put(distance)
 
         # Calculate running average
         total = 0
@@ -118,24 +120,24 @@ if __name__ == "__main__":
 
         PROXITY_TWO_IO_LEFT = UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
                                                GPIOLayout.SONAR_LEFT_TX_PIN)
-        PROXITY_TWO_IO_LEFT.measurement()
-        PROXITY_TWO_IO_LEFT.measurement()
-        PROXITY_TWO_IO_LEFT.measurement()
+        for x in range(0, PROXITY_TWO_IO_LEFT.QSIZE * 2):
+            PROXITY_TWO_IO_LEFT.measurement()
+
         MODULE_LOGGER.info("PROXITY_TWO_IO_LEFT: " +
                            str(PROXITY_TWO_IO_LEFT.measurement()))
 
         PROXITY_TWO_IO_RIGHT = UltrasonicSensor(GPIOLayout.SONAR_RIGHT_RX_PIN,
                                                 GPIOLayout.SONAR_RIGHT_TX_PIN)
-        PROXITY_TWO_IO_RIGHT.measurement()
-        PROXITY_TWO_IO_RIGHT.measurement()
-        PROXITY_TWO_IO_RIGHT.measurement()
+        for x in range(0, PROXITY_TWO_IO_RIGHT.QSIZE * 2):
+            PROXITY_TWO_IO_RIGHT.measurement()
+
         MODULE_LOGGER.info("PROXITY_TWO_IO_RIGHT: " +
                            str(PROXITY_TWO_IO_RIGHT.measurement()))
 
         PROXITY_ONE_IO = UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_PIN)
-        PROXITY_ONE_IO.measurement()
-        PROXITY_ONE_IO.measurement()
-        PROXITY_ONE_IO.measurement()
+        for x in range(0, PROXITY_ONE_IO.QSIZE * 2):
+            PROXITY_ONE_IO.measurement()
+
         MODULE_LOGGER.info("PROXITY_ONE_IO: " +
                            str(PROXITY_ONE_IO.measurement()))
     except KeyboardInterrupt:

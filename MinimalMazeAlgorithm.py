@@ -20,15 +20,9 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
-ROBOT_LENGTH = 35 # Length of the robot (cm)
-ROBOT_WIDTH = 14 # Width of the robot (cm)
-FRONT_BUFFER = 35 # Shortest distance to front (cm)
-SIDE_BUFFER = 35 # Shortest distance to side (cm)
+FRONT_BUFFER = 20 # Shortest distance to front (cm)
+SIDE_BUFFER = 10 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.1 # Angle correction delay time in seconds
-FIRST_WALL_LENGTH = 122 # Length of first wall (cm)
-SECOND_WALL_LENGTH = 204 # Length of first wall (cm)
-MIDDLE_GAP_WIDTH = 36 # Gap between each pair of walls at the middle "S" point
-EXIT_GAP = 40 # Gap between each pair of walls at exit
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
