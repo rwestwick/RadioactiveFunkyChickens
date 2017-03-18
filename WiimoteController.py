@@ -83,7 +83,7 @@ def main():
             time.sleep(BUTTON_DELAY)
 
         # Spin right right arrow key pressed
-        elif (buttons & cwiid.RIGHT):
+        elif (buttons & cwiid.BTN_RIGHT):
             robotmove.spin_right(speed)
             LOGGER.info("Spin right at speed " + str(speed))
             time.sleep(BUTTON_DELAY)
@@ -95,11 +95,11 @@ def main():
             time.sleep(BUTTON_DELAY)
 
         # If botton A pressed stop and rumble
-        elif (button & cwiid.BTN_A):
+        elif (buttons & cwiid.BTN_A):
             robotmove.stop()
-            wii.rumble = 1
+            wm.rumble = 1
             time.sleep(1)
-            wii.rumble = 0
+            wm.rumble = 0
             LOGGER.info("Stop!")
 
 
