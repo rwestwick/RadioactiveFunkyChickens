@@ -20,7 +20,8 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
-FRONT_BUFFER = 20 # Shortest distance to front (cm)
+FRONT_BUFFER_WARN = 30 # Shortest distance to front (cm)
+FRONT_BUFFER_STOP = 20 # Shortest distance to front (cm)
 SIDE_BUFFER = 12 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.1 # Angle correction delay time in seconds
 
@@ -48,10 +49,13 @@ def follow_wall(ultrasonic_sensor_side, ultrasonic_sensor_front):
     # Drive forward
     ROBOTMOVE.forward(MotorController.SPEED_SLOW)
 
-    LOGGER.info("Following Wall")
+    LOGGER.info("====  Following Wall ====")
 
     # Track first right wall round bend
     while True:
+        forward_speed = MotorController.SPEED_MEDIUM
+        turn_speed = MotorController.SPEED_FASTEST
+
         # Take measurements
         distance_side = ultrasonic_sensor_side.measurement()
         distance_stop = ultrasonic_sensor_front.measurement()
@@ -63,21 +67,27 @@ def follow_wall(ultrasonic_sensor_side, ultrasonic_sensor_front):
         # Will robot follow round the curve? Could use colour of walls
         # and camera
         # If yes, then stop when too close to bottom wall
-        if distance_stop < FRONT_BUFFER:
+        if distance_stop < FRONT_BUFFER_STOP:
+            LOGGER.info("Stop!")
             break
+
+        if distance_stop < FRONT_BUFFER_WARN:
+            LOGGER.info("Slow down!")
+            forward_speed = MotorController.SPEED_VERYVERYSLOW
+            #turn_speed = MotorController.SPEED_MEDIUM
 
         # Decide which way to steer
         if distance_side < SIDE_BUFFER:
             LOGGER.info("Steering right")
-            ROBOTMOVE.turn_forward(MotorController.SPEED_FAST, 0)
+            ROBOTMOVE.turn_forward(turn_speed, 0)
             time.sleep(CORRECTION_TIME)
-            ROBOTMOVE.forward(MotorController.SPEED_SLOW)
+            ROBOTMOVE.forward(forward_speed)
             time.sleep(CORRECTION_TIME)
         elif distance_side > SIDE_BUFFER:
             LOGGER.info("Steering left")
-            ROBOTMOVE.turn_forward(0, MotorController.SPEED_FAST)
+            ROBOTMOVE.turn_forward(0, turn_speed)
             time.sleep(CORRECTION_TIME)
-            ROBOTMOVE.forward(MotorController.SPEED_SLOW)
+            ROBOTMOVE.forward(forward_speed)
             time.sleep(CORRECTION_TIME)
 
 
