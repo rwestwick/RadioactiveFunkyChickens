@@ -22,7 +22,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
     Class defines how to interract with the Ultrasonic sensor
     """
     # Running average settings
-    QSIZE = 4
+    QSIZE = 3
     QINITIAL = 30.0  # Based on wall to wall distance of ~60cm
 
     def __init__(self, input_pin, output_pin=None):
