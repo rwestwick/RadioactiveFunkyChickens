@@ -50,8 +50,18 @@
       <file leaf-file-name="MinimalMazeAlgorithm.py" pinned="false" current-in-tab="true">
         <entry file="file://Z:/MinimalMazeAlgorithm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-972">
-              <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+            <state relative-caret-position="251">
+              <caret line="123" column="0" lean-forward="true" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MotorController.py" pinned="false" current-in-tab="false">
+        <entry file="file://Z:/MotorController.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="214">
+              <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -103,9 +113,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-4" />
-    <option name="y" value="1" />
+    <option name="y" value="2" />
     <option name="width" value="1378" />
-    <option name="height" value="753" />
+    <option name="height" value="752" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -342,7 +352,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="1" width="1378" height="753" extended-state="0" />
+    <frame x="-4" y="2" width="1378" height="752" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24626866" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -439,14 +449,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://Z:/MotorController.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="154" column="8" lean-forward="false" selection-start-line="154" selection-start-column="8" selection-end-line="154" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://Z:/UltrasonicSensor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="686">
@@ -455,10 +457,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://Z:/MotorController.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://Z:/MinimalMazeAlgorithm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-972">
-          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state relative-caret-position="251">
+          <caret line="123" column="0" lean-forward="true" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -21,7 +21,7 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
 FRONT_BUFFER = 20 # Shortest distance to front (cm)
-SIDE_BUFFER = 10 # Shortest distance to side (cm)
+SIDE_BUFFER = 12 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.1 # Angle correction delay time in seconds
 
 # Initialise motors
@@ -33,14 +33,14 @@ ROBOTMOVE = MotorController.MotorController(
 
 
 def turn_left():
-    ROBOTMOVE.spin_left(MotorController.SPEED_FASTEST)
-    time.sleep(0.5)
+    ROBOTMOVE.spin_left(MotorController.SPEED_MEDIUM)
+    time.sleep(0.7)
     ROBOTMOVE.stop()
 
 
 def turn_right():
-    ROBOTMOVE.spin_right(MotorController.SPEED_FASTEST)
-    time.sleep(0.5)
+    ROBOTMOVE.spin_right(MotorController.SPEED_MEDIUM)
+    time.sleep(0.7)
     ROBOTMOVE.stop()
 
 
@@ -60,7 +60,8 @@ def follow_wall(ultrasonic_sensor_side, ultrasonic_sensor_front):
         LOGGER.info("Distance (side): " + str(int(distance_side)) + " cm")
         LOGGER.info("Distance (stop): " + str(int(distance_stop)) + " cm")
 
-        # Will robot follow round the curve? Could use colour of walls and camera
+        # Will robot follow round the curve? Could use colour of walls
+        # and camera
         # If yes, then stop when too close to bottom wall
         if distance_stop < FRONT_BUFFER:
             break
@@ -68,13 +69,13 @@ def follow_wall(ultrasonic_sensor_side, ultrasonic_sensor_front):
         # Decide which way to steer
         if distance_side < SIDE_BUFFER:
             LOGGER.info("Steering right")
-            ROBOTMOVE.turn_forward(MotorController.SPEED_FASTEST, 0)
+            ROBOTMOVE.turn_forward(MotorController.SPEED_FAST, 0)
             time.sleep(CORRECTION_TIME)
             ROBOTMOVE.forward(MotorController.SPEED_SLOW)
             time.sleep(CORRECTION_TIME)
         elif distance_side > SIDE_BUFFER:
             LOGGER.info("Steering left")
-            ROBOTMOVE.turn_forward(0, MotorController.SPEED_FASTEST)
+            ROBOTMOVE.turn_forward(0, MotorController.SPEED_FAST)
             time.sleep(CORRECTION_TIME)
             ROBOTMOVE.forward(MotorController.SPEED_SLOW)
             time.sleep(CORRECTION_TIME)
@@ -108,12 +109,20 @@ def main():
     follow_wall(view_left, view_front)
     turn_right()
 
-    wibble
     follow_wall(view_left, view_front)
     turn_right()
 
     follow_wall(view_left, view_front)
     turn_right()
+
+    follow_wall(view_left, view_front)
+    turn_right()
+    turn_right()
+    turn_right()
+    turn_right()
+    ROBOTMOVE.stop()
+
+    wibble
 
     follow_wall(view_left, view_right)
     follow_wall(view_right, view_front)
