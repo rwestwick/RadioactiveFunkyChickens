@@ -22,7 +22,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
     Class defines how to interract with the Ultrasonic sensor
     """
     # Running average settings
-    QSIZE = 3
+    QSIZE = 4
     QINITIAL = 30.0  # Based on wall to wall distance of ~60cm
 
     def __init__(self, input_pin, output_pin=None):
@@ -118,15 +118,24 @@ if __name__ == "__main__":
 
         PROXITY_TWO_IO_LEFT = UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
                                                GPIOLayout.SONAR_LEFT_TX_PIN)
+        PROXITY_TWO_IO_LEFT.measurement()
+        PROXITY_TWO_IO_LEFT.measurement()
+        PROXITY_TWO_IO_LEFT.measurement()
         MODULE_LOGGER.info("PROXITY_TWO_IO_LEFT: " +
                            str(PROXITY_TWO_IO_LEFT.measurement()))
 
         PROXITY_TWO_IO_RIGHT = UltrasonicSensor(GPIOLayout.SONAR_RIGHT_RX_PIN,
                                                 GPIOLayout.SONAR_RIGHT_TX_PIN)
+        PROXITY_TWO_IO_RIGHT.measurement()
+        PROXITY_TWO_IO_RIGHT.measurement()
+        PROXITY_TWO_IO_RIGHT.measurement()
         MODULE_LOGGER.info("PROXITY_TWO_IO_RIGHT: " +
                            str(PROXITY_TWO_IO_RIGHT.measurement()))
 
         PROXITY_ONE_IO = UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_PIN)
+        PROXITY_ONE_IO.measurement()
+        PROXITY_ONE_IO.measurement()
+        PROXITY_ONE_IO.measurement()
         MODULE_LOGGER.info("PROXITY_ONE_IO: " +
                            str(PROXITY_ONE_IO.measurement()))
     except KeyboardInterrupt:
