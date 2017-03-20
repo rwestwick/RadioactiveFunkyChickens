@@ -58,8 +58,8 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         # Initilise Queue
         self.queue = Queue.Queue()
 
-        for _ in xrange(0, self.QSIZE):
-            self.queue.put(self.QINITIAL)
+        #for _ in xrange(0, self.QSIZE):
+        #    self.queue.put(self.QINITIAL)
 
     def measurement(self):
         """
