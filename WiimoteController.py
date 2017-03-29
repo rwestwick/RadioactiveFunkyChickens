@@ -97,10 +97,27 @@ def main():
         # If botton A pressed stop and rumble
         elif (buttons & cwiid.BTN_A):
             robotmove.stop()
-            wm.rumble = 1
-            time.sleep(1)
-            wm.rumble = 0
+            # wm.rumble = 1
+            # time.sleep(1)
+            # wm.rumble = 0
             LOGGER.info("Stop!")
+
+        # If button B pressed do a quick right
+        elif (buttons & cwiid.BTN_B):
+            robotmove.spin_right(speed)
+            time.sleep(0.5)
+            robotmove.forward(speed)
+            LOGGER.info("Quick right")
+
+        # If button Plus pressed increase speed
+        elif (buttons & cwiid.BTN_PLUS):
+            speed = MotorController.SPEED_FASTEST
+            LOGGER.info("Fast as possible")
+
+        # If button Minus pressed decrease speed
+        elif (buttons & cwiid.BTN_MINUS):
+            speed = MotorController.SPEED_MEDIUM
+            LOGGER.info("Go at medium speed.")
 
 
 if __name__ == "__main__":
