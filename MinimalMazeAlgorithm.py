@@ -20,10 +20,12 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
-FRONT_BUFFER_WARN = 30 # Shortest distance to front (cm)
-FRONT_BUFFER_STOP = 20 # Shortest distance to front (cm)
-SIDE_BUFFER = 12 # Shortest distance to side (cm)
-CORRECTION_TIME = 0.1 # Angle correction delay time in seconds
+FRONT_BUFFER_WARN = 35 # Shortest distance to front (cm)
+FRONT_BUFFER_STOP = 25 # Shortest distance to front (cm)
+SIDE_BUFFER = 10 # Shortest distance to side (cm)
+CORRECTION_TIME = 0.2 # Angle correction delay time in seconds
+FORWARD_TIME = 0.1 # Angle correction delay time in seconds
+TURN_DELAY = 0.7
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
@@ -33,36 +35,37 @@ ROBOTMOVE = MotorController.MotorController(
     GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
-def turn_left():
+def turn_left(delay):
+    LOGGER.info("Left Turn")
     ROBOTMOVE.spin_left(MotorController.SPEED_MEDIUM)
-    time.sleep(0.7)
+    time.sleep(delay)
     ROBOTMOVE.stop()
 
 
-def turn_right():
+def turn_right(delay):
+    LOGGER.info("Right Turn")
     ROBOTMOVE.spin_right(MotorController.SPEED_MEDIUM)
-    time.sleep(0.7)
+    time.sleep(delay)
     ROBOTMOVE.stop()
 
 
-def follow_wall(ultrasonic_sensor_side, ultrasonic_sensor_front):
-    # Drive forward
-    ROBOTMOVE.forward(MotorController.SPEED_SLOW)
+def follow_wall(side_buffer, ultrasonic_sensor_side, ultrasonic_sensor_front):
 
     LOGGER.info("====  Following Wall ====")
+    LOGGER.info("Distance (side warning): " + str(side_buffer) + " cm")
 
     # Track first right wall round bend
     while True:
-        forward_speed = MotorController.SPEED_MEDIUM
+        forward_speed = MotorController.SPEED_SLOW
         turn_speed = MotorController.SPEED_FASTEST
 
         # Take measurements
-        distance_side = ultrasonic_sensor_side.measurement()
-        distance_stop = ultrasonic_sensor_front.measurement()
+        if ultrasonic_sensor_side is not None:
+            distance_side = ultrasonic_sensor_side.measurement()
+            LOGGER.info("Distance (side): " + format(distance_side, '.2f') + " cm")
 
-        # Track distances
-        LOGGER.info("Distance (side): " + str(int(distance_side)) + " cm")
-        LOGGER.info("Distance (stop): " + str(int(distance_stop)) + " cm")
+        distance_stop = ultrasonic_sensor_front.measurement()
+        LOGGER.info("Distance (stop): " + format(distance_stop, '.2f') + " cm")
 
         # Will robot follow round the curve? Could use colour of walls
         # and camera
@@ -74,21 +77,29 @@ def follow_wall(ultrasonic_sensor_side, ultrasonic_sensor_front):
         if distance_stop < FRONT_BUFFER_WARN:
             LOGGER.info("Slow down!")
             forward_speed = MotorController.SPEED_VERYVERYSLOW
-            #turn_speed = MotorController.SPEED_MEDIUM
 
-        # Decide which way to steer
-        if distance_side < SIDE_BUFFER:
-            LOGGER.info("Steering right")
-            ROBOTMOVE.turn_forward(turn_speed, 0)
-            time.sleep(CORRECTION_TIME)
+        if ultrasonic_sensor_side is not None:
+            # Decide which way to steer
+            if distance_side < (side_buffer - 1):
+                LOGGER.info("Steering right")
+                ROBOTMOVE.turn_forward(turn_speed, 0)
+                time.sleep(CORRECTION_TIME)
+                ROBOTMOVE.forward(forward_speed)
+
+            elif distance_side > (side_buffer + 1):
+                LOGGER.info("Steering left")
+                ROBOTMOVE.turn_forward(0, turn_speed)
+                time.sleep(CORRECTION_TIME)
+                ROBOTMOVE.forward(forward_speed)
+
+            else:
+                LOGGER.info("Forward")
+                ROBOTMOVE.forward(forward_speed)
+                time.sleep(FORWARD_TIME)
+        else:
+            LOGGER.info("Forward")
             ROBOTMOVE.forward(forward_speed)
-            time.sleep(CORRECTION_TIME)
-        elif distance_side > SIDE_BUFFER:
-            LOGGER.info("Steering left")
-            ROBOTMOVE.turn_forward(0, turn_speed)
-            time.sleep(CORRECTION_TIME)
-            ROBOTMOVE.forward(forward_speed)
-            time.sleep(CORRECTION_TIME)
+            time.sleep(FORWARD_TIME)
 
 
 def main():
@@ -110,41 +121,64 @@ def main():
     view_front = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_FRONT_TX_PIN)
 
+    SIDE_BUFFER = view_left.measurement()
+    LOGGER.info("Distance side at start " + format(SIDE_BUFFER, '.2f') + " cm")
+
     while True:
         keyp = KeyboardCharacterReader.readkey()
         if keyp == ' ':
             LOGGER.info("Go")
             break
 
-    follow_wall(view_left, view_front)
-    turn_right()
+    LOGGER.info("First line")
+    follow_wall(SIDE_BUFFER, view_left, view_front)
+    turn_right(TURN_DELAY)
 
-    follow_wall(view_left, view_front)
-    turn_right()
+    LOGGER.info("")
+    LOGGER.info("Second line")
 
-    follow_wall(view_left, view_front)
-    turn_right()
+    follow_wall(SIDE_BUFFER, view_left, view_front)
+    turn_right(TURN_DELAY)
 
-    follow_wall(view_left, view_front)
-    turn_right()
-    turn_right()
-    turn_right()
-    turn_right()
+    LOGGER.info("")
+    LOGGER.info("Third towards 45 deg")
+
+    follow_wall(SIDE_BUFFER, view_left, view_front)
+    turn_right(TURN_DELAY)
+
+    LOGGER.info("")
+    LOGGER.info("Fourth towards last 45 deg")
+
+    follow_wall(SIDE_BUFFER, None, view_front)
+    turn_left(TURN_DELAY)
+
+    LOGGER.info("")
+    LOGGER.info("Fifth short ")
+
+    follow_wall(SIDE_BUFFER, view_right, view_front)
+    turn_left(TURN_DELAY)
+
+    LOGGER.info("")
+    LOGGER.info("Sixth short")
+
+    follow_wall(SIDE_BUFFER, view_right, view_front)
+    turn_left(TURN_DELAY)
+
+    LOGGER.info("")
+    LOGGER.info("Seventh long")
+
+    follow_wall(SIDE_BUFFER, view_right, view_front)
+    turn_left(TURN_DELAY)
+
+    LOGGER.info("")
+    LOGGER.info("Eighth and final straight long")
+
+    follow_wall(SIDE_BUFFER, view_right, view_front)
+    turn_left(TURN_DELAY)
+    turn_left(TURN_DELAY)
+    turn_left(TURN_DELAY)
+    turn_left(TURN_DELAY)
     ROBOTMOVE.stop()
-
-    wibble
-
-    follow_wall(view_left, view_right)
-    follow_wall(view_right, view_front)
-    turn_left()
-
-    follow_wall(view_right, view_front)
-    turn_left()
-
-    follow_wall(view_right, view_front)
-    turn_left()
-
-    follow_wall(view_right, view_front)
 
 
 if __name__ == "__main__":
