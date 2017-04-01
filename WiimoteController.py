@@ -61,7 +61,7 @@ def main():
     LOGGER.info("Wiimote connected.")
     
     # Set wiimote to report button presses
-    wm.rpt_mode = cwiid.RPT_BTN
+    wm.rpt_mode = cwiid.RPT_BTN | cwiid.RPT_ACC | cwiid.RPT_EXT
 
     # Turn on led to show connected
     wm.led = 1
