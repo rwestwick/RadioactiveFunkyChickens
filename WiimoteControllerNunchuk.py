@@ -70,7 +70,7 @@ def main():
     while True:
         
         if wm.state.has_key('nunchuk'):
-            print("Success")
+            # print("Success")
             
             # X axis: Left Max = 25, Middle = 125, RightMax = 225
             NunchukStickX = (wm.state['nunchuk']['stick'][cwiid.X])
@@ -81,25 +81,53 @@ def main():
             # print NunchukStickY
 
             # Go forward if joystick pushed forward
-            if (NunchukStickY > 150):
+            if (NunchukStickY > 150) & (NunchukStickY < 190):
+                speed = MotorController.SPEED_SLOW
+                robotmove.forward(speed)
+                LOGGER.info("Forward at speed " + str(speed))
+                time.sleep(STICK_DELAY)
+
+            elif (NunchukStickY >= 190):
+                speed = MotorController.SPEED_FASTEST
                 robotmove.forward(speed)
                 LOGGER.info("Forward at speed " + str(speed))
                 time.sleep(STICK_DELAY)
             
             # Go backwards if joystick pulled back
-            elif (NunchukStickY < 100):
+            elif (NunchukStickY < 100) & (NunchukStickY > 50):
+                speed = MotorController.SPEED_SLOW
+                robotmove.reverse(speed)
+                LOGGER.info("Reverse at speed " + str(speed))
+                time.sleep(STICK_DELAY)
+                
+            elif (NunchukStickY <= 50):
+                speed = MotorController.SPEED_FASTEST
                 robotmove.reverse(speed)
                 LOGGER.info("Reverse at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             # Spin right right joystick pushed right
-            elif (NunchukStickX > 150):
+            elif (NunchukStickX > 150) & (NunchukStickX < 190):
+                speed = MotorController.SPEED_SLOW
+                robotmove.spin_right(speed)
+                LOGGER.info("Spin right at speed " + str(speed))
+                time.sleep(STICK_DELAY)
+
+            elif (NunchukStickX >= 190):
+                speed = MotorController.SPEED_FASTEST
                 robotmove.spin_right(speed)
                 LOGGER.info("Spin right at speed " + str(speed))
                 time.sleep(STICK_DELAY)
             
             # Spin left if joystick pushed left
-            elif (NunChukStickX < 100):
+            elif (NunchukStickX < 100) & (NunchukStickX > 50):
+                speed = MotorController.SPEED_SLOW
+                robotmove.spin_left(speed)
+                LOGGER.info("Spin left at speed " + str(speed))
+                time.sleep(STICK_DELAY)
+
+            elif (NunchukStickX <= 50):
+                speed = MotorController.SPEED_FASTEST
                 robotmove.spin_left(speed)
                 LOGGER.info("Spin left at speed " + str(speed))
                 time.sleep(STICK_DELAY)
@@ -110,7 +138,7 @@ def main():
                 LOGGER.info("Stop!")
             
         else:
-            print("Doh")
+            print("Doh for now")
             time.sleep(2)
 
 
