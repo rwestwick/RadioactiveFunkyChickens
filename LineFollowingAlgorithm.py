@@ -52,7 +52,7 @@ def main():
         LSTATE = not linefollower.get_l_state()
         MSTATE = not linefollower.get_m_state()
         RSTATE = not linefollower.get_r_state()
-		
+
         LOGGER.info(str(RSTATE) + " - " + str(MSTATE) +	" - " +	str(LSTATE))
         #time.sleep(1)
 
@@ -65,13 +65,13 @@ def main():
                 LOGGER.info("No Line")
                 if lastturnleft:
                     LOGGER.info("  Hard Left Search")
-                    ROBOTMOVE.spin_left(MotorController.SPEED_VERYVERYSLOW)
+                    ROBOTMOVE.spin_left(MotorController.SPEED_VERYSLOW)
                 elif lastturnright:
                     LOGGER.info("  Hard Right Search")
-                    ROBOTMOVE.spin_right(MotorController.SPEED_VERYVERYSLOW)
+                    ROBOTMOVE.spin_right(MotorController.SPEED_VERYSLOW)
                 else:
                     LOGGER.info("  Search Right")
-                    ROBOTMOVE.spin_right(MotorController.SPEED_VERYVERYSLOW)
+                    ROBOTMOVE.spin_right(MotorController.SPEED_VERYSLOW)
 
             elif LSTATE == 0 and MSTATE == 1 and RSTATE == 0:
                 LOGGER.info("Found Middle - Forward")
