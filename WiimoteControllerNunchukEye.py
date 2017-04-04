@@ -22,8 +22,11 @@ import GPIOLayout
 import cwiid
 import ServoController
 
+# Set constants
 STICK_DELAY = 0.1
 BUTTON_DELAY = 0.1
+PAN_STEP = 10
+TILT_STEP = 10
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -40,15 +43,13 @@ robotmove = MotorController.MotorController(
 SERVO_CONTROLLER = ServoController.ServoController()
 SERVO_CONTROLLER.start_servos()
 
-tVal = 0  # 0 degrees is centre
-pVal = 0  # 0 degrees is centre
-
-    
 def main():
     """
     """
     # Set initial values
     speed = MotorController.SPEED_FASTEST  # Initial forward speed
+    tVal = 0  # 0 degrees is centre
+    pVal = 0  # 0 degrees is centre
     
     # Connecting to the wiimote. This allows several attempts
     # as first few often fail.
@@ -153,32 +154,46 @@ def main():
             
             # If button up pressed move servo up
             if (buttons & cwiid.BTN_UP):
-                LOGGER.info("Servo Up")
-                SERVO_CONTROLLER.set_pan_servo(90)
+                pVal = pVal + PAN_STEP
+                if pVal > 90:
+                    pVal = 90
+                LOGGER.info("Servo Up to: " + str(pVal))
+                SERVO_CONTROLLER.set_pan_servo(pVal)
                 time.sleep(BUTTON_DELAY)
                 
             # If button down pressed move servo down
             elif (buttons & cwiid.BTN_DOWN):
-                LOGGER.info("Servo Down")
-                SERVO_CONTROLLER.set_pan_servo(-90)
+                pVal = pVal - PAN_STEP
+                if pVal < -90:
+                    pVal = -90
+                LOGGER.info("Servo Down to: " + str(pVal))
+                SERVO_CONTROLLER.set_pan_servo(pVal)
                 time.sleep(BUTTON_DELAY)
 
             # If button right pressed move servo right
             elif (buttons & cwiid.BTN_RIGHT):
-                SERVO_CONTROLLER.set_tilt_servo(90)
-                LOGGER.info("Servo Right")
+                tVal = tVal + TILT_STEP
+                if tVal > 90:
+                    tVal = 90
+                LOGGER.info("Servo Right to: " + str(tVal))
+                SERVO_CONTROLLER.set_tilt_servo(tVal)
                 time.sleep(BUTTON_DELAY)
                 
             # If button left pressed move servo left
             elif (buttons & cwiid.BTN_LEFT):
-                LOGGER.info("Servo Left")
-                SERVO_CONTROLLER.set_tilt_servo(-90)
+                tVal = tVal - TILT_STEP
+                if tVal < -90:
+                    tVal = -90
+                LOGGER.info("Servo Left to: " + str(tVal))
+                SERVO_CONTROLLER.set_tilt_servo(tVal)
                 time.sleep(BUTTON_DELAY)
 
             # If botton A pressed centre Servo
             elif (buttons & cwiid.BTN_A):
-                SERVO_CONTROLLER.set_pan_servo(0)
-                SERVO_CONTROLLER.set_tilt_servo(0)
+                pVal = 0
+                tVal = 0
+                SERVO_CONTROLLER.set_pan_servo(pVal)
+                SERVO_CONTROLLER.set_tilt_servo(tVal)
                 LOGGER.info("Centre!") 
             
         else:
