@@ -21,10 +21,13 @@ import SetupConsoleLogger
 import GPIOLayout
 import cwiid
 import ServoController
+import threading
 
 # Set constants
 STICK_DELAY = 0.1
 BUTTON_DELAY = 0.1
+RUMBLE_DELAY = 1
+
 PAN_STEP = 10
 TILT_STEP = 10
 
@@ -32,6 +35,15 @@ NUNCHUK_MAX = 220.0
 NUNCHUK_MID = 126.0
 NUNCHUK_MIN = 32.0
 NUNCHUK_BUFFER = 25.0
+
+# Define rumble function for thread
+def rumble(currentLogger, currentWiimote):
+    """thread rumble function"""
+    currentLogger.info("Rumble")
+    currentWiimote.rumble = 1
+    time.sleep(RUMBLE_DELAY)
+    currentWiimote.rumble = 0
+    return
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -246,8 +258,16 @@ def main():
                 tVal = 0
                 SERVO_CONTROLLER.set_pan_servo(pVal)
                 SERVO_CONTROLLER.set_tilt_servo(tVal)
-                LOGGER.info("Centre!") 
-            
+                LOGGER.info("Centre!")
+                time.sleep(BUTTON_DELAY)
+
+            # If button B pressed rumble Wiimote, but don't block other actions
+            if (buttons & cwiid.BTN_B):
+                t = threading.Thread(target=rumble, args=(LOGGER, wm, ))
+                t.start()
+                time.sleep(BUTTON_DELAY)
+                
+        # If no nunchuck detected yet, signal and wait    
         else:
             print("Doh for now")
             time.sleep(2)
