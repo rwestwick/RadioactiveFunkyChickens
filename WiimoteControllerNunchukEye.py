@@ -28,6 +28,11 @@ BUTTON_DELAY = 0.1
 PAN_STEP = 10
 TILT_STEP = 10
 
+NUNCHUK_MAX = 220.0
+NUNCHUK_MID = 126.0
+NUNCHUK_MIN = 32.0
+NUNCHUK_BUFFER = 25.0
+
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
@@ -85,70 +90,117 @@ def main():
 
             buttons = wm.state['buttons']
             
-            # X axis: Left Max = 25, Middle = 125, RightMax = 225
+            # X axis: Left Max = 25, Middle = 124, Right Max = 225
             NunchukStickX = (wm.state['nunchuk']['stick'][cwiid.X])
-            # Y axis: DownMax = 30, Middle = 125, UpMax = 225
+            # Y axis: Down Max = 30, Middle = 132, Up Max = 225
             NunchukStickY = (wm.state['nunchuk']['stick'][cwiid.Y])
 
-            # print NunchukStickX
-            # print NunchukStickY
+            # print("Stick X: ", str(NunchukStickX), "Stick Y: ", str(NunchukStickY))
 
-            # Go forward if joystick pushed forward
-            if (NunchukStickY > 150) & (NunchukStickY < 190):
-                speed = MotorController.SPEED_SLOW
-                robotmove.forward(speed)
-                LOGGER.info("Forward at speed " + str(speed))
-                time.sleep(STICK_DELAY)
+            # Go forward if joystick pushed forward beyond buffer in central channel
+            if(NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+               NunchukStickX < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+               NunchukStickX > (NUNCHUK_MID - NUNCHUK_BUFFER)):
 
-            elif (NunchukStickY >= 190):
-                speed = MotorController.SPEED_FASTEST
+                speed = int(MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.forward(speed)
+
                 LOGGER.info("Forward at speed " + str(speed))
                 time.sleep(STICK_DELAY)
             
-            # Go backwards if joystick pulled back
-            elif (NunchukStickY < 100) & (NunchukStickY > 50):
-                speed = MotorController.SPEED_SLOW
-                robotmove.reverse(speed)
-                LOGGER.info("Reverse at speed " + str(speed))
-                time.sleep(STICK_DELAY)
+            # Go backwards if joystick pulled back beyond buffer in central channel
+            elif(NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickX < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickX > (NUNCHUK_MID - NUNCHUK_BUFFER)):
                 
-            elif (NunchukStickY <= 50):
-                speed = MotorController.SPEED_FASTEST
+                speed = int(MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.reverse(speed)
+                
                 LOGGER.info("Reverse at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
-            # Spin right right joystick pushed right
-            elif (NunchukStickX > 150) & (NunchukStickX < 190):
-                speed = MotorController.SPEED_SLOW
+            # Spin right right joystick pushed right beyond buffer in central channel
+            elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID - NUNCHUK_BUFFER)):
+                
+                speed = int(MotorController.SPEED_FASTEST * (NunchukStickX - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.spin_right(speed)
-                LOGGER.info("Spin right at speed " + str(speed))
-                time.sleep(STICK_DELAY)
-
-            elif (NunchukStickX >= 190):
-                speed = MotorController.SPEED_FASTEST
-                robotmove.spin_right(speed)
+                
                 LOGGER.info("Spin right at speed " + str(speed))
                 time.sleep(STICK_DELAY)
             
-            # Spin left if joystick pushed left
-            elif (NunchukStickX < 100) & (NunchukStickX > 50):
-                speed = MotorController.SPEED_SLOW
+            # Spin left if joystick pushed left beyond buffer in central channel
+            elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID - NUNCHUK_BUFFER)):
+                
+                speed = int(MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.spin_left(speed)
+                
                 LOGGER.info("Spin left at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
-            elif (NunchukStickX <= 50):
-                speed = MotorController.SPEED_FASTEST
-                robotmove.spin_left(speed)
-                LOGGER.info("Spin left at speed " + str(speed))
+            # Turn forward left if joystick pushed top left outside central channels
+            elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
+
+                speedLeftWheel = int(MotorController.SPEED_SLOW)
+                speedRightWheel = int(MotorController.SPEED_FASTEST)
+                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Steer left. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
+                time.sleep(STICK_DELAY)
+
+            # Turn forward right if joystick pushed top right outside central channels
+            elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
+
+                speedLeftWheel = int(MotorController.SPEED_FASTEST)
+                speedRightWheel = int(MotorController.SPEED_SLOW)
+                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Steer right. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
+                time.sleep(STICK_DELAY)
+
+            # Turn reverse left if joystick pushed bottom left outside central channels
+            elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER)):
+
+                speedLeftWheel = int(MotorController.SPEED_SLOW)
+                speedRightWheel = int(MotorController.SPEED_FASTEST)
+                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Reverse left. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
+                time.sleep(STICK_DELAY)
+
+            # Turn reverse right if joystick pushed top right outside central channels
+            elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER)):
+
+                speedLeftWheel = int(MotorController.SPEED_FASTEST)
+                speedRightWheel = int(MotorController.SPEED_SLOW)
+                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Reverse right. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
                 time.sleep(STICK_DELAY)
 
             # else stop
             else:
                 robotmove.stop()
-                LOGGER.info("Stop!")
+                # LOGGER.info("Stop! X pos: " + str(NunchukStickX) + " Y pos: " + str(NunchukStickY))
 
             # Servo Controls
             
