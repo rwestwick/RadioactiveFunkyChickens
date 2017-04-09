@@ -22,6 +22,7 @@ import GPIOLayout
 import cwiid
 import ServoController
 import threading
+import math
 
 # Set constants
 STICK_DELAY = 0.1
@@ -165,8 +166,18 @@ def main():
             elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
                  NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
-                speedLeftWheel = int(MotorController.SPEED_SLOW)
-                speedRightWheel = int(MotorController.SPEED_FASTEST)
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = int(lengthY) 
+                speedRightWheel = overallSpeed
                 robotmove.turn_forward(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info("Steer left. Left wheel at speed: " + str(speedLeftWheel) +
@@ -177,8 +188,18 @@ def main():
             elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
                  NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
-                speedLeftWheel = int(MotorController.SPEED_FASTEST)
-                speedRightWheel = int(MotorController.SPEED_SLOW)
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = overallSpeed
+                speedRightWheel = int(lengthY)
                 robotmove.turn_forward(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info("Steer right. Left wheel at speed: " + str(speedLeftWheel) +
@@ -188,9 +209,19 @@ def main():
             # Turn reverse left if joystick pushed bottom left outside central channels
             elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
                  NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER)):
+                
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
 
-                speedLeftWheel = int(MotorController.SPEED_SLOW)
-                speedRightWheel = int(MotorController.SPEED_FASTEST)
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = int(lengthY) 
+                speedRightWheel = overallSpeed
                 robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info("Reverse left. Left wheel at speed: " + str(speedLeftWheel) +
@@ -201,8 +232,18 @@ def main():
             elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
                  NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
-                speedLeftWheel = int(MotorController.SPEED_FASTEST)
-                speedRightWheel = int(MotorController.SPEED_SLOW)
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = overallSpeed
+                speedRightWheel = int(lengthY)
                 robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info("Reverse right. Left wheel at speed: " + str(speedLeftWheel) +
