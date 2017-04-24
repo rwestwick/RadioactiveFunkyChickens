@@ -21,12 +21,30 @@ import SetupConsoleLogger
 import GPIOLayout
 import cwiid
 import ServoController
+import threading
+import math
 
 # Set constants
 STICK_DELAY = 0.1
 BUTTON_DELAY = 0.1
+RUMBLE_DELAY = 1
+
 PAN_STEP = 10
 TILT_STEP = 10
+
+NUNCHUK_MAX = 220.0
+NUNCHUK_MID = 126.0
+NUNCHUK_MIN = 32.0
+NUNCHUK_BUFFER = 25.0
+
+# Define rumble function for thread
+def rumble(currentLogger, currentWiimote):
+    """thread rumble function"""
+    currentLogger.info("Rumble")
+    currentWiimote.rumble = 1
+    time.sleep(RUMBLE_DELAY)
+    currentWiimote.rumble = 0
+    return
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -85,70 +103,157 @@ def main():
 
             buttons = wm.state['buttons']
             
-            # X axis: Left Max = 25, Middle = 125, RightMax = 225
+            # X axis: Left Max = 25, Middle = 124, Right Max = 225
             NunchukStickX = (wm.state['nunchuk']['stick'][cwiid.X])
-            # Y axis: DownMax = 30, Middle = 125, UpMax = 225
+            # Y axis: Down Max = 30, Middle = 132, Up Max = 225
             NunchukStickY = (wm.state['nunchuk']['stick'][cwiid.Y])
 
-            # print NunchukStickX
-            # print NunchukStickY
+            # print("Stick X: ", str(NunchukStickX), "Stick Y: ", str(NunchukStickY))
 
-            # Go forward if joystick pushed forward
-            if (NunchukStickY > 150) & (NunchukStickY < 190):
-                speed = MotorController.SPEED_SLOW
-                robotmove.forward(speed)
-                LOGGER.info("Forward at speed " + str(speed))
-                time.sleep(STICK_DELAY)
+            # Go forward if joystick pushed forward beyond buffer in central channel
+            if(NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+               NunchukStickX < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+               NunchukStickX > (NUNCHUK_MID - NUNCHUK_BUFFER)):
 
-            elif (NunchukStickY >= 190):
-                speed = MotorController.SPEED_FASTEST
+                speed = int(MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.forward(speed)
+
                 LOGGER.info("Forward at speed " + str(speed))
                 time.sleep(STICK_DELAY)
             
-            # Go backwards if joystick pulled back
-            elif (NunchukStickY < 100) & (NunchukStickY > 50):
-                speed = MotorController.SPEED_SLOW
-                robotmove.reverse(speed)
-                LOGGER.info("Reverse at speed " + str(speed))
-                time.sleep(STICK_DELAY)
+            # Go backwards if joystick pulled back beyond buffer in central channel
+            elif(NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickX < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickX > (NUNCHUK_MID - NUNCHUK_BUFFER)):
                 
-            elif (NunchukStickY <= 50):
-                speed = MotorController.SPEED_FASTEST
+                speed = int(MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.reverse(speed)
+                
                 LOGGER.info("Reverse at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
-            # Spin right right joystick pushed right
-            elif (NunchukStickX > 150) & (NunchukStickX < 190):
-                speed = MotorController.SPEED_SLOW
+            # Spin right right joystick pushed right beyond buffer in central channel
+            elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID - NUNCHUK_BUFFER)):
+                
+                speed = int(MotorController.SPEED_FASTEST * (NunchukStickX - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.spin_right(speed)
-                LOGGER.info("Spin right at speed " + str(speed))
-                time.sleep(STICK_DELAY)
-
-            elif (NunchukStickX >= 190):
-                speed = MotorController.SPEED_FASTEST
-                robotmove.spin_right(speed)
+                
                 LOGGER.info("Spin right at speed " + str(speed))
                 time.sleep(STICK_DELAY)
             
-            # Spin left if joystick pushed left
-            elif (NunchukStickX < 100) & (NunchukStickX > 50):
-                speed = MotorController.SPEED_SLOW
+            # Spin left if joystick pushed left beyond buffer in central channel
+            elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID - NUNCHUK_BUFFER)):
+                
+                speed = int(MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN))
+                if speed > MotorController.SPEED_FASTEST:
+                    speed = MotorController.SPEED_FASTEST
                 robotmove.spin_left(speed)
+                
                 LOGGER.info("Spin left at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
-            elif (NunchukStickX <= 50):
-                speed = MotorController.SPEED_FASTEST
-                robotmove.spin_left(speed)
-                LOGGER.info("Spin left at speed " + str(speed))
+            # Turn forward left if joystick pushed top left outside central channels
+            elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
+
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = int(lengthY) 
+                speedRightWheel = overallSpeed
+                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Steer left. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
+                time.sleep(STICK_DELAY)
+
+            # Turn forward right if joystick pushed top right outside central channels
+            elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
+
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = overallSpeed
+                speedRightWheel = int(lengthY)
+                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Steer right. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
+                time.sleep(STICK_DELAY)
+
+            # Turn reverse left if joystick pushed bottom left outside central channels
+            elif(NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER)):
+                
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = int(lengthY) 
+                speedRightWheel = overallSpeed
+                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Reverse left. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
+                time.sleep(STICK_DELAY)
+
+            # Turn reverse right if joystick pushed top right outside central channels
+            elif(NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER) and
+                 NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER)):
+
+                # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
+                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
+
+                # Speed is length of hypotenuse from Pythagoras
+                overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                if overallSpeed > MotorController.SPEED_FASTEST:
+                    overallSpeed = MotorController.SPEED_FASTEST
+                    
+                # Calculate wheel speeds
+                speedLeftWheel = overallSpeed
+                speedRightWheel = int(lengthY)
+                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
+
+                LOGGER.info("Reverse right. Left wheel at speed: " + str(speedLeftWheel) +
+                            " Right wheel at speed: " + str(speedRightWheel))
                 time.sleep(STICK_DELAY)
 
             # else stop
             else:
                 robotmove.stop()
-                LOGGER.info("Stop!")
+                # LOGGER.info("Stop! X pos: " + str(NunchukStickX) + " Y pos: " + str(NunchukStickY))
 
             # Servo Controls
             
@@ -194,8 +299,16 @@ def main():
                 tVal = 0
                 SERVO_CONTROLLER.set_pan_servo(pVal)
                 SERVO_CONTROLLER.set_tilt_servo(tVal)
-                LOGGER.info("Centre!") 
-            
+                LOGGER.info("Centre!")
+                time.sleep(BUTTON_DELAY)
+
+            # If button B pressed rumble Wiimote, but don't block other actions
+            if (buttons & cwiid.BTN_B):
+                t = threading.Thread(target=rumble, args=(LOGGER, wm, ))
+                t.start()
+                time.sleep(BUTTON_DELAY)
+                
+        # If no nunchuck detected yet, signal and wait    
         else:
             print("Doh for now")
             time.sleep(2)
