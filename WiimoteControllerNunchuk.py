@@ -70,7 +70,7 @@ def main():
     # Respond to Nunchuk joystick
     while True:
 
-        if wm.state.has_key('nunchuk'):
+        if 'nunchuk' in wm.state:
             # print("Success")
 
             # X axis: Left Max = 25, Middle = 125, RightMax = 225
