@@ -39,8 +39,8 @@ rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 time.sleep(0.1)
 
 # Initialize rowValues array to do testing such that they are all initialised to be white (255)
-ROW_LENGTH = 10 # Number of rectangles per row for black/white analysis
-COL_LENGTH = 10 # Number of rectangles per column for black/white analysis
+ROW_LENGTH = 10 # Number of rectangles per row for analysis
+COL_LENGTH = 10 # Number of rectangles per column for analysis
 MeanValues = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
 
 # Capture frames from the camera
@@ -48,20 +48,18 @@ MeanValues = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
 # capture_continuous(output, format=None, use_video_port=False, resize=None, splitter_port=0, burst=False, **options)
 # The format, use_video_port, splitter_port, resize, and options parameters are the same as in capture()
 
-for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=True):
+# This appears to be importing to BGR not RGB
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array respresenting the image, then intialize the timestap
     # and occupied/unoccupied text
     image = frame.array
 
-    # Convert to gray scale
-    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-    # Convert to correct colour scale
-    trueColor = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # Define the colour boundaries
+    trueColor = image
+    
+    # Define the colour boundaries in BGR
     lower = [17, 15, 100]
     upper = [50, 56, 200]
+
 
     # Create NumPy arrays from the boundaries
     lower = np.array(lower, dtype = "uint8")
@@ -71,21 +69,6 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     mask = cv2.inRange(trueColor, lower, upper)
     output = cv2.bitwise_and(trueColor, trueColor, mask = mask)
 
-    # Simple thresholding of gray sclae image
-    # http://www.pyimagesearch.com/2014/09/08/thresholding-simple-image-segmentation-using-opencv/
-    # (T, threshImage) = cv2.threshold(src, thresh, maxval, type)
-    # src - source image. This image should be grayscale.
-    # thresh - is the threshold value which is used to classify the pixel intensities in the grayscale image.
-    # maxval - is the pixel value used if any given pixel in the image passes the thresh  test.
-    # type - the thresholding method to be used. The type  value can be any of:
-    # cv2.THRESH_BINARY
-    # cv2.THRESH_BINARY_INV
-    # cv2.THRESH_TRUNC
-    # cv2.THRESH_TOZERO
-    # cv2.THRESH_TOZERO_INV
-    
-    ret,threshImg = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
-
     # Create a frame for lower middle part of video
     # Top left is [0, 0] in [rows, columns]
 
@@ -94,13 +77,9 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     startCol = int(0.40 * CAMERA_WIDTH)
     stopCol  = int(0.60 * CAMERA_WIDTH) - 1.0
     
-    lowerMiddleSquare = threshImg[startRow:stopRow, startCol:stopCol]
-
     # show the frame
-    # cv2.imshow("ColourFrame", trueColor)
-    # cv2.imshow("GrayFrame", gray)
-    # cv2.imshow("ThresholdFrame", threshImg)
-    # cv2.imshow("SmallFrame", lowerMiddleSquare)
+    cv2.imshow("ColourFrame", trueColor)
+    cv2.imshow("Mask", mask)
     cv2.imshow("ColourThreshold", output)
 
     # Capture a key press. The function waits argument in ms for any keyboard event
@@ -122,20 +101,16 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
             startCol = int((i/ROW_LENGTH) * CAMERA_WIDTH)
             stopCol  = int(((i+1)/ROW_LENGTH) * CAMERA_WIDTH) - 1.0
             
-            square = threshImg[startRow:stopRow, startCol:stopCol]
+            square = mask[startRow:stopRow, startCol:stopCol]
 
             # Mean of all the values in rectangular "square" array
-            MeanValues[j, i] = int(np.mean(square))
+            MeanValues[j, i] = np.mean(square)
 
     # Find index of first minimum mean value per row N.B. Black = 0, White = 255
     # As it is the first then if there are two fully black rectangles this could lead to errors
     # print("The mean values array: ", MeanValues)
-    smallSquare = np.argmin(MeanValues[0, 0:(ROW_LENGTH-1)])
-    print("The rectangle with the most black pixels in top row is: ", str(smallSquare))
-    smallSquare = np.argmin(MeanValues[(COL_LENGTH-1), 0:(ROW_LENGTH-1)])
-    print("The rectangle with the most black pixels in bottom row is: ", str(smallSquare))
-
-    # time.sleep(10)
+    smallSquare = np.argmax(MeanValues[0:(COL_LENGTH-1), 0:(ROW_LENGTH-1)])
+    print("The rectangle with the most red pixels in top row is: ", str(smallSquare))
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
