@@ -39,9 +39,9 @@ rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 time.sleep(0.1)
 
 # Initialize rowValues array to do testing such that they are all initialised to be white (255)
-ROW_LENGTH = 10 # Number of rectangles per row for analysis
-COL_LENGTH = 10 # Number of rectangles per column for analysis
-MeanValues = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
+ROW_LENGTH = 2 # Number of rectangles per row for analysis
+COL_LENGTH = 2 # Number of rectangles per column for analysis
+MeanValues = np.ones([COL_LENGTH, ROW_LENGTH]) * 255
 
 # Capture frames from the camera
 # http://picamera.readthedocs.io/en/release-1.10/api_camera.html
@@ -58,7 +58,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     
     # Define the colour boundaries in BGR
     lower = [17, 15, 100]
-    upper = [50, 56, 200]
+    upper = [100, 100, 255]
 
 
     # Create NumPy arrays from the boundaries
@@ -85,9 +85,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # Capture a key press. The function waits argument in ms for any keyboard event
     key = cv2.waitKey(1) & 0xFF
 
-    # Capture number of white/black pixels in ROW_LENGTH rectanges along lower row of threshold frame
-    # N.B. May want to make this for several rows to track the line further in the horizon and
-    # allow for sharp 90deg turns.
+    # Capture mean number of white/black pixels in the mask output in each ROW and COLUMN block
 
     # Loop over all rows
     for j in range(COL_LENGTH):
@@ -106,11 +104,25 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
             # Mean of all the values in rectangular "square" array
             MeanValues[j, i] = np.mean(square)
 
-    # Find index of first minimum mean value per row N.B. Black = 0, White = 255
-    # As it is the first then if there are two fully black rectangles this could lead to errors
+    # Find index of block with largest number of white pixels N.B. Black = 0, White = 255(?)
+    
     # print("The mean values array: ", MeanValues)
-    smallSquare = np.argmax(MeanValues[0:(COL_LENGTH-1), 0:(ROW_LENGTH-1)])
-    print("The rectangle with the most red pixels in top row is: ", str(smallSquare))
+    # sizeOfMeanValues = MeanValues.size
+    # print("The size of the MeanValues array is: ", str(sizeOfMeanValues))
+    # print("The MeanValues array is: ", str(MeanValues))
+    
+    # Square numbering is top left to top right and then looping down rows
+    bigWhiteSquare = np.argmax(MeanValues)
+    print(str(bigWhiteSquare))
+
+    # Work out off and even for left or right
+    # Only works for 2x2 grid currently! Will need to change for other grid sizes
+    # N.B. Our left is the robots right
+    
+    if (bigWhiteSquare % 2) > 0:
+        print("The red object is to your right")
+    else:
+        print("The red object is to your left")
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
