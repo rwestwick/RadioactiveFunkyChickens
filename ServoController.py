@@ -25,9 +25,11 @@ class ServoController(object):
     Class to control the two (pan/tilt) servos on the initio robot
     """
     # Define pins for Pan/Tilt
-    PAN_SERVO = 0
-    TILT_SERVO = 1
-
+    PAN_SERVO_ID = 0
+    TILT_SERVO_ID = 1
+    PAN_PIN = 18
+    TILT_PIN = 22
+    
     def __init__(self):
         """
         Initialises the required properties of the servo controller
@@ -41,7 +43,7 @@ class ServoController(object):
         """
         if self.servos_active is False:
             script_path = os.path.split(os.path.realpath(__file__))[0]
-            servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="18,22"'
+            servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' + str(PAN_PIN) + ',' + str(TILT_PIN) + '"'
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null'
             os.system(init_string)
             self.servos_active = True
@@ -54,32 +56,39 @@ class ServoController(object):
         self.servos_active = False
         MODULE_LOGGER.info("ServoController Module Stopped")
 
-    def set_servo(self, servo, degrees):
+    def set_servo(self, servo_id, degrees):
         """
         Sets a specific servo to a position, starting the servo if required
         """
         if self.servos_active is False:
             self.start_servos()
-        self.pin_servod(servo, degrees)
+        self.pin_servod(servo_id, degrees)
 
     def set_pan_servo(self, degrees):
         """
         Sets the pan servo to a position
         """
-        self.set_servo(self.PAN_SERVO, degrees)
+        self.set_servo(self.PAN_SERVO_ID, degrees)
 
     def set_tilt_servo(self, degrees):
         """
         Sets the tilt servo to a position
         """
-        self.set_servo(self.TILT_SERVO, degrees)
+        self.set_servo(self.TILT_SERVO_ID, degrees)
 
     @staticmethod
     def pin_servod(pin, degrees):
         """
         Uses the servoblaster device to set the required angle
+        eg  echo p1-18=120 > /dev/servoblaster
         """
-        pin_string = "echo " + str(pin) + "=" + str(
+        PIN_STRING = 'p' + str(pin) + '-'
+        if pin == PAN_SERVO:
+            PIN_STRING = PIN_STRING + str(PAN_PIN) + '='
+        else:
+            PIN_STRING = PIN_STRING + str(TILT_PIN) + '='
+
+        PIN_STRING = PIN_STRING + str(
             50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
         os.system(pin_string)
 
