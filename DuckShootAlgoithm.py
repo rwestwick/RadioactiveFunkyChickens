@@ -40,10 +40,18 @@ FIRE = SwitchingGPIO(
     
 STICK_DELAY = 0.1
 
-def wmMove(wm):
+LASER_ON = False
+
+# Set initial values
+ELEVATION_SPEED = MotorController.SPEED_SLOW
+
+
+def wmMove(wm, robotmove):
     """
     Called to move the robot using the numchuck controller
     """
+    speed = MotorController.SPEED_FASTEST  # Initial forward speed
+    
     if 'nunchuk' in wm.state:
         # X axis: Left Max = 25, Middle = 125, RightMax = 225
         NunchukStickX = (wm.state['nunchuk']['stick'][cwiid.X])
@@ -107,7 +115,45 @@ def wmMove(wm):
             robotmove.stop()
             LOGGER.info("Stop!")
 
-def keyboardMovementsOfGun():
+def keyboardMovementsOfGun(keyp, gunmove):
+    """
+    Performs the main duck shooting algorithm
+    """
+
+    # Increase height of gun
+    if keyp == '>':
+        gunmove.backward(ELEVATION_SPEED)
+        time.sleep(0.5)
+        gunmove.stop()
+
+    # Decrease height of gun
+    elif keyp == '<':
+        gunmove.forward(ELEVATION_SPEED)
+        time.sleep(0.5)
+        gunmove.stop()
+
+    # fire (enter) is pressed
+    elif keyp == ord('\n'):
+        LASER.switch_on()
+        time.sleep(1)
+        LASER.switch_off()
+
+    # laser (enter) is pressed
+    elif keyp == 'l':
+        if LASER_ON:
+            LASER.switch_off()
+            LASER_ON = False
+        else:
+            LASER.switch_on()
+            LASER_ON = True
+        time.sleep(0.5)
+
+    # To end if Ctrl-C pressed
+    elif ord(keyp) == 3:
+        LOGGER.info("Break control loop!")
+        return False
+     
+     return True
             
             
 def main():
@@ -140,51 +186,20 @@ def main():
 
     # Turn on led to show connected
     wm.led = 1
-    
-    # Set initial values
-    elevation_speed = MotorController.SPEED_FASTEST  # Initial forward speed
-    direction = ' '
-    
+        
     # Give remote control keys
-    print "Steer robot by using the arrow keys to control"
+    print "Steer robot by using the numchuck"
     print "Use , or < to lower gun"
     print "Use . or > to raise gun"
-    print "Speed changes take effect when the next arrow key is pressed"
+    print "Use Enter to fire"
+    print "Use l to toggle the laser pointer"
     print "Press Ctrl-C to end"
-    
-    # Waiting for start of remote controller
-    LOGGER.info("To start remote controller press 'Space' key.")
-
-    while True:
-        keyp = KeyboardCharacterReader.readkey()
-        if keyp == ' ':
-            LOGGER.info("They're off! Press Control^C to finish")
-            break
 
     # Respond to key presses
-    while True:
+    while keyboardMovementsOfGun(KeyboardCharacterReader.readkey(), GUNMOUNT):
 
         # Perform the movement via the numchuck
-        wmMove(wn)
-        
-        keyp = KeyboardCharacterReader.readkey()
-
-        # Increase height of gun
-        if keyp == '>':
-
-        # Decrease height of gun
-        elif keyp == '<':
-
-        # fire (enter) is pressed
-        elif keyp == ord('\n'):
-        
-        # lazer (enter) is pressed
-        elif keyp == 'l':
-
-        # To end if Ctrl-C pressed
-        elif ord(keyp) == 3:
-            LOGGER.info("Break control loop!")
-            break
+        wmMove(wn, ROBOTMOVE)
 
     
 if __name__ == "__main__":
