@@ -43,7 +43,8 @@ class ServoController(object):
         """
         if self.servos_active is False:
             script_path = os.path.split(os.path.realpath(__file__))[0]
-            servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' + str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"'
+            # servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' + str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PCM
+            servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             os.system(init_string)
             self.servos_active = True
@@ -84,12 +85,13 @@ class ServoController(object):
         """
         PIN_STRING = 'echo p1-'
         if pin == 0:
-            PIN_STRING = PIN_STRING + str(18) + '='
+            PIN_STRING = PIN_STRING + str(ServoController.PAN_PIN) + '='
         else:
-            PIN_STRING = PIN_STRING + str(22) + '='
+            PIN_STRING = PIN_STRING + str(ServoController.TILT_PIN) + '='
 
         PIN_STRING = PIN_STRING + str(
             50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
+        print(PIN_STRING)
         os.system(PIN_STRING)
 
 
@@ -98,8 +100,8 @@ if __name__ == "__main__":
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         SERVO_CONTROLLER = ServoController()
 
-        SERVO_CONTROLLER.set_pan_servo(0)
         SERVO_CONTROLLER.start_servos()
+        time.sleep(1)
         SERVO_CONTROLLER.set_pan_servo(0)
         time.sleep(1)
         SERVO_CONTROLLER.set_pan_servo(90)
