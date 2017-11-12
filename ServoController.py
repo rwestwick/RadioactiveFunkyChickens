@@ -43,8 +43,8 @@ class ServoController(object):
         """
         if self.servos_active is False:
             script_path = os.path.split(os.path.realpath(__file__))[0]
-            servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' + str(PAN_PIN) + ',' + str(TILT_PIN) + '"'
-            init_string = "sudo " + script_path + servod_cmd + ' > /dev/null'
+            servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' + str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"'
+            init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             os.system(init_string)
             self.servos_active = True
 
@@ -83,14 +83,14 @@ class ServoController(object):
         eg  echo p1-18=120 > /dev/servoblaster
         """
         PIN_STRING = 'p' + str(pin) + '-'
-        if pin == PAN_SERVO:
-            PIN_STRING = PIN_STRING + str(PAN_PIN) + '='
+        if pin == 0:
+            PIN_STRING = PIN_STRING + str(18) + '='
         else:
-            PIN_STRING = PIN_STRING + str(TILT_PIN) + '='
+            PIN_STRING = PIN_STRING + str(22) + '='
 
         PIN_STRING = PIN_STRING + str(
             50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
-        os.system(pin_string)
+        os.system(PIN_STRING)
 
 
 if __name__ == "__main__":
