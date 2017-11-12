@@ -82,7 +82,7 @@ class ServoController(object):
         Uses the servoblaster device to set the required angle
         eg  echo p1-18=120 > /dev/servoblaster
         """
-        PIN_STRING = 'p' + str(pin) + '-'
+        PIN_STRING = 'echo p1-'
         if pin == 0:
             PIN_STRING = PIN_STRING + str(18) + '='
         else:
