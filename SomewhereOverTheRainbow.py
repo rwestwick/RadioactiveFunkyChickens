@@ -50,6 +50,11 @@ ROBOTMOVE = MotorController.MotorController(
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
 
+# Initialize rowValues array to do testing such that they are all initialised to be white (255)
+ROW_LENGTH = 2 # Number of rectangles per row for analysis
+COL_LENGTH = 2 # Number of rectangles per column for analysis
+MeanValues = np.ones([COL_LENGTH, ROW_LENGTH]) * 255
+
 # Initialize camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
@@ -124,10 +129,10 @@ def main():
         trueColor = image
 
         # Define the colour boundaries in BGR
-        # lower = [17, 15, 100] # Red
-        # upper = [100, 100, 255] # Red
-        lower = [100, 20, 20] # Blue
-        upper = [255, 100, 100] # Blue
+        lower = [17, 15, 100] # Red
+        upper = [100, 100, 255] # Red
+        # lower = [100, 20, 20] # Blue
+        # upper = [255, 100, 100] # Blue
 
         # Create NumPy arrays from the boundaries
         lower = np.array(lower, dtype = "uint8")
@@ -137,10 +142,48 @@ def main():
         mask = cv2.inRange(trueColor, lower, upper)
         output = cv2.bitwise_and(trueColor, trueColor, mask = mask)
         
-        # show the frame(s) for test perpurposes
+        # show the frame(s) for test purposes
         cv2.imshow("ColourFrame", trueColor)
         cv2.imshow("Mask", mask)
         cv2.imshow("ColourThreshold", output)
+
+        # Capture mean number of white/black pixels in the mask output in each ROW and COLUMN block
+
+        # Loop over all rows
+        for j in range(COL_LENGTH):
+            
+            # Loop over all columns
+            for i in range(ROW_LENGTH):
+            
+                # Image region of interest (ROI)
+                startRow = int((j/COL_LENGTH) * CAMERA_HEIGHT)
+                stopRow  = int(((j+1)/COL_LENGTH) * CAMERA_HEIGHT) - 1.0
+                startCol = int((i/ROW_LENGTH) * CAMERA_WIDTH)
+                stopCol  = int(((i+1)/ROW_LENGTH) * CAMERA_WIDTH) - 1.0
+                
+                square = mask[startRow:stopRow, startCol:stopCol]
+
+                # Mean of all the values in rectangular "square" array
+                MeanValues[j, i] = np.mean(square)
+
+        # Find index of block with largest number of white pixels N.B. Black = 0, White = 255(?)
+        
+        # print("The mean values array: ", MeanValues)
+        # sizeOfMeanValues = MeanValues.size
+        # print("The size of the MeanValues array is: ", str(sizeOfMeanValues))
+        # print("The MeanValues array is: ", str(MeanValues))
+        
+        # Square numbering is top left to top right and then looping down rows
+        bigWhiteSquare = np.argmax(MeanValues)
+
+        # Work out off and even for left or right
+        # Only works for 2x2 grid currently! Will need to change for other grid sizes
+        # N.B. Our left is the robots right
+        
+        if (bigWhiteSquare % 2) > 0:
+            print("The red object is to your right")
+        else:
+            print("The red object is to your left")
 
         # Spin robot to work out position of each coloured marker
 
