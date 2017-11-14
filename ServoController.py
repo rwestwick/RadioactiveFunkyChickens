@@ -91,7 +91,6 @@ class ServoController(object):
 
         PIN_STRING = PIN_STRING + str(
             50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
-        print(PIN_STRING)
         os.system(PIN_STRING)
 
 
