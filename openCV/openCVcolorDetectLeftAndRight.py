@@ -68,12 +68,15 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     upper_blue_bgr = [255, 100, 100] # Blue
 
     # Define the colour boundaries in HSV
+    # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
     # For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255].
     # Different softwares use different scales. So if you are comparing OpenCV values with them,
     # you need to normalize these ranges.
     # [255, 0, 0] BGR -> [120, 255, 255] HSV - Blue
     # [0, 255, 0] BGR -> [60, 255, 255] HSV - Gree
-    # [0, 0, 255] BGR -> [0, 255, 255] HSV - Red
+    # [0, 0, 255] BGR -> [0, 255, 255] HSV - Red - For red may need two ranges
+    # https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+    # https://pythonprogramming.net/color-filter-python-opencv-tutorial/
     # [0, 255, 255] BGR -> [30, 255, 255] HSV - Yellow - Half Red and Green
     lower_blue_hsv = [90, 50, 50] # Blue
     upper_blue_hsv = [150, 255, 255] # Blue
@@ -153,6 +156,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         print("The HSV blue object is to your right")
     else:
         print("The HSV blue object is to your left")
+
+    # Try using circle detection to filer out noise
+    # https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+    # https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
