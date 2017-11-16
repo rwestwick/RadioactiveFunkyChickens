@@ -23,6 +23,47 @@ import time
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
+# Define Colour constants
+
+# Define the colour boundaries in BGR
+LOWER_RED_BGR = [15, 15, 100] # Red
+UPPER_RED_BGR = [100, 100, 255] # Red
+LOWER_BLUE_BGR = [100, 15, 15] # Blue
+UPPER_BLUE_BGR = [255, 100, 100] # Blue
+LOWER_GREEN_BGR = [15, 100, 15] # Green
+UPPER_GREEN_BGR = [100, 255, 100] # Green
+LOWER_YELLOW_BGR = [15, 100, 100] # Yellow
+UPPER_YELLOW_BGR = [100, 255, 255] # Yellow
+LOWER_BGR_ARRAY = [LOWER_RED_BGR, LOWER_BLUE_BGR, LOWER_GREEN_BGR, LOWER_GREEN_BGR]
+UPPER_BGR_ARRAY = [UPPER_RED_BGR, UPPER_BLUE_BGR, UPPER_GREEN_BGR, UPPER_GREEN_BGR]
+
+# Define the colour boundaries in HSV
+# http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
+# For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255].
+# Different softwares use different scales. So if you are comparing OpenCV values with them,
+# you need to normalize these ranges.
+# [255, 0, 0] BGR -> [120, 255, 255] HSV - Blue
+# [0, 255, 0] BGR -> [60, 255, 255] HSV - Green
+# [0, 0, 255] BGR -> [0, 255, 255] HSV - Red - For red may need two ranges
+# https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+# https://pythonprogramming.net/color-filter-python-opencv-tutorial/
+# [0, 255, 255] BGR -> [30, 255, 255] HSV - Yellow - Half Red and Green
+
+LOWER_RED_HSV = [0, 50, 50] # Red
+UPPER_RED_HSV = [20, 155, 255] # Red
+LOWER_BLUE_HSV = [90, 50, 50] # Blue
+UPPER_BLUE_HSV = [150, 255, 255] # Blue
+LOWER_GREEN_HSV = [45, 50, 50] # Green
+UPPER_GREEN_HSV = [90, 155, 255] # Green
+LOWER_YELLOW_HSV = [20, 50, 50] # Yellow
+UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
+LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
+UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
+
+# Initialize colour array counter
+colourArrayCntr = 0
+COLOUR_NAME_ARRAY = ['Red', 'Blue', 'Green', 'Yellow']
+
 # Initialize the camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
@@ -60,40 +101,27 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     bgrImage = image # Keep in BGR
     hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) # Convert BGR to HSV
-    
-    # Define the colour boundaries in BGR
-    # lower = [17, 15, 100] # Red
-    # upper = [100, 100, 255] # Red
-    lower_blue_bgr = [100, 20, 20] # Blue
-    upper_blue_bgr = [255, 100, 100] # Blue
 
-    # Define the colour boundaries in HSV
-    # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
-    # For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255].
-    # Different softwares use different scales. So if you are comparing OpenCV values with them,
-    # you need to normalize these ranges.
-    # [255, 0, 0] BGR -> [120, 255, 255] HSV - Blue
-    # [0, 255, 0] BGR -> [60, 255, 255] HSV - Gree
-    # [0, 0, 255] BGR -> [0, 255, 255] HSV - Red - For red may need two ranges
-    # https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
-    # https://pythonprogramming.net/color-filter-python-opencv-tutorial/
-    # [0, 255, 255] BGR -> [30, 255, 255] HSV - Yellow - Half Red and Green
-    lower_blue_hsv = [90, 50, 50] # Blue
-    upper_blue_hsv = [150, 255, 255] # Blue
+    # Select colour range to detect
+    lower_bgr = LOWER_BGR_ARRAY[colourArrayCntr]
+    upper_bgr = UPPER_BGR_ARRAY[colourArrayCntr]
+
+    lower_hsv = LOWER_HSV_ARRAY[colourArrayCntr]
+    upper_hsv = UPPER_HSV_ARRAY[colourArrayCntr]
 
     # Create NumPy arrays from the boundaries
-    lower_blue_bgr = np.array(lower_blue_bgr, dtype = "uint8")
-    upper_blue_bgr = np.array(upper_blue_bgr, dtype = "uint8")
+    lower_bgr = np.array(lower_bgr, dtype = "uint8")
+    upper_bgr = np.array(upper_bgr, dtype = "uint8")
 
-    lower_blue_hsv = np.array(lower_blue_hsv, dtype = "uint8")
-    upper_blue_hsv = np.array(upper_blue_hsv, dtype = "uint8")
+    lower_hsv = np.array(lower_hsv, dtype = "uint8")
+    upper_hsv = np.array(upper_hsv, dtype = "uint8")
 
     # Find the colours within the specified boundaries and apply the mask - BGR
-    mask_bgr = cv2.inRange(bgrImage, lower_blue_bgr, upper_blue_bgr)
+    mask_bgr = cv2.inRange(bgrImage, lower_bgr, upper_bgr)
     output_bgr = cv2.bitwise_and(bgrImage, bgrImage, mask = mask_bgr)
 
     # Find the colours within the specified boundaries and apply the mask - HSV
-    mask_hsv = cv2.inRange(hsvImage, lower_blue_hsv, upper_blue_hsv)
+    mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
     output_hsv = cv2.bitwise_and(hsvImage, hsvImage, mask = mask_hsv)
 
     # Create a frame for lower middle part of video
@@ -147,19 +175,23 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # Only works for 2x2 grid currently! Will need to change for other grid sizes
     # N.B. Our left is the robots right
     
-    if (bigSquareBGR % 2) > 0:
-        print("The BGR blue object is to your right")
-    else:
-        print("The BGR blue object is to your left")
-
-    if (bigSquareHSV % 2) > 0:
-        print("The HSV blue object is to your right")
-    else:
-        print("The HSV blue object is to your left")
+##    if (bigSquareBGR % 2) > 0:
+##        print("The BGR blue object is to your right")
+##    else:
+##        print("The BGR blue object is to your left")
+##
+##    if (bigSquareHSV % 2) > 0:
+##        print("The HSV blue object is to your right")
+##    else:
+##        print("The HSV blue object is to your left")
 
     # Try using circle detection to filer out noise
     # https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
     # https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
+    # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html
+
+    # Or use contours
+    # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
@@ -171,6 +203,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # if the 'q' key was pressed break from the loop
     if key == ord("q"):
         break
+    # if the 'c' key was pressed change the colour array counter
+    elif key == ord("c"):
+        colourArrayCntr = (colourArrayCntr + 1) % 4 # Loop over integers 0 to 3
+        print("The colour selector is now ", str(COLOUR_NAME_ARRAY[colourArrayCntr]))
 
 # simply destroys all windows created
 # Can use cv2.destroyWindow(frameName) to destroy a specific window
