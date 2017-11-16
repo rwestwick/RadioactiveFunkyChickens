@@ -64,6 +64,12 @@ UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_
 colourArrayCntr = 0
 COLOUR_NAME_ARRAY = ['Red', 'Blue', 'Green', 'Yellow']
 
+# Show commands and status
+print "Press 'q' to quit."
+print "Press 'c' to change colour selector."
+print "All key presses must be in a video frame window."
+print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
+
 # Initialize the camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
@@ -206,7 +212,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # if the 'c' key was pressed change the colour array counter
     elif key == ord("c"):
         colourArrayCntr = (colourArrayCntr + 1) % 4 # Loop over integers 0 to 3
-        print("The colour selector is now ", str(COLOUR_NAME_ARRAY[colourArrayCntr]))
+        print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
 
 # simply destroys all windows created
 # Can use cv2.destroyWindow(frameName) to destroy a specific window
