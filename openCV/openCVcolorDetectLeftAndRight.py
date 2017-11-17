@@ -40,6 +40,8 @@ UPPER_BGR_ARRAY = [UPPER_RED_BGR, UPPER_BLUE_BGR, UPPER_GREEN_BGR, UPPER_GREEN_B
 # Define the colour boundaries in HSV
 # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
 # For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255].
+# For H values (normally 360 deg) to fit into 8 bits then range halved (0 to 179)
+# Value gray colors - 0 black 255 white
 # Different softwares use different scales. So if you are comparing OpenCV values with them,
 # you need to normalize these ranges.
 # [255, 0, 0] BGR -> [120, 255, 255] HSV - Blue
@@ -59,6 +61,26 @@ LOWER_YELLOW_HSV = [20, 50, 50] # Yellow
 UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
 LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
 UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
+
+# Define the colour boundaries in YUV
+# luma (Y) brightness of image and
+# chrominance (UV) - colour-difference components
+# U = (blue - luma) V = (red - luma)
+# See - http://answers.opencv.org/question/57947/understanding-yuv-to-bgr-color-spaces-conversion/
+# Boundaries just direct coversions of BGR
+# cv2.cvtColor(np.uint8([[[100, 100, 255]]]), cv2.COLOR_BGR2YUV)
+# Values need refining - See https://en.wikipedia.org/wiki/YUV - Yellow is not in a clear boundary
+# Y could be all values, exist with boundary to remove noise
+LOWER_RED_YUV = [25, 165, 119] # Red
+UPPER_RED_YUV = [118, 195, 255] # Red
+LOWER_BLUE_YUV = [40, 116, 181] # Blue
+UPPER_BLUE_YUV = [146, 105, 224] # Blue
+LOWER_GREEN_YUV = [65, 103, 84] # Green
+UPPER_GREEN_YUV = [191, 83, 48] # Green
+LOWER_YELLOW_YUV = [75, 140, 75] # Yellow
+UPPER_YELLOW_YUV = [182, 164, 0] # Yellow
+LOWER_YUV_ARRAY = [LOWER_RED_YUV, LOWER_BLUE_YUV, LOWER_GREEN_YUV, LOWER_GREEN_YUV]
+UPPER_YUV_ARRAY = [UPPER_RED_YUV, UPPER_BLUE_YUV, UPPER_GREEN_YUV, UPPER_GREEN_YUV]
 
 # Initialize colour array counter
 colourArrayCntr = 0
@@ -107,6 +129,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     bgrImage = image # Keep in BGR
     hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) # Convert BGR to HSV
+    yuvImage = cv2.cvtColor(image, cv2.COLOR_BGR2YUV) # Convert BGR to YUV
 
     # Select colour range to detect
     lower_bgr = LOWER_BGR_ARRAY[colourArrayCntr]
