@@ -89,6 +89,7 @@ COLOUR_NAME_ARRAY = ['Red', 'Blue', 'Green', 'Yellow']
 # Show commands and status
 print "Press 'q' to quit."
 print "Press 'c' to change colour selector."
+print "Press 'p' to take picture of current frame."
 print "All key presses must be in a video frame window."
 print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
 
@@ -101,6 +102,9 @@ camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dospl
 camera.framerate = 10 # If not set then defaults to 30fps
 camera.vflip = True
 camera.hflip = True
+
+# Initialize photo capture
+imageNum = 1
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]
@@ -236,6 +240,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     elif key == ord("c"):
         colourArrayCntr = (colourArrayCntr + 1) % 4 # Loop over integers 0 to 3
         print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
+    elif key == ord("p"):
+        fileNameBGR = 'bgrImage' + str(imageNum) + '.png'
+        fileNameMaskBGR = 'bgrImageMask' + str(imageNum) + '.png'
+        fileNameMaskHSV = 'hsvImageMask' + str(imageNum) + '.png'
+        imageNum += 1
+        cv2.imwrite(fileNameBGR, bgrImage)
+        cv2.imwrite(fileNameMaskBGR, mask_bgr)
+        cv2.imwrite(fileNameMaskHSV, mask_hsv)
 
 # simply destroys all windows created
 # Can use cv2.destroyWindow(frameName) to destroy a specific window
