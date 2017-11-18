@@ -94,12 +94,12 @@ print "All key presses must be in a video frame window."
 print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
 
 # Initialize the camera
-CAMERA_WIDTH = 640
-CAMERA_HEIGHT = 480
+CAMERA_WIDTH = 320
+CAMERA_HEIGHT = 240
 camera = PiCamera() # Initialize camera
 camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dosplays resolution
 # Can get framerates up to 60fps 640x480
-camera.framerate = 10 # If not set then defaults to 30fps
+camera.framerate = 3 # If not set then defaults to 30fps
 camera.vflip = True
 camera.hflip = True
 
@@ -164,13 +164,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     stopRow  = int(1.00 * CAMERA_HEIGHT) - 1.0
     startCol = int(0.40 * CAMERA_WIDTH)
     stopCol  = int(0.60 * CAMERA_WIDTH) - 1.0
-    
-    # Show the frame(s)
-    cv2.imshow("BGR ColourFrame", bgrImage)
-    cv2.imshow("BGR Mask", mask_bgr)
-    cv2.imshow("BGR ColourThreshold", output_bgr)
-    cv2.imshow("HSV Mask", mask_hsv)
-    cv2.imshow("HSV ColourThreshold", output_hsv)
 
     # Capture mean number of white/black pixels in the mask output in each ROW and COLUMN block
 
@@ -218,13 +211,33 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 ##    else:
 ##        print("The HSV blue object is to your left")
 
-    # Try using circle detection to filer out noise
+    # Try using circle detection to filter out noise
     # https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
     # https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
     # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html
 
     # Or use contours
     # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
+    # https://docs.opencv.org/3.0-beta/modules/imgproc/doc/filtering.html
+    # cv2.medianBlur(src, ksize[, dst]) -> dst
+    # smoothes an image using the median filter with the ksize * ksize aperture
+    bgrImageBlur = cv2.medianBlur(bgrImage, 5) # Computes the median of all the pixels
+    hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_RGB2HSV) # Swaps the red and blue channels!
+
+    # Find the colour in blurried image
+    # mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
+    hsvRedImageBlur = cv2.inRange(image, np.array((115, 127, 64)), np.array((125, 255, 255)))
+    
+    # Find the contours
+    im2, contours, hierarchy = cv2.findContours(hsvRedImageBlur, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE) # RETR_TREE not in piborg example
+
+    # Show the frame(s)
+    cv2.imshow("BGR ColourFrame", bgrImage)
+    cv2.imshow("BGR Mask", mask_bgr)
+    cv2.imshow("BGR ColourThreshold", output_bgr)
+    cv2.imshow("HSV Mask", mask_hsv)
+    cv2.imshow("HSV ColourThreshold", output_hsv)
+    cv2.imshow("Contours", im2)
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
@@ -242,8 +255,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
     elif key == ord("p"):
         fileNameBGR = 'bgrImage' + str(imageNum) + '.png'
-        fileNameMaskBGR = 'bgrImageMask' + str(imageNum) + '.png'
-        fileNameMaskHSV = 'hsvImageMask' + str(imageNum) + '.png'
+        fileNameMaskBGR = 'bgrImageMask' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+        fileNameMaskHSV = 'hsvImageMask' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
         imageNum += 1
         cv2.imwrite(fileNameBGR, bgrImage)
         cv2.imwrite(fileNameMaskBGR, mask_bgr)
