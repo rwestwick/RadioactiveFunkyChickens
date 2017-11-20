@@ -51,13 +51,13 @@ UPPER_BGR_ARRAY = [UPPER_RED_BGR, UPPER_BLUE_BGR, UPPER_GREEN_BGR, UPPER_GREEN_B
 # https://pythonprogramming.net/color-filter-python-opencv-tutorial/
 # [0, 255, 255] BGR -> [30, 255, 255] HSV - Yellow - Half Red and Green
 
-LOWER_RED_HSV = [0, 50, 50] # Red
-UPPER_RED_HSV = [20, 155, 255] # Red
-LOWER_BLUE_HSV = [90, 50, 50] # Blue
-UPPER_BLUE_HSV = [150, 255, 255] # Blue
-LOWER_GREEN_HSV = [45, 50, 50] # Green
-UPPER_GREEN_HSV = [90, 155, 255] # Green
-LOWER_YELLOW_HSV = [20, 50, 50] # Yellow
+LOWER_RED_HSV = [0, 50, 50] # Red = ~340deg to ~30deg # 170 doesn't seem to work as a lower hue
+UPPER_RED_HSV = [15, 255, 255] # Red
+LOWER_BLUE_HSV = [90, 50, 50] # Blue = ~180deg to ~260deg
+UPPER_BLUE_HSV = [130, 255, 255] # Blue
+LOWER_GREEN_HSV = [45, 50, 50] # Green = ~90deg to ~150deg
+UPPER_GREEN_HSV = [75, 255, 255] # Green
+LOWER_YELLOW_HSV = [20, 50, 50] # Yellow = ~40deg to ~90deg
 UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
 LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
 UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
@@ -97,7 +97,7 @@ print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
 CAMERA_WIDTH = 320
 CAMERA_HEIGHT = 240
 camera = PiCamera() # Initialize camera
-camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dosplays resolution
+camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to display resolution
 # Can get framerates up to 60fps 640x480
 camera.framerate = 3 # If not set then defaults to 30fps
 camera.vflip = True
@@ -155,7 +155,9 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     # Find the colours within the specified boundaries and apply the mask - HSV
     mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
-    output_hsv = cv2.bitwise_and(hsvImage, hsvImage, mask = mask_hsv)
+    #output_hsv = cv2.bitwise_and(hsvImage, hsvImage, mask = mask_hsv)
+    # Applying mask to BGR image gives true colours on display
+    output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask = mask_hsv)
 
     # Create a frame for lower middle part of video
     # Top left is [0, 0] in [rows, columns]
@@ -257,10 +259,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         fileNameBGR = 'bgrImage' + str(imageNum) + '.png'
         fileNameMaskBGR = 'bgrImageMask' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
         fileNameMaskHSV = 'hsvImageMask' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+        fileNameOutputBGR = 'bgrImageOutput' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+        fileNameOutputHSV = 'hsvImageOutput' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
         imageNum += 1
         cv2.imwrite(fileNameBGR, bgrImage)
         cv2.imwrite(fileNameMaskBGR, mask_bgr)
         cv2.imwrite(fileNameMaskHSV, mask_hsv)
+        cv2.imwrite(fileNameOutputBGR, output_bgr)
+        cv2.imwrite(fileNameOutputHSV, output_hsv)
 
 # simply destroys all windows created
 # Can use cv2.destroyWindow(frameName) to destroy a specific window
