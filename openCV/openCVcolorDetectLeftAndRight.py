@@ -51,10 +51,12 @@ UPPER_BGR_ARRAY = [UPPER_RED_BGR, UPPER_BLUE_BGR, UPPER_GREEN_BGR, UPPER_GREEN_B
 # https://pythonprogramming.net/color-filter-python-opencv-tutorial/
 # [0, 255, 255] BGR -> [30, 255, 255] HSV - Yellow - Half Red and Green
 
-LOWER_RED_HSV = [0, 50, 50] # Red = ~340deg to ~30deg # 170 doesn't seem to work as a lower hue
+LOWER_RED_LFT_HSV = [165, 50, 50] # Left of 0deg Red = ~330deg to 359deg
+UPPER_RED_LFT_HSV = [179, 255, 255] # Red
+LOWER_RED_HSV = [0, 50, 50] # Red = 0deg to ~30deg
 UPPER_RED_HSV = [15, 255, 255] # Red
-LOWER_BLUE_HSV = [90, 50, 50] # Blue = ~180deg to ~260deg
-UPPER_BLUE_HSV = [130, 255, 255] # Blue
+LOWER_BLUE_HSV = [80, 50, 50] # Blue = ~180deg to ~260deg
+UPPER_BLUE_HSV = [140, 255, 255] # Blue
 LOWER_GREEN_HSV = [45, 50, 50] # Green = ~90deg to ~150deg
 UPPER_GREEN_HSV = [75, 255, 255] # Green
 LOWER_YELLOW_HSV = [20, 50, 50] # Yellow = ~40deg to ~90deg
@@ -142,12 +144,17 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     lower_hsv = LOWER_HSV_ARRAY[colourArrayCntr]
     upper_hsv = UPPER_HSV_ARRAY[colourArrayCntr]
 
-    # Create NumPy arrays from the boundaries
+    # Create BGR NumPy arrays from the boundaries
     lower_bgr = np.array(lower_bgr, dtype = "uint8")
     upper_bgr = np.array(upper_bgr, dtype = "uint8")
 
+    # Create HSV NumPy arrays from the boundaries
     lower_hsv = np.array(lower_hsv, dtype = "uint8")
     upper_hsv = np.array(upper_hsv, dtype = "uint8")
+
+    # Extra HSV NumPy arrays for red
+    lower2_hsv = np.array(LOWER_RED_LFT_HSV, dtype = "uint8")
+    upper2_hsv = np.array(UPPER_RED_LFT_HSV, dtype = "uint8")
 
     # Find the colours within the specified boundaries and apply the mask - BGR
     mask_bgr = cv2.inRange(bgrImage, lower_bgr, upper_bgr)
@@ -155,6 +162,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     # Find the colours within the specified boundaries and apply the mask - HSV
     mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
+    if colourArrayCntr == 0: # If Red do both ranges
+        mask_hsv2 = cv2.inRange(hsvImage, lower2_hsv, upper2_hsv)
+        # mask_hsv = cv2.add(mask_hsv, mask_hsv2)
+        
     #output_hsv = cv2.bitwise_and(hsvImage, hsvImage, mask = mask_hsv)
     # Applying mask to BGR image gives true colours on display
     output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask = mask_hsv)
