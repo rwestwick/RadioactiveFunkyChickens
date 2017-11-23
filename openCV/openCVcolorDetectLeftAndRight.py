@@ -235,22 +235,32 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # cv2.medianBlur(src, ksize[, dst]) -> dst
     # smoothes an image using the median filter with the ksize * ksize aperture
     bgrImageBlur = cv2.medianBlur(bgrImage, 5) # Computes the median of all the pixels
-    hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_RGB2HSV) # Swaps the red and blue channels!
+    hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2HSV)
 
     # Find the colour in blurried image
-    # mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
-    hsvRedImageBlur = cv2.inRange(image, np.array((115, 127, 64)), np.array((125, 255, 255)))
+    mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
+    output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur, mask = mask_hsvImageBlur)
     
     # Find the contours
-    im2, contours, hierarchy = cv2.findContours(hsvRedImageBlur, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE) # RETR_TREE not in piborg example
+    # imgray = cv2.cvtColor(output_hsvImageBlur, cv2.COLOR_BGR2GRAY)
+    # ret,thresh = cv2.threshold(imgray, 50, 255, cv2.THRESH_BINARY)
+    # RETR_TREE works, but is not in piborg example which uses RETR_LIST
+    im2,contours,hierarchy = cv2.findContours(mask_hsv, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) 
+    cv2.drawContours(output_hsv, contours, -1, (0,255,0), 3)
 
     # Show the frame(s)
     cv2.imshow("BGR ColourFrame", bgrImage)
-    cv2.imshow("BGR Mask", mask_bgr)
-    cv2.imshow("BGR ColourThreshold", output_bgr)
+    # cv2.imshow("BGR Mask", mask_bgr)
+    # cv2.imshow("BGR ColourThreshold", output_bgr)
     cv2.imshow("HSV Mask", mask_hsv)
     cv2.imshow("HSV ColourThreshold", output_hsv)
-    cv2.imshow("Contours", im2)
+    # cv2.imshow("BGR Blur", bgrImageBlur)
+    # cv2.imshow("HSV Mask Blur", mask_hsvImageBlur)
+    # cv2.imshow("HSV Blur Colour Threshold", output_hsvImageBlur)
+    # cv2.imshow("HSV Gray", imgray)
+    # cv2.imshow("Gray Threshold", thresh)
+    
+    # cv2.imshow("Contours", im2)
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
