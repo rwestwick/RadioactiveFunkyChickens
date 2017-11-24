@@ -51,15 +51,15 @@ UPPER_BGR_ARRAY = [UPPER_RED_BGR, UPPER_BLUE_BGR, UPPER_GREEN_BGR, UPPER_GREEN_B
 # https://pythonprogramming.net/color-filter-python-opencv-tutorial/
 # [0, 255, 255] BGR -> [30, 255, 255] HSV - Yellow - Half Red and Green
 
-LOWER_RED_LFT_HSV = [165, 50, 50] # Left of 0deg Red = ~330deg to 359deg
+LOWER_RED_LFT_HSV = [165, 100, 100] # Left of 0deg Red = ~330deg to 359deg
 UPPER_RED_LFT_HSV = [179, 255, 255] # Red
-LOWER_RED_HSV = [0, 50, 50] # Red = 0deg to ~30deg
+LOWER_RED_HSV = [0, 100, 100] # Red = 0deg to ~30deg
 UPPER_RED_HSV = [15, 255, 255] # Red
 LOWER_BLUE_HSV = [80, 50, 50] # Blue = ~180deg to ~260deg
 UPPER_BLUE_HSV = [140, 255, 255] # Blue
 LOWER_GREEN_HSV = [45, 50, 50] # Green = ~90deg to ~150deg
 UPPER_GREEN_HSV = [75, 255, 255] # Green
-LOWER_YELLOW_HSV = [20, 50, 50] # Yellow = ~40deg to ~90deg
+LOWER_YELLOW_HSV = [20, 100, 100] # Yellow = ~40deg to ~90deg
 UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
 LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
 UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
@@ -245,8 +245,29 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # imgray = cv2.cvtColor(output_hsvImageBlur, cv2.COLOR_BGR2GRAY)
     # ret,thresh = cv2.threshold(imgray, 50, 255, cv2.THRESH_BINARY)
     # RETR_TREE works, but is not in piborg example which uses RETR_LIST
-    im2,contours,hierarchy = cv2.findContours(mask_hsv, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) 
+    # RETR_EXTERNAL does not look for contours within contours
+    im2,contours,hierarchy = cv2.findContours(mask_hsv, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) 
     cv2.drawContours(output_hsv, contours, -1, (0,255,0), 3)
+
+    # Go through each contour
+    foundArea = -1
+    foundX = -1
+    foundY = -1
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        cx = x + (w/2)
+        cy = y + (h/2)
+        area = w * h
+        if foundArea < area:
+            foundArea = area
+            foundX = cx
+            foundY = cy
+    if foundArea > 0:
+        ball = [foundX, foundY, foundArea]
+    else:
+        ball = None
+
+    cv2.circle(output_hsv, (int(cx), int(cy)), 10, (255, 255, 255), -1)
 
     # Show the frame(s)
     cv2.imshow("BGR ColourFrame", bgrImage)
