@@ -246,7 +246,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # ret,thresh = cv2.threshold(imgray, 50, 255, cv2.THRESH_BINARY)
     # RETR_TREE works, but is not in piborg example which uses RETR_LIST
     # RETR_EXTERNAL does not look for contours within contours
-    im2,contours,hierarchy = cv2.findContours(mask_hsv, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) 
+    im2,contours,hierarchy = cv2.findContours(mask_hsvImageBlur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) 
     cv2.drawContours(output_hsv, contours, -1, (0,255,0), 3)
 
     # Go through each contour
@@ -267,7 +267,18 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     else:
         ball = None
 
-    cv2.circle(output_hsv, (int(cx), int(cy)), 10, (255, 255, 255), -1)
+    if ball == None:
+        print("No contours.")
+    else:
+        cv2.circle(output_hsv, (int(cx), int(cy)), 10, (255, 255, 255), -1)
+        imageTextString1 = 'X = ' + str(cx) + ' Y = ' + str(cy)
+        imageTextString2 = 'W = ' + str(w) + ' H = ' + str(h)
+        imageTextString3 = 'Area = ' + str(area)
+        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        cv2.putText(output_hsv, imageTextString1, (50, 20), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(output_hsv, imageTextString3, (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        
 
     # Show the frame(s)
     cv2.imshow("BGR ColourFrame", bgrImage)
