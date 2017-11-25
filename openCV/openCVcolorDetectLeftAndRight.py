@@ -271,12 +271,12 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         print("No contours.")
     else:
         cv2.circle(output_hsv, (int(cx), int(cy)), 10, (255, 255, 255), -1)
-        imageTextString1 = 'X = ' + str(cx) + ' Y = ' + str(cy)
-        imageTextString2 = 'W = ' + str(w) + ' H = ' + str(h)
-        imageTextString3 = 'Area = ' + str(area)
+        imageTextString1 = 'X = ' + str(foundX) + ' Y = ' + str(foundY)
+        #imageTextString2 = 'W = ' + str(w) + ' H = ' + str(h)
+        imageTextString3 = 'Area = ' + str(foundArea)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         cv2.putText(output_hsv, imageTextString1, (50, 20), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        #cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.putText(output_hsv, imageTextString3, (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         
 
