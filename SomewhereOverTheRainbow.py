@@ -39,6 +39,25 @@ SIDE_BUFFER = 10 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15 # Angle correction delay time in seconds
 FORWARD_TIME = 0.1 # Angle correction delay time in seconds
 TURN_DELAY = 0.65
+PAN_INTIAL = 0
+TILT_INTIAL = 20
+
+# Define the colour boundaries in HSV
+LOWER_RED_LFT_HSV = [165, 100, 100] # Left of 0deg Red = ~330deg to 359deg
+UPPER_RED_LFT_HSV = [179, 255, 255] # Red
+LOWER_RED_HSV = [0, 100, 100] # Red = 0deg to ~30deg
+UPPER_RED_HSV = [15, 255, 255] # Red
+LOWER_BLUE_HSV = [80, 50, 50] # Blue = ~180deg to ~260deg
+UPPER_BLUE_HSV = [140, 255, 255] # Blue
+LOWER_GREEN_HSV = [45, 50, 50] # Green = ~90deg to ~150deg
+UPPER_GREEN_HSV = [75, 255, 255] # Green
+LOWER_YELLOW_HSV = [20, 100, 100] # Yellow = ~40deg to ~90deg
+UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
+LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
+UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
+
+# Initialize colour array counter
+COLOUR_NAME_ARRAY = ['Red', 'Blue', 'Green', 'Yellow']
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
@@ -83,6 +102,19 @@ def main():
 
     LOGGER.info("Minimal Maze")
 
+    # Set initial colour
+    colourArrayCntr = 0
+
+    # Initialize photo capture
+    imageNum = 1
+
+    # Show commands and status
+    LOGGER.info("Press 'q' to quit.")
+    LOGGER.info("Press 'c' to change colour selector.")
+    LOGGER.info("Press 'p' to take picture of current frame.")
+    LOGGER.info("All key presses must be in a video frame window.")
+    LOGGER.info("The colour selector is now " + COLOUR_NAME_ARRAY[colourArrayCntr])
+
     # Waiting for start of challenge
     LOGGER.info("To start 'Somewhere Over the Rainbow' press 'Space' key.")
 
@@ -103,8 +135,8 @@ def main():
     # Setting the camera to look ahead
     SERVO_CONTROLLER.start_servos()
     time.sleep(1) # Need to add a delay or echo does not work!
-    SERVO_CONTROLLER.set_pan_servo(0)
-    SERVO_CONTROLLER.set_tilt_servo(0) 
+    SERVO_CONTROLLER.set_pan_servo(PAN_INTIAL)
+    SERVO_CONTROLLER.set_tilt_servo(TILT_INTIAL) 
 
     # Start the challenge
     while True:
@@ -112,9 +144,6 @@ def main():
         if keyp == ' ':
             LOGGER.info("Go")
             break
-
-    # Capture live video feed
-    LOGGER.info("To close live video feeds press 'q' key.")
 
     # Capture frames from the camera
     # http://picamera.readthedocs.io/en/release-1.10/api_camera.html
@@ -126,64 +155,71 @@ def main():
         # and occupied/unoccupied text
         image = frame.array
 
-        trueColor = image
+        bgrImage = image # Keep in BGR
+        hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) # Convert BGR to HSV
 
-        # Define the colour boundaries in BGR
-        lower = [17, 15, 100] # Red
-        upper = [100, 100, 255] # Red
-        # lower = [100, 20, 20] # Blue
-        # upper = [255, 100, 100] # Blue
+        # Select colour range to detect
+        lower_hsv = LOWER_HSV_ARRAY[colourArrayCntr]
+        upper_hsv = UPPER_HSV_ARRAY[colourArrayCntr]
 
-        # Create NumPy arrays from the boundaries
-        lower = np.array(lower, dtype = "uint8")
-        upper = np.array(upper, dtype = "uint8")
+        # Create HSV NumPy arrays from the boundaries
+        lower_hsv = np.array(lower_hsv, dtype = "uint8")
+        upper_hsv = np.array(upper_hsv, dtype = "uint8")
 
-        # find the colours within the specified boundaries and apply the mask
-        mask = cv2.inRange(trueColor, lower, upper)
-        output = cv2.bitwise_and(trueColor, trueColor, mask = mask)
-        
-        # show the frame(s) for test purposes
-        cv2.imshow("ColourFrame", trueColor)
-        cv2.imshow("Mask", mask)
-        cv2.imshow("ColourThreshold", output)
+        # Find the colours within the specified boundaries and apply the mask - HSV
+        mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
 
-        # Capture mean number of white/black pixels in the mask output in each ROW and COLUMN block
+        # Applying mask to BGR image gives true colours on display
+        output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask = mask_hsv)
 
-        # Loop over all rows
-        for j in range(COL_LENGTH):
-            
-            # Loop over all columns
-            for i in range(ROW_LENGTH):
-            
-                # Image region of interest (ROI)
-                startRow = int((j/COL_LENGTH) * CAMERA_HEIGHT)
-                stopRow  = int(((j+1)/COL_LENGTH) * CAMERA_HEIGHT) - 1.0
-                startCol = int((i/ROW_LENGTH) * CAMERA_WIDTH)
-                stopCol  = int(((i+1)/ROW_LENGTH) * CAMERA_WIDTH) - 1.0
-                
-                square = mask[startRow:stopRow, startCol:stopCol]
+        # Or use contours
+        # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
+        # https://docs.opencv.org/3.0-beta/modules/imgproc/doc/filtering.html
+        # cv2.medianBlur(src, ksize[, dst]) -> dst
+        # smoothes an image using the median filter with the ksize * ksize aperture
+        bgrImageBlur = cv2.medianBlur(bgrImage, 5) # Computes the median of all the pixels
+        hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2HSV)
 
-                # Mean of all the values in rectangular "square" array
-                MeanValues[j, i] = np.mean(square)
+        # Find the colour in blurried image
+        mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
+        output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur, mask = mask_hsvImageBlur)
 
-        # Find index of block with largest number of white pixels N.B. Black = 0, White = 255(?)
-        
-        # print("The mean values array: ", MeanValues)
-        # sizeOfMeanValues = MeanValues.size
-        # print("The size of the MeanValues array is: ", str(sizeOfMeanValues))
-        # print("The MeanValues array is: ", str(MeanValues))
-        
-        # Square numbering is top left to top right and then looping down rows
-        bigWhiteSquare = np.argmax(MeanValues)
+        # Find the contours
+        # imgray = cv2.cvtColor(output_hsvImageBlur, cv2.COLOR_BGR2GRAY)
+        # ret,thresh = cv2.threshold(imgray, 50, 255, cv2.THRESH_BINARY)
+        # RETR_TREE works, but is not in piborg example which uses RETR_LIST
+        # RETR_EXTERNAL does not look for contours within contours
+        im2,contours,hierarchy = cv2.findContours(mask_hsvImageBlur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) 
+        cv2.drawContours(output_hsv, contours, -1, (0,255,0), 3)
 
-        # Work out off and even for left or right
-        # Only works for 2x2 grid currently! Will need to change for other grid sizes
-        # N.B. Our left is the robots right
-        
-        if (bigWhiteSquare % 2) > 0:
-            print("The red object is to your right")
+        # Go through each contour
+        foundArea = -1
+        foundX = -1
+        foundY = -1
+        for contour in contours:
+            x, y, w, h = cv2.boundingRect(contour)
+            cx = x + (w/2)
+            cy = y + (h/2)
+            area = w * h
+            if foundArea < area:
+                foundArea = area
+                foundX = cx
+                foundY = cy
+        if foundArea > 0:
+            ball = [foundX, foundY, foundArea]
         else:
-            print("The red object is to your left")
+            ball = None
+
+        if ball == None:
+            LOGGER.info("No contours.")
+        else:
+            cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
+            imageTextString1 = 'X = ' + str(foundX) + ' Y = ' + str(foundY)
+            imageTextString3 = 'Area = ' + str(foundArea)
+            font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+            cv2.putText(output_hsv, imageTextString1, (50, 20), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(output_hsv, imageTextString3, (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+
 
         # Spin robot to work out position of each coloured marker
 
@@ -195,6 +231,11 @@ def main():
 
         # Point towards Green marker and go into quarter cirle zone
 
+        # Show the frame(s)
+        cv2.imshow("BGR ColourFrame", bgrImage)
+        cv2.imshow("HSV Mask", mask_hsv)
+        cv2.imshow("HSV ColourThreshold", output_hsv)
+
         # http://picamera.readthedocs.io/en/release-1.10/api_array.html
         # Clear the stream in preperation for the next frame
         rawCapture.truncate(0)
@@ -205,6 +246,19 @@ def main():
         # if the 'q' key was pressed break from the loop
         if key == ord("q"):
             break
+        # if the 'c' key was pressed change the colour array counter
+        elif key == ord("c"):
+            colourArrayCntr = (colourArrayCntr + 1) % 4 # Loop over integers 0 to 3
+            LOGGER.info("The colour selector is now " + COLOUR_NAME_ARRAY[colourArrayCntr])
+        # if the 'p' key was pressed capture the images
+        elif key == ord("p"):
+            fileNameBGR = 'bgrImage' + str(imageNum) + '.png'
+            fileNameMaskHSV = 'hsvImageMask' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+            fileNameOutputHSV = 'hsvImageOutput' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+            imageNum += 1
+            cv2.imwrite(fileNameBGR, bgrImage)
+            cv2.imwrite(fileNameMaskHSV, mask_hsv)
+            cv2.imwrite(fileNameOutputHSV, output_hsv)
 
 if __name__ == "__main__":
     try:
