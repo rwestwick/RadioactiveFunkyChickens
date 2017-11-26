@@ -272,7 +272,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     if ball == None:
         print("No contours.")
     else:
-        cv2.circle(output_hsv, (int(cx), int(cy)), 10, (255, 255, 255), -1)
+        cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
         imageTextString1 = 'X = ' + str(foundX) + ' Y = ' + str(foundY)
         #imageTextString2 = 'W = ' + str(w) + ' H = ' + str(h)
         imageTextString3 = 'Area = ' + str(foundArea)
