@@ -39,8 +39,8 @@ SIDE_BUFFER = 10 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15 # Angle correction delay time in seconds
 FORWARD_TIME = 0.1 # Angle correction delay time in seconds
 TURN_DELAY = 0.65
-PAN_INTIAL = 0
-TILT_INTIAL = 20
+PAN_INTIAL = -30
+TILT_INTIAL = 0
 
 # Define the colour boundaries in HSV
 LOWER_RED_LFT_HSV = [165, 100, 100] # Left of 0deg Red = ~330deg to 359deg
