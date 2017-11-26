@@ -140,7 +140,7 @@ def keyboardMovementsOfGun(keyp, gunmove):
 
     # laser (enter) is pressed
     elif keyp == 'l':
-        if LASER_ON:
+        if LASER_ON == True:
             LASER.switch_off()
             LASER_ON = False
         else:
@@ -199,7 +199,7 @@ def main():
     while keyboardMovementsOfGun(KeyboardCharacterReader.readkey(), GUNMOUNT):
 
         # Perform the movement via the numchuck
-        wmMove(wn, ROBOTMOVE)
+        wmMove(wn, GUNMOUNT)
 
     
 if __name__ == "__main__":
@@ -209,4 +209,4 @@ if __name__ == "__main__":
         LOGGER.info("Stopping the Duck Shoot")
     finally:
         LOGGER.info("Duck Shoot Finished")
-        ROBOTMOVE.cleanup()
+        GUNMOUNT.cleanup()
