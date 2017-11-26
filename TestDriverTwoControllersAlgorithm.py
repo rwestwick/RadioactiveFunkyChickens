@@ -29,10 +29,45 @@ DMCONTROLLER = DualMotorController.DualMotorController(
                 GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
 
 
-def one_wheel():
+def one_wheel_movements():
     """
     Performs single wheel movements
     """
+    x = DualMotorController.SPEED_FASTEST
+    LOGGER.info("Speed " + str(x))
+    DMCONTROLLER.stop()
+
+    LOGGER.info("front_left_forward")
+    DMCONTROLLER.front_left_forward(x)
+    time.sleep(5)
+
+    LOGGER.info("front_left_backward")
+    DMCONTROLLER.front_left_backward(x)
+    time.sleep(3)
+
+    LOGGER.info("front_right_forward")
+    DMCONTROLLER.front_right_forward(x)
+    time.sleep(5)
+
+    LOGGER.info("front_right_backward")
+    DMCONTROLLER.front_right_backward(x)
+    time.sleep(5)
+
+    LOGGER.info("rear_left_forward")
+    DMCONTROLLER.rear_left_forward(x)
+    time.sleep(5)
+
+    LOGGER.info("rear_left_backward")
+    DMCONTROLLER.rear_left_backward(x)
+    time.sleep(3)
+
+    LOGGER.info("rear_right_forward")
+    DMCONTROLLER.rear_right_forward(x)
+    time.sleep(5)
+
+    LOGGER.info("rear_right_backward")
+    DMCONTROLLER.rear_right_backward(x)
+    time.sleep(5)
 
 
 def main_movements():
@@ -70,7 +105,7 @@ def main_movements():
 if __name__ == "__main__":
     try:
         main_movements()
-        one_wheel()
+        one_wheel_movements()
     except KeyboardInterrupt:
         LOGGER.info("Stopping the drive test")
     finally:
