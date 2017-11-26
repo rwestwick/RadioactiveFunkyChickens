@@ -15,11 +15,11 @@ MODULE_LOGGER = logging.getLogger("__main__.DualMotorController")
 
 # Define some basic speed settings
 SPEED_FASTEST = 100
-SPEED_FAST = 90
-SPEED_MEDIUM = 80
-SPEED_SLOW = 60
-SPEED_VERYSLOW = 50
-SPEED_VERYVERYSLOW = 40
+SPEED_FAST = 80
+SPEED_MEDIUM = 50
+SPEED_SLOW = 40
+SPEED_VERYSLOW = 30
+SPEED_VERYVERYSLOW = 20
 
 class DualMotorController(object):
 
