@@ -19,6 +19,7 @@ from __future__ import division
 # Import needed libraries such as picamera OpenCV and NumPy
 import cv2
 import numpy as np
+from matplotlib import pyplot as plt
 import time
 from picamera import PiCamera
 from picamera.array import PiRGBArray
@@ -92,6 +93,7 @@ COLOUR_NAME_ARRAY = ['Red', 'Blue', 'Green', 'Yellow']
 print "Press 'q' to quit."
 print "Press 'c' to change colour selector."
 print "Press 'p' to take picture of current frame."
+print "Press 'h' for histogram to be taken."
 print "All key presses must be in a video frame window."
 print "The colour selector is now", COLOUR_NAME_ARRAY[colourArrayCntr]
 
@@ -320,6 +322,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         cv2.imwrite(fileNameMaskHSV, mask_hsv)
         cv2.imwrite(fileNameOutputBGR, output_bgr)
         cv2.imwrite(fileNameOutputHSV, output_hsv)
+    elif key == ord("h"):
+        color = ('b', 'g', 'r')
+        for i,col in enumerate(color):
+            # Histogram Calculation
+            hist = cv2.calcHist([image], [i], None, [256], [0, 256])
+            plt.plot(hist, color = col)
+            plt.xlim([0, 256])
+        plt.show()
 
 # simply destroys all windows created
 # Can use cv2.destroyWindow(frameName) to destroy a specific window
