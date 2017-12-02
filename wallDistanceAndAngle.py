@@ -20,6 +20,7 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 # Set initial constant values
 robotWidth = 12.0         # Width of the robot in cm
 
+
 def wallAngle(distanceOne, distanceTwo, wallWidth):
     """
     Calculate angle to wall
