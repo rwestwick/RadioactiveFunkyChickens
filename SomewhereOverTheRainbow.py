@@ -34,7 +34,7 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
 FRONT_BUFFER_WARN = 35 # Shortest distance to front (cm)
-FRONT_BUFFER_STOP = 25 # Shortest distance to front (cm)
+FRONT_BUFFER_STOP = 20 # Shortest distance to front (cm)
 SIDE_BUFFER = 10 # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15 # Angle correction delay time in seconds
 FORWARD_TIME = 0.1 # Angle correction delay time in seconds
@@ -69,11 +69,6 @@ ROBOTMOVE = MotorController.MotorController(
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
 
-# Initialize rowValues array to do testing such that they are all initialised to be white (255)
-ROW_LENGTH = 2 # Number of rectangles per row for analysis
-COL_LENGTH = 2 # Number of rectangles per column for analysis
-MeanValues = np.ones([COL_LENGTH, ROW_LENGTH]) * 255
-
 # Initialize camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
@@ -83,6 +78,23 @@ camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dospl
 camera.framerate = 10 # If not set then defaults to 30fps
 camera.vflip = True
 camera.hflip = True
+
+# Initialize tracking columns
+NUM_COLS = 5 # This number is linked to the column constants so cannot be changed
+COL_WIDTH = int(CAMERA_WIDTH / NUM_COLS)
+FAR_LEFT_COL_XLINE1 = 0
+FAR_LEFT_COL_XLINE2 = FAR_LEFT_COL_XLINE1 + COL_WIDTH
+LEFT_COL_XLINE1 = FAR_LEFT_COL_XLINE2
+LEFT_COL_XLINE2 = LEFT_COL_XLINE1 + COL_WIDTH
+CNTR_COL_XLINE1 = LEFT_COL_XLINE2
+CNTR_COL_XLINE2 = CNTR_COL_XLINE1 + COL_WIDTH
+RIGHT_COL_XLINE1 = CNTR_COL_XLINE2
+RIGHT_COL_XLINE2 = RIGHT_COL_XLINE1 + COL_WIDTH
+FAR_RIGHT_COL_XLINE1 = RIGHT_COL_XLINE2
+FAR_RIGHT_COL_XLINE2 = FAR_RIGHT_COL_XLINE1 + COL_WIDTH
+
+if FAR_RIGHT_COL_XLINE2 > CAMERA_WIDTH:
+    LOGGER.info("Issue with column width calculations!")
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]
@@ -102,7 +114,7 @@ def main():
 
     LOGGER.info("Minimal Maze")
 
-    # Set initial colour
+    # Set initial colour from COLOUR_NAME_ARRAY array position - 'Red', 'Blue', 'Green', 'Yellow'
     colourArrayCntr = 0
 
     # Initialize photo capture
@@ -212,14 +224,41 @@ def main():
 
         if ball == None:
             LOGGER.info("No contours.")
-        else:
+        else: # If ball is found show details
+            # Show location of centre of largest contour as white dot
             cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
+
+            # Show largest contour values
             imageTextString1 = 'X = ' + str(foundX) + ' Y = ' + str(foundY)
-            imageTextString3 = 'Area = ' + str(foundArea)
+            imageTextString2 = 'Area = ' + str(foundArea)
             font = cv2.FONT_HERSHEY_COMPLEX_SMALL
             cv2.putText(output_hsv, imageTextString1, (50, 20), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(output_hsv, imageTextString3, (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
+            # Work out whether to turn left or right from contour position
+            if ((foundX >= FAR_LEFT_COL_XLINE1) and (foundX < FAR_LEFT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= LEFT_COL_XLINE1) and (foundX < LEFT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= CNTR_COL_XLINE1) and (foundX < CNTR_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= RIGHT_COL_XLINE1) and (foundX < RIGHT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= FAR_RIGHT_COL_XLINE1) and (foundX < FAR_RIGHT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+
+        # Change speed depending on distance to front wall
+        distanceToFrontWall = view_front.measurement()
+        imageTextString3 = 'Distance = ' + str(distanceToFrontWall)
+        fontDistance = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        cv2.putText(output_hsv, imageTextString3, (50, 80), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        
+        if distanceToFrontWall > FRONT_BUFFER_WARN:
+            cv2.putText(output_hsv, 'Full speed.', (50, 100), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        elif ((distanceToFrontWall < FRONT_BUFFER_WARN) and (distanceToFrontWall > FRONT_BUFFER_STOP)):
+            cv2.putText(output_hsv, 'Slowly now.', (50, 100), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        elif ((distanceToFrontWall < FRONT_BUFFER_STOP)):
+            cv2.putText(output_hsv, 'Breaks on.', (50, 100), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Spin robot to work out position of each coloured marker
 
