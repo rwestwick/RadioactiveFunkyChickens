@@ -138,19 +138,33 @@ class MotorController(object):
         self.motor_right_forward.ChangeDutyCycle(0)
         self.motor_right_backward.ChangeDutyCycle(speed)
 
-    def one_wheel_right(self, speed):
+    def using_left_go_right(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.turn_forward(speed, 0)
+        
+    def using_left_go_left(self, speed):
+        """
+        Causes the Robot to turn right using just one wheel
+        Sets just one side to turn. 0 <= speed <= 100
+        """
+        self.turn_reverse(speed, 0)
 
-    def one_wheel_left(self, speed):
+    def using_right_go_right(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.turn_forward(0, speed)
+        
+    def using_right_go_left(self, speed):
+        """
+        Causes the Robot to turn right using just one wheel
+        Sets just one side to turn. 0 <= speed <= 100
+        """
+        self.turn_reverse(0, speed)
 
     def turn_forward(self, left_speed, right_speed):
         """
@@ -209,12 +223,17 @@ if __name__ == "__main__":
         MODULE_LOGGER.info("turn_reverse (left) 50%")
         MCONTROLLER.turn_reverse(SPEED_MEDIUM, 0)
         time.sleep(5)
-        MODULE_LOGGER.info("one_wheel_left 50%")
-        MCONTROLLER.one_wheel_left(SPEED_MEDIUM)
+        MODULE_LOGGER.info("using_left_go_right 50%")
+        MCONTROLLER.using_left_go_right(SPEED_MEDIUM)
         time.sleep(5)
-        MODULE_LOGGER.info("one_wheel_right 50%")
-        MCONTROLLER.one_wheel_right(SPEED_MEDIUM)
+        MODULE_LOGGER.info("using_left_go_left 50%")
+        MCONTROLLER.using_left_go_left(SPEED_MEDIUM)
         time.sleep(5)
+        MODULE_LOGGER.info("using_right_go_right 50%")
+        MCONTROLLER.using_right_go_right(SPEED_MEDIUM)
+        time.sleep(5)
+        MODULE_LOGGER.info("using_right_go_left 50%")
+        MCONTROLLER.using_right_go_left(SPEED_MEDIUM)
     except KeyboardInterrupt:
         pass
     finally:
