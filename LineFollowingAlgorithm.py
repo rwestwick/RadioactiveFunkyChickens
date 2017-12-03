@@ -11,6 +11,7 @@ import LineFollowerSensor
 import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
+import SpeedSettings
 
 
 # Create a logger to both file and stdout
@@ -57,7 +58,7 @@ def main():
         #time.sleep(1)
 
         if foundline is False:
-            ROBOTMOVE.forward(MotorController.SPEED_SLOW)
+            ROBOTMOVE.forward(SpeedSettings.SPEED_SLOW)
             if LSTATE == 1 or MSTATE == 1 or RSTATE == 1:
                 foundline = True
         else:
@@ -65,47 +66,47 @@ def main():
                 LOGGER.info("No Line")
                 if lastturnleft:
                     LOGGER.info("  Hard Left Search")
-                    ROBOTMOVE.spin_left(MotorController.SPEED_VERYSLOW)
+                    ROBOTMOVE.spin_left(SpeedSettings.SPEED_VERYSLOW)
                 elif lastturnright:
                     LOGGER.info("  Hard Right Search")
-                    ROBOTMOVE.spin_right(MotorController.SPEED_VERYSLOW)
+                    ROBOTMOVE.spin_right(SpeedSettings.SPEED_VERYSLOW)
                 else:
                     LOGGER.info("  Search Right")
-                    ROBOTMOVE.spin_right(MotorController.SPEED_VERYSLOW)
+                    ROBOTMOVE.spin_right(SpeedSettings.SPEED_VERYSLOW)
 
             elif LSTATE == 0 and MSTATE == 1 and RSTATE == 0:
                 LOGGER.info("Found Middle - Forward")
-                ROBOTMOVE.forward(MotorController.SPEED_VERYVERYSLOW)
+                ROBOTMOVE.forward(SpeedSettings.SPEED_VERYVERYSLOW)
                 lastturnleft = False
                 lastturnright = False
             elif LSTATE == 1 and MSTATE == 0 and RSTATE == 0:
                 LOGGER.info("Left only - Turn Hard Left")
-                ROBOTMOVE.spin_left(MotorController.SPEED_SLOW)
+                ROBOTMOVE.spin_left(SpeedSettings.SPEED_SLOW)
                 lastturnleft = True
                 lastturnright = False
             elif LSTATE == 1 and MSTATE == 1 and RSTATE == 0:
                 LOGGER.info("Left and middle - Turn Left")
-                ROBOTMOVE.turn_forward(MotorController.SPEED_SLOW / 2,
-                                       MotorController.SPEED_SLOW)
+                ROBOTMOVE.turn_forward(SpeedSettings.SPEED_SLOW / 2,
+                                       SpeedSettings.SPEED_SLOW)
                 lastturnleft = True
                 lastturnright = False
             elif LSTATE == 0 and MSTATE == 0 and RSTATE == 1:
                 LOGGER.info("Right only - Turn Hard Right")
-                ROBOTMOVE.spin_right(MotorController.SPEED_SLOW)
+                ROBOTMOVE.spin_right(SpeedSettings.SPEED_SLOW)
                 lastturnleft = False
                 lastturnright = True
             elif LSTATE == 0 and MSTATE == 1 and RSTATE == 1:
                 LOGGER.info("Right and middle - Turn Right")
-                ROBOTMOVE.turn_forward(MotorController.SPEED_SLOW,
-                                       MotorController.SPEED_SLOW / 2)
+                ROBOTMOVE.turn_forward(SpeedSettings.SPEED_SLOW,
+                                       SpeedSettings.SPEED_SLOW / 2)
                 lastturnleft = False
                 lastturnright = True
             elif LSTATE == 1 and MSTATE == 1 and RSTATE == 1:
                 LOGGER.info("All sensors are on the line")
-                ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
+                ROBOTMOVE.forward(SpeedSettings.SPEED_MEDIUM)
             else:
                 LOGGER.error("Some other state")
-                ROBOTMOVE.reverse(MotorController.SPEED_MEDIUM)
+                ROBOTMOVE.reverse(SpeedSettings.SPEED_MEDIUM)
 
 if __name__ == "__main__":
     try:

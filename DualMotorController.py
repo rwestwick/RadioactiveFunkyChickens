@@ -10,23 +10,16 @@ import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import GPIOLayout
 import MotorController
+import SpeedSettings
 
 MODULE_LOGGER = logging.getLogger("__main__.DualMotorController")
 
-# Define some basic speed settings
-SPEED_FASTEST = 100
-SPEED_FAST = 80
-SPEED_MEDIUM = 50
-SPEED_SLOW = 40
-SPEED_VERYSLOW = 30
-SPEED_VERYVERYSLOW = 20
 
 class DualMotorController(object):
 
     """
     Provides ability to control the motors on the robot.
     """
-    START_FREQ = 25
 
     def __init__(self,
                  left_front_forward,
@@ -57,8 +50,6 @@ class DualMotorController(object):
         """
         self.front_controller.stop()
         self.rear_controller.stop()
-        time.sleep(1)
-        GPIO.cleanup()
         MODULE_LOGGER.info("Cleaned up DualMotorController")
 
     def stop(self):
@@ -106,7 +97,6 @@ class DualMotorController(object):
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.front_controller.using_left_go_right(speed)
-        self.rear_controller.stop()
 
     def front_left_backward(self, speed):
         """
@@ -114,7 +104,6 @@ class DualMotorController(object):
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.front_controller.using_left_go_left(speed)
-        self.rear_controller.stop()
 
     def front_right_forward(self, speed):
         """
@@ -122,7 +111,6 @@ class DualMotorController(object):
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.front_controller.using_right_go_right(speed)
-        self.rear_controller.stop()
 
     def front_right_backward(self, speed):
         """
@@ -130,14 +118,12 @@ class DualMotorController(object):
         Sets just one side to turn. 0 <= speed <= 100
         """
         self.front_controller.using_right_go_left(speed)
-        self.rear_controller.stop()
 
     def rear_left_forward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.stop()
         self.rear_controller.using_left_go_right(speed)
 
     def rear_left_backward(self, speed):
@@ -145,7 +131,6 @@ class DualMotorController(object):
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.stop()
         self.rear_controller.using_left_go_left(speed)
 
     def rear_right_forward(self, speed):
@@ -153,7 +138,6 @@ class DualMotorController(object):
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.stop()
         self.rear_controller.using_right_go_right(speed)
 
     def rear_right_backward(self, speed):
@@ -161,7 +145,6 @@ class DualMotorController(object):
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.stop()
         self.rear_controller.using_right_go_left(speed)
 
 
@@ -183,40 +166,48 @@ if __name__ == "__main__":
         DMCONTROLLER.stop()
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("forward 50%")
-        DMCONTROLLER.forward(SPEED_MEDIUM)
+        DMCONTROLLER.forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("reverse 50%")
-        DMCONTROLLER.reverse(SPEED_MEDIUM)
+        DMCONTROLLER.reverse(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("spin_left 50%")
-        DMCONTROLLER.spin_left(SPEED_MEDIUM)
+        DMCONTROLLER.spin_left(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("spin_right 50%")
-        DMCONTROLLER.spin_right(SPEED_MEDIUM)
+        DMCONTROLLER.spin_right(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("front_left_forward 50%")
-        DMCONTROLLER.front_left_forward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.front_left_forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("front_left_backward 50%")
-        DMCONTROLLER.front_left_backward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.front_left_backward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("front_right_forward 50%")
-        DMCONTROLLER.front_right_forward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.front_right_forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("front_right_backward 50%")
-        DMCONTROLLER.front_right_backward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.front_right_backward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("rear_left_forward 50%")
-        DMCONTROLLER.rear_left_forward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.rear_left_forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("rear_left_backward 50%")
-        DMCONTROLLER.rear_left_backward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.rear_left_backward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("rear_right_forward 50%")
-        DMCONTROLLER.rear_right_forward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.rear_right_forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("rear_right_backward 50%")
-        DMCONTROLLER.rear_right_backward(SPEED_MEDIUM)
+        DMCONTROLLER.stop()
+        DMCONTROLLER.rear_right_backward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
 
     except KeyboardInterrupt:

@@ -9,22 +9,10 @@ import logging
 import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import GPIOLayout
+import SpeedSettings
 
 MODULE_LOGGER = logging.getLogger("__main__.MotorController")
 
-# Define some basic speed settings
-SPEED_FASTEST = 100
-SPEED_FAST = 90
-SPEED_MEDIUM = 80
-SPEED_SLOW = 60
-SPEED_VERYSLOW = 50
-SPEED_VERYVERYSLOW = 40
-#SPEED_FASTEST = 100
-#SPEED_FAST = 80
-#SPEED_MEDIUM = 50
-#SPEED_SLOW = 40
-#SPEED_VERYSLOW = 30
-#SPEED_VERYVERYSLOW = 20
 
 class MotorController(object):
 
@@ -200,40 +188,40 @@ if __name__ == "__main__":
         MCONTROLLER.stop()
         time.sleep(5)
         MODULE_LOGGER.info("forward 50%")
-        MCONTROLLER.forward(SPEED_MEDIUM)
+        MCONTROLLER.forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("reverse 50%")
-        MCONTROLLER.reverse(SPEED_MEDIUM)
+        MCONTROLLER.reverse(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("spin_left 50%")
-        MCONTROLLER.spin_left(SPEED_MEDIUM)
+        MCONTROLLER.spin_left(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("spin_right 50%")
-        MCONTROLLER.spin_right(SPEED_MEDIUM)
+        MCONTROLLER.spin_right(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("turn_forward (left) 50%")
-        MCONTROLLER.turn_forward(0, SPEED_MEDIUM)
+        MCONTROLLER.turn_forward(0, SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("turn_forward (right) 50%")
-        MCONTROLLER.turn_forward(SPEED_MEDIUM, 0)
+        MCONTROLLER.turn_forward(SpeedSettings.SPEED_MEDIUM, 0)
         time.sleep(5)
         MODULE_LOGGER.info("turn_reverse (right) 50%")
-        MCONTROLLER.turn_reverse(0, SPEED_MEDIUM)
+        MCONTROLLER.turn_reverse(0, SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("turn_reverse (left) 50%")
-        MCONTROLLER.turn_reverse(SPEED_MEDIUM, 0)
+        MCONTROLLER.turn_reverse(SpeedSettings.SPEED_MEDIUM, 0)
         time.sleep(5)
         MODULE_LOGGER.info("using_left_go_right 50%")
-        MCONTROLLER.using_left_go_right(SPEED_MEDIUM)
+        MCONTROLLER.using_left_go_right(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("using_left_go_left 50%")
-        MCONTROLLER.using_left_go_left(SPEED_MEDIUM)
+        MCONTROLLER.using_left_go_left(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("using_right_go_right 50%")
-        MCONTROLLER.using_right_go_right(SPEED_MEDIUM)
+        MCONTROLLER.using_right_go_right(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
         MODULE_LOGGER.info("using_right_go_left 50%")
-        MCONTROLLER.using_right_go_left(SPEED_MEDIUM)
+        MCONTROLLER.using_right_go_left(SpeedSettings.SPEED_MEDIUM)
     except KeyboardInterrupt:
         pass
     finally:

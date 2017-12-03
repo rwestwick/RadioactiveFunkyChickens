@@ -14,6 +14,8 @@ import MotorController
 import UltrasonicSensor
 import SetupConsoleLogger
 import GPIOLayout
+import SpeedSettings
+
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -21,7 +23,7 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
 
-speed = MotorController.SPEED_FASTEST  # Initial forward speed
+speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
 arcSpeed = 100          # Difference between left and right for correction
 # Width of the wall in cm (actual width on web-page = 522 mm)
 wallWidth = 52
@@ -39,6 +41,7 @@ robotmove = MotorController.MotorController(
     GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+
 
 def main():
     """

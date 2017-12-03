@@ -1,7 +1,7 @@
 # !/usr/bin/python
 
 """
-Defines the pins in use for the initio robot
+Defines the various robot GPIO pins
 """
 
 # Motor Pins Original

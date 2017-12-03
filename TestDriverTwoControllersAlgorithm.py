@@ -11,6 +11,7 @@ import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
 import cwiid
+import SpeedSettings
 
 
 # Create a logger to both file and stdout
@@ -33,7 +34,7 @@ def one_wheel_movements():
     """
     Performs single wheel movements
     """
-    x = DualMotorController.SPEED_FASTEST
+    x = SpeedSettings.SPEED_FASTEST
     LOGGER.info("Speed " + str(x))
     DMCONTROLLER.stop()
 
@@ -76,9 +77,9 @@ def main_movements():
     """
     DMCONTROLLER.stop()
   
-    speed_list = [DualMotorController.SPEED_FASTEST,
-                  DualMotorController.SPEED_MEDIUM,
-                  DualMotorController.SPEED_VERYVERYSLOW]
+    speed_list = [SpeedSettings.SPEED_FASTEST,
+                  SpeedSettings.SPEED_MEDIUM,
+                  SpeedSettings.SPEED_VERYVERYSLOW]
 
     for x in speed_list:
 		LOGGER.info("Speed " + str(x))
