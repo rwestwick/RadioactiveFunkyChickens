@@ -69,7 +69,7 @@ ROBOTMOVE = MotorController.MotorController(
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
 
-# Initialize camera
+# Initialise camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 camera = PiCamera() # Initialize camera
@@ -100,6 +100,7 @@ if FAR_RIGHT_COL_XLINE2 > CAMERA_WIDTH:
 # class picamera.array.PiRGBArray(camera, size=None)[source]
 # Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
 # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
+rawCaptureServo = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
 # Allow the camera time to warmup
@@ -112,8 +113,65 @@ def main():
     Method 2 - Emergency backup
     """
 
-    LOGGER.info("Minimal Maze")
+    LOGGER.info("Somewhere Over The Rainbow")
 
+    # Start servos
+    LOGGER.info("Start Pan/Tilt servos")
+    SERVO_CONTROLLER.start_servos()
+    time.sleep(1)
+
+    # Set initial pan and tilt values
+    pVal = 0
+    tVal = 0
+    
+    SERVO_CONTROLLER.set_pan_servo(pVal)
+    time.sleep(1)
+    SERVO_CONTROLLER.set_tilt_servo(tVal)
+    time.sleep(1)
+
+    # Manually recentre servos if needed
+    LOGGER.info("Press 'w', 'z', 's' and 'a' keys to recentre pan/tilt servos.")
+    LOGGER.info("Press 'n' to start main Somewhere Over the Rainbow algorithm.")
+    
+    for frameServo in camera.capture_continuous(rawCaptureServo, format="bgr", use_video_port=True):
+        # grab the raw NumPy array respresenting the image, then intialize the timestap
+        # and occupied/unoccupied text
+        imageServo = frameServo.array
+
+        # Show the frame(s)
+        cv2.imshow("Camera View", imageServo)
+        
+        # Capture a key press. The function waits argument in ms for any keyboard event
+        key = cv2.waitKey(100) & 0xFF
+        
+        if key == ord("w"):
+            pVal = min(90, pVal + 10)
+            SERVO_CONTROLLER.set_pan_servo(pVal)
+            LOGGER.info("Pan/Tilt servos up.")
+
+        elif key == ord("z"):
+            pVal = max(-90, pVal - 10)
+            SERVO_CONTROLLER.set_pan_servo(pVal)
+            LOGGER.info("Pan/Tilt servos down.")
+
+        elif key == ord("s"):
+            tVal = min(90, tVal + 10)
+            SERVO_CONTROLLER.set_tilt_servo(tVal)
+            LOGGER.info("Pan/Tilt servos right.")
+
+        elif key == ord("a"):
+            tVal = max(-90, tVal - 10)
+            SERVO_CONTROLLER.set_tilt_servo(tVal)
+            LOGGER.info("Pan/Tilt servos left.")
+            
+        elif key == ord("n"):
+            LOGGER.info("Stopped centering servos.")
+            cv2.destroyAllWindows()
+            break
+
+        # Clear the stream in preperation for the next frame
+        rawCaptureServo.truncate(0)
+    
     # Set initial colour from COLOUR_NAME_ARRAY array position - 'Red', 'Blue', 'Green', 'Yellow'
     colourArrayCntr = 0
 
@@ -128,7 +186,7 @@ def main():
     LOGGER.info("The colour selector is now " + COLOUR_NAME_ARRAY[colourArrayCntr])
 
     # Waiting for start of challenge
-    LOGGER.info("To start 'Somewhere Over the Rainbow' press 'Space' key.")
+    LOGGER.info("To start 'Somewhere Over the Rainbow' press 'Space' key in console window.")
 
     # Create necessary sensor objects
     view_left = UltrasonicSensor.UltrasonicSensor(
@@ -143,12 +201,6 @@ def main():
     LOGGER.info("Distance view_left at start " + format(view_left.measurement(), '.2f') + " cm")
     LOGGER.info("Distance view_right at start " + format(view_right.measurement(), '.2f') + " cm")
     LOGGER.info("Distance view_front at start " + format(view_front.measurement(), '.2f') + " cm")
-
-    # Setting the camera to look ahead
-    SERVO_CONTROLLER.start_servos()
-    time.sleep(1) # Need to add a delay or echo does not work!
-    SERVO_CONTROLLER.set_pan_servo(PAN_INTIAL)
-    SERVO_CONTROLLER.set_tilt_servo(TILT_INTIAL) 
 
     # Start the challenge
     while True:
