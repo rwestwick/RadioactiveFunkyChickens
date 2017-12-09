@@ -293,12 +293,17 @@ def main():
         im2,contours,hierarchy = cv2.findContours(mask_hsvImageBlur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) 
         cv2.drawContours(output_hsv, contours, -1, (0,255,0), 3)
 
-        # Sort for three largest contours by area
-        if len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
+        # Calculate final number of largest area contours
+        if len(contours) == 0:
+            LOGGER.info("No contours found.")
+        elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
             finalNumLargestAreaContours = len(contours)
         else:
             finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
 
+        # Need to add code for no contours found!!
+
+        # Sort for three largest contours by area
         cntSortedByArea = sorted(contours, key=cv2.contourArea, reverse=True)[:finalNumLargestAreaContours]
 
         # Highlight largest contours by area in Yellow
