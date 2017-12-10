@@ -29,6 +29,7 @@ import numpy as np
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
+# Additional contour functions defined
 def contour_circularity(cnts):
     # Compute the circularity of the contours in the array
 
@@ -46,7 +47,7 @@ def contour_circularity(cnts):
  
         circularityArray.append(circularity)
  
-    # return the
+    # return an array of circularity values
     return circularityArray
 
 def contour_centre(c):
@@ -55,7 +56,7 @@ def contour_centre(c):
     cX = int(M["m10"] / M["m00"])
     cY = int(M["m01"] / M["m00"])
  
-    # return the x and y co-ordinates of center
+    # return the x and y co-ordinates of the center of contours
     return cX, cY
 
 # Create a logger to both file and stdout
@@ -104,7 +105,7 @@ CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 camera = PiCamera() # Initialize camera
 camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT) # resolution defaults to dosplays resolution
-# Can get framerates up to 60fps 640x480
+# Can get framerates up to 60fps 640x480, but dependent on algorithm processing speed
 camera.framerate = 10 # If not set then defaults to 30fps
 camera.vflip = True
 camera.hflip = True
@@ -112,6 +113,8 @@ camera.hflip = True
 # Image fitering constants
 # Initial number for down selecting large contours
 NUM_OF_LARGEST_AREA_CONTOURS = 3 # If number too small then will loose circular marker
+MIN_MARKER_AREA = 1 # Correct value to be decided
+MIN_MARKER_CIRCULARITY = 1 # Correct value to be decided
 
 # Initialize tracking columns
 NUM_COLS = 5 # This number is linked to the column constants so cannot be changed
@@ -134,7 +137,9 @@ if FAR_RIGHT_COL_XLINE2 > CAMERA_WIDTH:
 # class picamera.array.PiRGBArray(camera, size=None)[source]
 # Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
 # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
+# Video capture for servo pan/tilt setting
 rawCaptureServo = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
+# Video capture for main algorithm
 rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
 # Allow the camera time to warmup
@@ -155,8 +160,8 @@ def main():
     time.sleep(1)
 
     # Set initial pan and tilt values
-    pVal = 0
-    tVal = 0
+    pVal = 20
+    tVal = 20
     
     SERVO_CONTROLLER.set_pan_servo(pVal)
     time.sleep(1)
@@ -171,6 +176,11 @@ def main():
         # grab the raw NumPy array respresenting the image, then intialize the timestap
         # and occupied/unoccupied text
         imageServo = frameServo.array
+
+        # Show Pan and Tilt values on screen
+        imageTextString1 = 'Pan = ' + str(pVal) + ' Tilt = ' + str(tVal)
+        fontPanAndTilt = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        cv2.putText(imageServo, imageTextString1, (50, 20), fontPanAndTilt, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Show the frame(s)
         cv2.imshow("Camera View", imageServo)
