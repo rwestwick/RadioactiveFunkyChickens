@@ -83,15 +83,15 @@ PAN_INTIAL = -30
 TILT_INTIAL = 0
 
 # Define the colour boundaries in HSV
-LOWER_RED_LFT_HSV = [165, 100, 100] # Left of 0deg Red = ~330deg to 359deg
+LOWER_RED_LFT_HSV = [165, 50, 50] # Left of 0deg Red = ~330deg to 359deg
 UPPER_RED_LFT_HSV = [179, 255, 255] # Red
-LOWER_RED_HSV = [0, 100, 100] # Red = 0deg to ~30deg
+LOWER_RED_HSV = [0, 50, 50] # Red = 0deg to ~30deg
 UPPER_RED_HSV = [15, 255, 255] # Red
 LOWER_BLUE_HSV = [80, 50, 50] # Blue = ~180deg to ~260deg
 UPPER_BLUE_HSV = [140, 255, 255] # Blue
 LOWER_GREEN_HSV = [45, 50, 50] # Green = ~90deg to ~150deg
 UPPER_GREEN_HSV = [75, 255, 255] # Green
-LOWER_YELLOW_HSV = [20, 100, 100] # Yellow = ~40deg to ~90deg
+LOWER_YELLOW_HSV = [20, 50, 50] # Yellow = ~40deg to ~90deg
 UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
 LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
 UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
@@ -280,13 +280,19 @@ def main():
         # Select colour range to detect
         lower_hsv = LOWER_HSV_ARRAY[colourArrayCntr]
         upper_hsv = UPPER_HSV_ARRAY[colourArrayCntr]
+        lower_red_lft_hsv = LOWER_RED_LFT_HSV
+        upper_red_lft_hsv = UPPER_RED_LFT_HSV
 
         # Create HSV NumPy arrays from the boundaries
         lower_hsv = np.array(lower_hsv, dtype = "uint8")
         upper_hsv = np.array(upper_hsv, dtype = "uint8")
+        lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype = "uint8")
+        upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype = "uint8")
 
         # Find the colours within the specified boundaries and apply the mask - HSV
         mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
+        if colourArrayCntr == 0:
+            mask_hsv = mask_hsv + cv2.inRange(hsvImage, lower_red_lft_hsv, upper_red_lft_hsv)
 
         # Applying mask to BGR image gives true colours on display
         output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask = mask_hsv)
@@ -347,9 +353,11 @@ def main():
             # Show location of centre of largest contour as white dot
             cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
 
-            # Show size of chosen area
+            # Show area and circularity of chosen contour
             imageTextString5 = "Area = " + str(cv2.contourArea(cntSortedByCirc[0]))
             cv2.putText(output_hsv, imageTextString5, (50, 140), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            imageTextString6 = "Circularity = " + str(cntCircularity[0])
+            cv2.putText(output_hsv, imageTextString6, (50, 160), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
             # Work out whether to turn left or right from contour position
             if ((foundX >= FAR_LEFT_COL_XLINE1) and (foundX < FAR_LEFT_COL_XLINE2)):
