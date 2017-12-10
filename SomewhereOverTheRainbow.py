@@ -32,6 +32,8 @@ from picamera.array import PiRGBArray
 # Additional contour functions defined
 def contour_circularity(cnts):
     # Compute the circularity of the contours in the array
+    # The lower the value the less circular
+    # Perfect circle has value of one
 
     # Initialize the circularity array
     circularityArray = []
@@ -50,11 +52,18 @@ def contour_circularity(cnts):
     # return an array of circularity values
     return circularityArray
 
-def contour_centre(c):
+def contour_centre(cntr):
     # compute the center of the contour area
-    M = cv2.moments(c)
-    cX = int(M["m10"] / M["m00"])
-    cY = int(M["m01"] / M["m00"])
+    M = cv2.moments(cntr)
+
+    # Prevent division by 0
+    if M["m00"] == 0:
+        x, y, w, h = cv2.boundingRect(cntr)
+        cX = x + (w / 2)
+        cY = y + (h / 2)
+    else:
+        cX = int(M["m10"] / M["m00"])
+        cY = int(M["m01"] / M["m00"])
  
     # return the x and y co-ordinates of the center of contours
     return cX, cY
@@ -113,8 +122,8 @@ camera.hflip = True
 # Image fitering constants
 # Initial number for down selecting large contours
 NUM_OF_LARGEST_AREA_CONTOURS = 3 # If number too small then will loose circular marker
-MIN_MARKER_AREA = 1 # Correct value to be decided
-MIN_MARKER_CIRCULARITY = 1 # Correct value to be decided
+MIN_MARKER_AREA = 10 # Correct value to be decided
+MIN_MARKER_CIRCULARITY = 0.5 # Correct value to be decided
 
 # Initialize tracking columns
 NUM_COLS = 5 # This number is linked to the column constants so cannot be changed
@@ -154,6 +163,9 @@ def main():
 
     LOGGER.info("Somewhere Over The Rainbow")
 
+    # Set font for text on image/video
+    font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+
     # Start servos
     LOGGER.info("Start Pan/Tilt servos")
     SERVO_CONTROLLER.start_servos()
@@ -179,8 +191,7 @@ def main():
 
         # Show Pan and Tilt values on screen
         imageTextString1 = 'Pan = ' + str(pVal) + ' Tilt = ' + str(tVal)
-        fontPanAndTilt = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        cv2.putText(imageServo, imageTextString1, (50, 20), fontPanAndTilt, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(imageServo, imageTextString1, (50, 20), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Show the frame(s)
         cv2.imshow("Camera View", imageServo)
@@ -291,9 +302,8 @@ def main():
         # Find the colour in blurried image
         mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
         output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur, mask = mask_hsvImageBlur)
-        colourFont = cv2.FONT_HERSHEY_COMPLEX_SMALL
         imageTextString2 = 'Colour = ' + COLOUR_NAME_ARRAY[colourArrayCntr]
-        cv2.putText(output_hsv, imageTextString2, (50, 40), colourFont, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Find the contours
         # imgray = cv2.cvtColor(output_hsvImageBlur, cv2.COLOR_BGR2GRAY)
@@ -311,54 +321,68 @@ def main():
         else:
             finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
 
-        # Need to add code for no contours found!!
-
         # Sort for three largest contours by area
         cntSortedByArea = sorted(contours, key=cv2.contourArea, reverse=True)[:finalNumLargestAreaContours]
 
         # Highlight largest contours by area in Yellow
         cv2.drawContours(output_hsv, cntSortedByArea, -1, (0,255,255), 3)
-         
-        # Calculate the largest contours' by area circularity
-        cntCircularity = contour_circularity(cntSortedByArea)
 
-        # Sort contours in order of circularity
-        (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntSortedByArea, cntCircularity), key=lambda x: x[1], reverse=True))
+        # Check to see if any contours are found as circularity and zip does not work without array
+        if len(cntSortedByArea) == 0:
+            cv2.putText(output_hsv, 'No contours found!', (50, 140), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            
+        else:
+            # Calculate the largest contours' by area circularity
+            cntCircularity = contour_circularity(cntSortedByArea)
 
-        # Highlight the most circular contour in white
-        cv2.drawContours(output_hsv, cntSortedByCirc[0], -1, (255,255,255), 3)
+            # Sort contours in order of circularity
+            (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntSortedByArea, cntCircularity), key=lambda x: x[1], reverse=True))
 
-        # Calculate centre of most circular contour
-        foundX, foundY = contour_centre(cntSortedByCirc[0])
-        
-        # Show location of centre of largest contour as white dot
-        cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
+            # Highlight the most circular contour in white
+            cv2.drawContours(output_hsv, cntSortedByCirc[0], -1, (255,255,255), 3)
 
-        # Work out whether to turn left or right from contour position
-        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        if ((foundX >= FAR_LEFT_COL_XLINE1) and (foundX < FAR_LEFT_COL_XLINE2)):
-            cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-        elif ((foundX >= LEFT_COL_XLINE1) and (foundX < LEFT_COL_XLINE2)):
-            cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-        elif ((foundX >= CNTR_COL_XLINE1) and (foundX < CNTR_COL_XLINE2)):
-            cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-        elif ((foundX >= RIGHT_COL_XLINE1) and (foundX < RIGHT_COL_XLINE2)):
-            cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-        elif ((foundX >= FAR_RIGHT_COL_XLINE1) and (foundX < FAR_RIGHT_COL_XLINE2)):
-            cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            # Calculate centre of most circular contour
+            foundX, foundY = contour_centre(cntSortedByCirc[0])
+            
+            # Show location of centre of largest contour as white dot
+            cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
 
+            # Show size of chosen area
+            imageTextString5 = "Area = " + str(cv2.contourArea(cntSortedByCirc[0]))
+            cv2.putText(output_hsv, imageTextString5, (50, 140), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+
+            # Work out whether to turn left or right from contour position
+            if ((foundX >= FAR_LEFT_COL_XLINE1) and (foundX < FAR_LEFT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= LEFT_COL_XLINE1) and (foundX < LEFT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= CNTR_COL_XLINE1) and (foundX < CNTR_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= RIGHT_COL_XLINE1) and (foundX < RIGHT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            elif ((foundX >= FAR_RIGHT_COL_XLINE1) and (foundX < FAR_RIGHT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+
+        # Check to see if top three contours are greater than minimum size and circularity
+        # to prevent false hits
+        for cntCounter in range(len(cntSortedByCirc)):
+            currentCntrArea = cv2.contourArea(cntSortedByCirc[cntCounter])
+            currentCntrCircularity = cntCircularity[cntCounter]
+            if (currentCntrArea < MIN_MARKER_AREA) and (currentCntrCircularity < MIN_MARKER_CIRCULARITY):
+                imageTextString4 = 'Contour ' + str(cntCounter + 1) + ' is too small and not circular enough' # Contours numbered 1 to finalNumLargestAreaContours
+                cv2.putText(output_hsv, imageTextString4, (50, 120), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+                
         # Change speed depending on distance to front wall
         distanceToFrontWall = view_front.measurement()
         imageTextString3 = 'Distance = ' + str(distanceToFrontWall)
-        fontDistance = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        cv2.putText(output_hsv, imageTextString3, (50, 80), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(output_hsv, imageTextString3, (50, 80), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         
         if distanceToFrontWall > FRONT_BUFFER_WARN:
-            cv2.putText(output_hsv, 'Full speed.', (50, 100), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(output_hsv, 'Full speed.', (50, 100), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         elif ((distanceToFrontWall < FRONT_BUFFER_WARN) and (distanceToFrontWall > FRONT_BUFFER_STOP)):
-            cv2.putText(output_hsv, 'Slowly now.', (50, 100), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(output_hsv, 'Slowly now.', (50, 100), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         elif ((distanceToFrontWall < FRONT_BUFFER_STOP)):
-            cv2.putText(output_hsv, 'Breaks on.', (50, 100), fontDistance, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(output_hsv, 'Breaks on.', (50, 100), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Spin robot to work out position of each coloured marker
 
