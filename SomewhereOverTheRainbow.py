@@ -20,6 +20,7 @@ import math
 import SetupConsoleLogger
 import ServoController
 import MotorController
+import SpeedSettings
 import UltrasonicSensor
 import GPIOLayout
 import KeyboardCharacterReader
@@ -220,13 +221,15 @@ def main():
             LOGGER.info("Pan/Tilt servos left.")
             
         elif key == ord("n"):
-            LOGGER.info("Stopped centering servos.")
-            cv2.destroyAllWindows()
+            LOGGER.info("Stopped centering servos.")      
             break
 
         # Clear the stream in preperation for the next frame
         rawCaptureServo.truncate(0)
-    
+
+    # Close Servo Setting window
+    cv2.destroyAllWindows()
+
     # Set initial colour from COLOUR_NAME_ARRAY array position - 'Red', 'Blue', 'Green', 'Yellow'
     colourArrayCntr = 0
 
@@ -335,9 +338,12 @@ def main():
 
         # Check to see if any contours are found as circularity and zip does not work without array
         if len(cntSortedByArea) == 0:
+            contourDetection = False
             cv2.putText(output_hsv, 'No contours found!', (50, 140), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
             
         else:
+            contourDetection = True
+
             # Calculate the largest contours' by area circularity
             cntCircularity = contour_circularity(cntSortedByArea)
 
@@ -359,18 +365,6 @@ def main():
             imageTextString6 = "Circularity = " + str(cntCircularity[0])
             cv2.putText(output_hsv, imageTextString6, (50, 160), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
-            # Work out whether to turn left or right from contour position
-            if ((foundX >= FAR_LEFT_COL_XLINE1) and (foundX < FAR_LEFT_COL_XLINE2)):
-                cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            elif ((foundX >= LEFT_COL_XLINE1) and (foundX < LEFT_COL_XLINE2)):
-                cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            elif ((foundX >= CNTR_COL_XLINE1) and (foundX < CNTR_COL_XLINE2)):
-                cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            elif ((foundX >= RIGHT_COL_XLINE1) and (foundX < RIGHT_COL_XLINE2)):
-                cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            elif ((foundX >= FAR_RIGHT_COL_XLINE1) and (foundX < FAR_RIGHT_COL_XLINE2)):
-                cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-
         # Check to see if top three contours are greater than minimum size and circularity
         # to prevent false hits
         for cntCounter in range(len(cntSortedByCirc)):
@@ -387,10 +381,38 @@ def main():
         
         if distanceToFrontWall > FRONT_BUFFER_WARN:
             cv2.putText(output_hsv, 'Full speed.', (50, 100), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            speedForward = SpeedSettings.SPEED_FAST
         elif ((distanceToFrontWall < FRONT_BUFFER_WARN) and (distanceToFrontWall > FRONT_BUFFER_STOP)):
             cv2.putText(output_hsv, 'Slowly now.', (50, 100), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            speedForward = SpeedSettings.SPEED_SLOW
         elif ((distanceToFrontWall < FRONT_BUFFER_STOP)):
             cv2.putText(output_hsv, 'Breaks on.', (50, 100), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            speedForward = 0
+            ROBOTMOVE.stop()
+
+        if ((contourDetection == True) and (speedForward != 0)):
+            # Work out whether to turn left or right from contour position
+            if ((foundX >= FAR_LEFT_COL_XLINE1) and (foundX < FAR_LEFT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+                ROBOTMOVE.turn_forward(0, speedForward)
+                time.sleep(FORWARD_TIME)
+            elif ((foundX >= LEFT_COL_XLINE1) and (foundX < LEFT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+                ROBOTMOVE.turn_forward((speedForward / 2), speedForward)
+                time.sleep(FORWARD_TIME)
+            elif ((foundX >= CNTR_COL_XLINE1) and (foundX < CNTR_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+                ROBOTMOVE.forward(speedForward)
+                time.sleep(FORWARD_TIME)
+            elif ((foundX >= RIGHT_COL_XLINE1) and (foundX < RIGHT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+                ROBOTMOVE.turn_forward(speedForward, (speedForward / 2))
+                time.sleep(FORWARD_TIME)
+            elif ((foundX >= FAR_RIGHT_COL_XLINE1) and (foundX < FAR_RIGHT_COL_XLINE2)):
+                cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+                ROBOTMOVE.turn_forward(speedForward, 0)
+                time.sleep(FORWARD_TIME)
+            
 
         # Spin robot to work out position of each coloured marker
 
@@ -403,8 +425,8 @@ def main():
         # Point towards Green marker and go into quarter cirle zone
 
         # Show the frame(s)
-        cv2.imshow("BGR ColourFrame", bgrImage)
-        cv2.imshow("HSV Mask", mask_hsv)
+        # cv2.imshow("BGR ColourFrame", bgrImage)
+        # cv2.imshow("HSV Mask", mask_hsv)
         cv2.imshow("HSV ColourThreshold", output_hsv)
 
         # http://picamera.readthedocs.io/en/release-1.10/api_array.html
@@ -442,5 +464,3 @@ if __name__ == "__main__":
         ROBOTMOVE.cleanup()
         cv2.destroyAllWindows()
         GPIO.cleanup()
-        
-        
