@@ -48,8 +48,8 @@ class DualMotorController(object):
         """
         Sets all motors off and sets GPIO to standard values
         """
-        self.front_controller.stop()
-        self.rear_controller.stop()
+        self.front_controller.cleanup()
+        self.rear_controller.cleanup()
         MODULE_LOGGER.info("Cleaned up DualMotorController")
 
     def stop(self):
@@ -96,56 +96,56 @@ class DualMotorController(object):
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.using_left_go_right(speed)
+        self.front_controller.left_forwards(speed)
 
     def front_left_backward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.using_left_go_left(speed)
+        self.front_controller.left_backwards(speed)
 
     def front_right_forward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.using_right_go_right(speed)
+        self.front_controller.right_forwards(speed)
 
     def front_right_backward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.front_controller.using_right_go_left(speed)
+        self.front_controller.right_backwards(speed)
 
     def rear_left_forward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.rear_controller.using_left_go_right(speed)
+        self.rear_controller.left_forwards(speed)
 
     def rear_left_backward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.rear_controller.using_left_go_left(speed)
+        self.rear_controller.left_backwards(speed)
 
     def rear_right_forward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.rear_controller.using_right_go_right(speed)
+        self.rear_controller.right_forwards(speed)
 
     def rear_right_backward(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.rear_controller.using_right_go_left(speed)
+        self.rear_controller.right_backwards(speed)
 
 
 

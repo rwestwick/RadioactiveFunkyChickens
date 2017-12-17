@@ -19,7 +19,7 @@ class MotorController(object):
     """
     Provides ability to control the motors on the robot.
     """
-    START_FREQ = 25
+    START_FREQ = 50
 
     def __init__(self,
                  left_forward,
@@ -73,7 +73,6 @@ class MotorController(object):
         Sets all motors off and sets GPIO to standard values
         """
         self.stop()
-        time.sleep(1)
         GPIO.cleanup()
         MODULE_LOGGER.info("Cleaned up MotorController")
 
@@ -126,33 +125,37 @@ class MotorController(object):
         self.motor_right_forward.ChangeDutyCycle(0)
         self.motor_right_backward.ChangeDutyCycle(speed)
 
-    def using_left_go_right(self, speed):
+    def left_forwards(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.turn_forward(speed, 0)
+        self.motor_left_forward.ChangeDutyCycle(speed)
+        self.motor_left_backward.ChangeDutyCycle(0)
         
-    def using_left_go_left(self, speed):
+    def left_backwards(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.turn_reverse(speed, 0)
+        self.motor_left_forward.ChangeDutyCycle(0)
+        self.motor_left_backward.ChangeDutyCycle(speed)
 
-    def using_right_go_right(self, speed):
+    def right_forwards(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.turn_forward(0, speed)
+        self.motor_right_forward.ChangeDutyCycle(speed)
+        self.motor_right_backward.ChangeDutyCycle(0)
         
-    def using_right_go_left(self, speed):
+    def right_backwards(self, speed):
         """
         Causes the Robot to turn right using just one wheel
         Sets just one side to turn. 0 <= speed <= 100
         """
-        self.turn_reverse(0, speed)
+        self.motor_right_forward.ChangeDutyCycle(0)
+        self.motor_right_backward.ChangeDutyCycle(speed)
 
     def turn_forward(self, left_speed, right_speed):
         """
@@ -211,17 +214,17 @@ if __name__ == "__main__":
         MODULE_LOGGER.info("turn_reverse (left) 50%")
         MCONTROLLER.turn_reverse(SpeedSettings.SPEED_MEDIUM, 0)
         time.sleep(5)
-        MODULE_LOGGER.info("using_left_go_right 50%")
-        MCONTROLLER.using_left_go_right(SpeedSettings.SPEED_MEDIUM)
+        MODULE_LOGGER.info("left_forwards 50%")
+        MCONTROLLER.left_forwards(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
-        MODULE_LOGGER.info("using_left_go_left 50%")
-        MCONTROLLER.using_left_go_left(SpeedSettings.SPEED_MEDIUM)
+        MODULE_LOGGER.info("left_backwards 50%")
+        MCONTROLLER.left_backwards(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
-        MODULE_LOGGER.info("using_right_go_right 50%")
-        MCONTROLLER.using_right_go_right(SpeedSettings.SPEED_MEDIUM)
+        MODULE_LOGGER.info("right_forwards 50%")
+        MCONTROLLER.right_forwards(SpeedSettings.SPEED_MEDIUM)
         time.sleep(5)
-        MODULE_LOGGER.info("using_right_go_left 50%")
-        MCONTROLLER.using_right_go_left(SpeedSettings.SPEED_MEDIUM)
+        MODULE_LOGGER.info("right_backwards 50%")
+        MCONTROLLER.right_backwards(SpeedSettings.SPEED_MEDIUM)
     except KeyboardInterrupt:
         pass
     finally:
