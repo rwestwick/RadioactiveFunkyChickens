@@ -47,6 +47,7 @@ def keyboard_movements():
     # Start the challenge
     while True:
         keyp = KeyboardCharacterReader.readkey()
+
         if keyp == 'q':
             LOGGER.info("Front Left Forwards")
             DMCONTROLLER.front_left_forward(x)
@@ -81,11 +82,27 @@ def keyboard_movements():
             LOGGER.info("Back Right Forwards")
             DMCONTROLLER.rear_right_forward(x)
         elif keyp == 'f':
-            DMCONTROLLER.rear_right_forward(0)
             LOGGER.info("Back Right Stop")
+            DMCONTROLLER.rear_right_forward(0)
         elif keyp == 'v':
             LOGGER.info("Back Right Backwards")
             DMCONTROLLER.rear_right_backward(x)
+
+        if ord(keyp) == 16:
+            LOGGER.info("forward")
+            DMCONTROLLER.forward(x)
+        elif ord(keyp) == 17:
+            LOGGER.info("reverse")
+            DMCONTROLLER.reverse(x)
+        elif ord(keyp) == 19:
+            LOGGER.info("left")
+            DMCONTROLLER.spin_left(x)
+        elif ord(keyp) == 18:
+            LOGGER.info("right")
+            DMCONTROLLER.spin_right(x)
+        elif keyp == ' ':
+            LOGGER.info("stop")
+            DMCONTROLLER.stop()
 
         elif keyp == '+':
             if pos > 0:
@@ -160,10 +177,7 @@ def main_movements():
     DMCONTROLLER.stop()
   
     speed_list = [SpeedSettings.SPEED_FASTEST,
-                  SpeedSettings.SPEED_FAST,
                   SpeedSettings.SPEED_MEDIUM,
-                  SpeedSettings.SPEED_SLOW,
-                  SpeedSettings.SPEED_VERYSLOW,
                   SpeedSettings.SPEED_VERYVERYSLOW]   
 
     for x in speed_list:
@@ -190,8 +204,8 @@ def main_movements():
     
 if __name__ == "__main__":
     try:
-        #keyboard_movements()
-        main_movements()
+        keyboard_movements()
+        #main_movements()
         #one_wheel_movements()
     except KeyboardInterrupt:
         LOGGER.info("Stopping the drive test")
