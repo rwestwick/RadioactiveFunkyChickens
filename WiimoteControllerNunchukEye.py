@@ -23,6 +23,7 @@ import cwiid
 import ServoController
 import threading
 import math
+import SpeedSettings
 
 # Set constants
 STICK_DELAY = 0.1
@@ -65,7 +66,7 @@ def main():
     """
     """
     # Set initial values
-    speed = MotorController.SPEED_FASTEST  # Initial forward speed
+    speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
     tVal = 0  # 0 degrees is centre
     pVal = 0  # 0 degrees is centre
     
@@ -115,9 +116,9 @@ def main():
                NunchukStickX < (NUNCHUK_MID + NUNCHUK_BUFFER) and
                NunchukStickX > (NUNCHUK_MID - NUNCHUK_BUFFER)):
 
-                speed = int(MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
-                if speed > MotorController.SPEED_FASTEST:
-                    speed = MotorController.SPEED_FASTEST
+                speed = int(SpeedSettings.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
+                if speed > SpeedSettings.SPEED_FASTEST:
+                    speed = SpeedSettings.SPEED_FASTEST
                 robotmove.forward(speed)
 
                 LOGGER.info("Forward at speed " + str(speed))
@@ -128,9 +129,9 @@ def main():
                  NunchukStickX < (NUNCHUK_MID + NUNCHUK_BUFFER) and
                  NunchukStickX > (NUNCHUK_MID - NUNCHUK_BUFFER)):
                 
-                speed = int(MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN))
-                if speed > MotorController.SPEED_FASTEST:
-                    speed = MotorController.SPEED_FASTEST
+                speed = int(SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN))
+                if speed > SpeedSettings.SPEED_FASTEST:
+                    speed = SpeedSettings.SPEED_FASTEST
                 robotmove.reverse(speed)
                 
                 LOGGER.info("Reverse at speed " + str(speed))
@@ -141,9 +142,9 @@ def main():
                  NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER) and
                  NunchukStickY > (NUNCHUK_MID - NUNCHUK_BUFFER)):
                 
-                speed = int(MotorController.SPEED_FASTEST * (NunchukStickX - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
-                if speed > MotorController.SPEED_FASTEST:
-                    speed = MotorController.SPEED_FASTEST
+                speed = int(SpeedSettings.SPEED_FASTEST * (NunchukStickX - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID))
+                if speed > SpeedSettings.SPEED_FASTEST:
+                    speed = SpeedSettings.SPEED_FASTEST
                 robotmove.spin_right(speed)
                 
                 LOGGER.info("Spin right at speed " + str(speed))
@@ -154,9 +155,9 @@ def main():
                  NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER) and
                  NunchukStickY > (NUNCHUK_MID - NUNCHUK_BUFFER)):
                 
-                speed = int(MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN))
-                if speed > MotorController.SPEED_FASTEST:
-                    speed = MotorController.SPEED_FASTEST
+                speed = int(SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN))
+                if speed > SpeedSettings.SPEED_FASTEST:
+                    speed = SpeedSettings.SPEED_FASTEST
                 robotmove.spin_left(speed)
                 
                 LOGGER.info("Spin left at speed " + str(speed))
@@ -167,13 +168,13 @@ def main():
                  NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
                 # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
-                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
-                lengthY = MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
+                lengthX = SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = SpeedSettings.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
 
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                if overallSpeed > MotorController.SPEED_FASTEST:
-                    overallSpeed = MotorController.SPEED_FASTEST
+                if overallSpeed > SpeedSettings.SPEED_FASTEST:
+                    overallSpeed = SpeedSettings.SPEED_FASTEST
                     
                 # Calculate wheel speeds
                 speedLeftWheel = int(lengthY) 
@@ -189,13 +190,13 @@ def main():
                  NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
                 # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
-                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
-                lengthY = MotorController.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
+                lengthX = SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = SpeedSettings.SPEED_FASTEST * (NunchukStickY - NUNCHUK_MID)/(NUNCHUK_MAX - NUNCHUK_MID)
 
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                if overallSpeed > MotorController.SPEED_FASTEST:
-                    overallSpeed = MotorController.SPEED_FASTEST
+                if overallSpeed > SpeedSettings.SPEED_FASTEST:
+                    overallSpeed = SpeedSettings.SPEED_FASTEST
                     
                 # Calculate wheel speeds
                 speedLeftWheel = overallSpeed
@@ -211,13 +212,13 @@ def main():
                  NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER)):
                 
                 # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
-                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
-                lengthY = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthX = SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
 
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                if overallSpeed > MotorController.SPEED_FASTEST:
-                    overallSpeed = MotorController.SPEED_FASTEST
+                if overallSpeed > SpeedSettings.SPEED_FASTEST:
+                    overallSpeed = SpeedSettings.SPEED_FASTEST
                     
                 # Calculate wheel speeds
                 speedLeftWheel = int(lengthY) 
@@ -233,13 +234,13 @@ def main():
                  NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
                 # Calculate lenghts in range <100, min value depends on NUNCHUK_BUFFER value
-                lengthX = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
-                lengthY = MotorController.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthX = SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickX)/(NUNCHUK_MID - NUNCHUK_MIN)
+                lengthY = SpeedSettings.SPEED_FASTEST * (NUNCHUK_MID - NunchukStickY)/(NUNCHUK_MID - NUNCHUK_MIN)
 
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                if overallSpeed > MotorController.SPEED_FASTEST:
-                    overallSpeed = MotorController.SPEED_FASTEST
+                if overallSpeed > SpeedSettings.SPEED_FASTEST:
+                    overallSpeed = SpeedSettings.SPEED_FASTEST
                     
                 # Calculate wheel speeds
                 speedLeftWheel = overallSpeed
