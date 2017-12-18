@@ -20,6 +20,7 @@ import MotorController
 import SetupConsoleLogger
 import GPIOLayout
 import cwiid
+import SpeedSettings
 
 BUTTON_DELAY = 0.1 
 
@@ -38,7 +39,7 @@ def main():
     """
     """
     # Set initial values
-    speed = MotorController.SPEED_FASTEST  # Initial forward speed
+    speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
     
     # Connecting to the wiimote. This allows several attempts
     # as first few often fail.
@@ -111,12 +112,12 @@ def main():
 
         # If button Plus pressed increase speed
         elif (buttons & cwiid.BTN_PLUS):
-            speed = MotorController.SPEED_FASTEST
+            speed = SpeedSettings.SPEED_FASTEST
             LOGGER.info("Fast as possible")
 
         # If button Minus pressed decrease speed
         elif (buttons & cwiid.BTN_MINUS):
-            speed = MotorController.SPEED_MEDIUM
+            speed = SpeedSettings.SPEED_MEDIUM
             LOGGER.info("Go at medium speed.")
 
 
