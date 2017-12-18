@@ -20,6 +20,7 @@ import MotorController
 import SetupConsoleLogger
 import GPIOLayout
 import cwiid
+import SpeedSettings
 
 STICK_DELAY = 0.1
 
@@ -39,7 +40,7 @@ def main():
     """
     """
     # Set initial values
-    speed = MotorController.SPEED_FASTEST  # Initial forward speed
+    speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
 
     # Connecting to the wiimote. This allows several attempts
     # as first few often fail.
@@ -83,52 +84,52 @@ def main():
 
             # Go forward if joystick pushed forward
             if (NunchukStickY > 150) & (NunchukStickY < 190):
-                speed = MotorController.SPEED_SLOW
+                speed = SpeedSettings.SPEED_SLOW
                 robotmove.forward(speed)
                 LOGGER.info("Forward at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             elif (NunchukStickY >= 190):
-                speed = MotorController.SPEED_FASTEST
+                speed = SpeedSettings.SPEED_FASTEST
                 robotmove.forward(speed)
                 LOGGER.info("Forward at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             # Go backwards if joystick pulled back
             elif (NunchukStickY < 100) & (NunchukStickY > 50):
-                speed = MotorController.SPEED_SLOW
+                speed = SpeedSettings.SPEED_SLOW
                 robotmove.reverse(speed)
                 LOGGER.info("Reverse at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             elif (NunchukStickY <= 50):
-                speed = MotorController.SPEED_FASTEST
+                speed = SpeedSettings.SPEED_FASTEST
                 robotmove.reverse(speed)
                 LOGGER.info("Reverse at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             # Spin right right joystick pushed right
             elif (NunchukStickX > 150) & (NunchukStickX < 190):
-                speed = MotorController.SPEED_SLOW
+                speed = SpeedSettings.SPEED_SLOW
                 robotmove.spin_right(speed)
                 LOGGER.info("Spin right at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             elif (NunchukStickX >= 190):
-                speed = MotorController.SPEED_FASTEST
+                speed = SpeedSettings.SPEED_FASTEST
                 robotmove.spin_right(speed)
                 LOGGER.info("Spin right at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             # Spin left if joystick pushed left
             elif (NunchukStickX < 100) & (NunchukStickX > 50):
-                speed = MotorController.SPEED_SLOW
+                speed = SpeedSettings.SPEED_SLOW
                 robotmove.spin_left(speed)
                 LOGGER.info("Spin left at speed " + str(speed))
                 time.sleep(STICK_DELAY)
 
             elif (NunchukStickX <= 50):
-                speed = MotorController.SPEED_FASTEST
+                speed = SpeedSettings.SPEED_FASTEST
                 robotmove.spin_left(speed)
                 LOGGER.info("Spin left at speed " + str(speed))
                 time.sleep(STICK_DELAY)
