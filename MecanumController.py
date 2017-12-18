@@ -33,8 +33,7 @@ class MecanumController(object):
                  
         MODULE_LOGGER.info("Initialising MecanumController")
 
-        self.controller = 
-            DualMotorController.DualMotorController(left_front_forward,
+        self.controller = DualMotorController.DualMotorController(left_front_forward,
                                                     left_front_backward,
                                                     right_front_forward,
                                                     right_front_backward,
@@ -92,8 +91,8 @@ class MecanumController(object):
         """
         self.controller.front_left_backward(speed)
         self.controller.front_right_forward(speed)
-        self.controller.back_left_forward(speed)
-        self.controller.back_right_backward(speed)
+        self.controller.rear_left_forward(speed)
+        self.controller.rear_left_backward(speed)
 
     def right(self, speed):
         """
@@ -102,44 +101,44 @@ class MecanumController(object):
         """
         self.controller.front_left_forward(speed)
         self.controller.front_right_backward(speed)
-        self.controller.back_left_backward(speed)
-        self.controller.back_right_forward(speed)
+        self.controller.rear_left_backward(speed)
+        self.controller.rear_right_forward(speed)
 
     def forward_diagonal_left(self, speed):
         """
         Causes the Robot to move diagonally forward left
         speed. 0 <= speed <= 100
         """
-        stop.stop()
+        self.stop()
         self.controller.front_right_forward(speed)
-        self.controller.back_left_forward(speed)
+        self.controller.rear_left_forward(speed)
 
     def forward_diagonal_right(self, speed):
         """
         Causes the Robot to move diagonally forward right
         speed. 0 <= speed <= 100
         """
-        stop.stop()
+        self.stop()
         self.controller.front_left_forward(speed)
-        self.controller.back_right_forward(speed)
+        self.controller.rear_right_forward(speed)
 
     def backward_diagonal_left(self, speed):
         """
         Causes the Robot to move diagonally backward left
         speed. 0 <= speed <= 100
         """
-        stop.stop()
+        self.stop()
         self.controller.front_left_backward(speed)
-        self.controller.back_right_backward(speed)
+        self.controller.rear_right_backward(speed)
 
     def backward_diagonal_right(self, speed):
         """
         Causes the Robot to move diagonally backward right
         speed. 0 <= speed <= 100
         """
-        stop.stop()
+        self.stop()
         self.controller.front_right_backward(speed)
-        self.controller.back_left_backward(speed)
+        self.controller.rear_left_backward(speed)
 
 
 if __name__ == "__main__":
@@ -161,8 +160,8 @@ if __name__ == "__main__":
         MODULE_LOGGER.info("forward 50%")
         MMCONTROLLER.forward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
-        MODULE_LOGGER.info("reverse 50%")
-        MMCONTROLLER.reverse(SpeedSettings.SPEED_MEDIUM)
+        MODULE_LOGGER.info("backward 50%")
+        MMCONTROLLER.backward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("spin_left 50%")
         MMCONTROLLER.spin_left(SpeedSettings.SPEED_MEDIUM)
