@@ -107,7 +107,7 @@ camera.hflip = True
 # Image fitering constants
 # Initial number for down selecting large contours
 NUM_OF_LARGEST_AREA_CONTOURS = 3 # If number too small then will loose circular marker
-MIN_MARKER_AREA = 10 # Correct value to be decided
+MIN_MARKER_AREA = 100 # Correct value to be decided
 MIN_MARKER_CIRCULARITY = 0.5 # Correct value to be decided
 
 # Initialize tracking columns
@@ -317,22 +317,29 @@ def main():
         # Sort for three largest contours by area
         cntSortedByArea = sorted(contours, key=cv2.contourArea, reverse=True)[:finalNumLargestAreaContours]
 
-        # Highlight largest contours by area in Yellow
+        # Highlight largest contours by area in Yellow even if smaller than min area
         cv2.drawContours(output_hsv, cntSortedByArea, -1, (0,255,255), 3)
 
+        # Calculate position of contour that still is greater than min area
+        cntWithMinArea = []
+        for cntCounterArea in range(len(cntSortedByArea)):
+            if cv2.contourArea(cntSortedByArea[cntCounterArea]) >= MIN_MARKER_AREA:
+                cntWithMinArea.append(cntSortedByArea[cntCounterArea])
+            else:
+                break
+
         # Check to see if any contours are found as circularity and zip does not work without array
-        if len(cntSortedByArea) == 0:
+        if len(cntWithMinArea) == 0:
             contourDetection = False
             cv2.putText(output_hsv, 'No contours found!', (50, 140), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            
         else:
             contourDetection = True
 
-            # Calculate the largest contours' by area circularity
-            cntCircularity = contour_circularity(cntSortedByArea)
+            # Calculate the largest contours' by area circularity value
+            cntCircularity = contour_circularity(cntWithMinArea)
 
             # Sort contours in order of circularity
-            (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntSortedByArea, cntCircularity), key=lambda x: x[1], reverse=True))
+            (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntWithMinArea, cntCircularity), key=lambda x: x[1], reverse=True))
 
             # Highlight the most circular contour in white
             cv2.drawContours(output_hsv, cntSortedByCirc[0], -1, (255,255,255), 3)
@@ -349,18 +356,31 @@ def main():
             imageTextString6 = "Circularity = " + str(round(cntCircularity[0],2))
             cv2.putText(output_hsv, imageTextString6, (50, 160), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
-        # Check to see if top three contours are greater than minimum size and circularity
+        # Check to see if top three contours are greater than minimum circularity
         # to prevent false hits
+        imageTextString4 = 'Contour(s) '
+        contoursWithinSizeAndCircularity = True
+        
         for cntCounter in range(len(cntSortedByCirc)):
-            currentCntrArea = cv2.contourArea(cntSortedByCirc[cntCounter])
             currentCntrCircularity = cntCircularity[cntCounter]
-            if (currentCntrArea < MIN_MARKER_AREA) and (currentCntrCircularity < MIN_MARKER_CIRCULARITY):
-                imageTextString4 = 'Contour ' + str(cntCounter + 1) + ' is too small and not circular enough' # Contours numbered 1 to finalNumLargestAreaContours
-                cv2.putText(output_hsv, imageTextString4, (50, 120), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+            if (currentCntrCircularity < MIN_MARKER_CIRCULARITY):
+                imageTextString4 = imageTextString4 + str(cntCounter + 1) + ' ' # Contours numbered 1 to finalNumLargestAreaContours
+                contoursWithinSizeAndCircularity = False
+
+        if contoursWithinSizeAndCircularity:
+            imageTextString7 = "Top " + str(len(cntSortedByCirc)) + " contours within size and circularity boundary."
+            cv2.putText(output_hsv, imageTextString7, (50, 120), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        else:
+            imageTextString4 = imageTextString4 + 'of ' + str(len(cntSortedByCirc)) + ' are not circular enough'
+            cv2.putText(output_hsv, imageTextString4, (50, 120), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
                 
         # Change speed depending on distance to front wall
         distanceToFrontWall = view_front.measurement()
-        imageTextString3 = 'Distance = ' + str(round(distanceToFrontWall, 2)) + 'cm'
+        distanceToLeftWall = view_left.measurement()
+        distanceToRightWall = view_right.measurement()
+        imageTextString3 = 'Distance to front, left and right walls = ' + str(round(distanceToFrontWall, 2))
+        imageTextString3 = imageTextString3 + ', ' + str(round(distanceToLeftWall, 2))
+        imageTextString3 = imageTextString3 + ', ' + str(round(distanceToRightWall, 2)) + 'cm'
         cv2.putText(output_hsv, imageTextString3, (50, 80), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         
         if distanceToFrontWall > FRONT_BUFFER_WARN:
@@ -426,12 +446,12 @@ def main():
         # if the 'c' key was pressed change the colour array counter
         elif key == ord("c"):
             colourArrayCntr = (colourArrayCntr + 1) % 4 # Loop over integers 0 to 3
-            LOGGER.info("The colour selector is now " + COLOUR_NAME_ARRAY[colourArrayCntr])
+            LOGGER.info("The colour selector is now " + ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
         # if the 'p' key was pressed capture the images
         elif key == ord("p"):
             fileNameBGR = 'bgrImage' + str(imageNum) + '.png'
-            fileNameMaskHSV = 'hsvImageMask' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
-            fileNameOutputHSV = 'hsvImageOutput' + str(COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+            fileNameMaskHSV = 'hsvImageMask' + str(ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
+            fileNameOutputHSV = 'hsvImageOutput' + str(ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]) + str(imageNum) + '.png'
             imageNum += 1
             cv2.imwrite(fileNameBGR, bgrImage)
             cv2.imwrite(fileNameMaskHSV, mask_hsv)
