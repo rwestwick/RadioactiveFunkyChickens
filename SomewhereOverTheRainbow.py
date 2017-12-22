@@ -22,6 +22,7 @@ import ServoController
 import MotorController
 import SpeedSettings
 import UltrasonicSensor
+import ColourBoundaries
 import GPIOLayout
 import KeyboardCharacterReader
 import RPi.GPIO as GPIO
@@ -82,23 +83,6 @@ FORWARD_TIME = 0.1 # Angle correction delay time in seconds
 TURN_DELAY = 0.65
 PAN_INTIAL = -30
 TILT_INTIAL = 0
-
-# Define the colour boundaries in HSV
-LOWER_RED_LFT_HSV = [165, 50, 50] # Left of 0deg Red = ~330deg to 359deg
-UPPER_RED_LFT_HSV = [179, 255, 255] # Red
-LOWER_RED_HSV = [0, 50, 50] # Red = 0deg to ~30deg
-UPPER_RED_HSV = [15, 255, 255] # Red
-LOWER_BLUE_HSV = [80, 50, 50] # Blue = ~180deg to ~260deg
-UPPER_BLUE_HSV = [140, 255, 255] # Blue
-LOWER_GREEN_HSV = [45, 50, 50] # Green = ~90deg to ~150deg
-UPPER_GREEN_HSV = [75, 255, 255] # Green
-LOWER_YELLOW_HSV = [20, 50, 50] # Yellow = ~40deg to ~90deg
-UPPER_YELLOW_HSV = [45, 255, 255] # Yellow
-LOWER_HSV_ARRAY = [LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV]
-UPPER_HSV_ARRAY = [UPPER_RED_HSV, UPPER_BLUE_HSV, UPPER_GREEN_HSV, UPPER_YELLOW_HSV]
-
-# Initialize colour array counter
-COLOUR_NAME_ARRAY = ['Red', 'Blue', 'Green', 'Yellow']
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
@@ -241,7 +225,7 @@ def main():
     LOGGER.info("Press 'c' to change colour selector.")
     LOGGER.info("Press 'p' to take picture of current frame.")
     LOGGER.info("All key presses must be in a video frame window.")
-    LOGGER.info("The colour selector is now " + COLOUR_NAME_ARRAY[colourArrayCntr])
+    LOGGER.info("The colour selector is now " + ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
     # Waiting for start of challenge
     LOGGER.info("To start 'Somewhere Over the Rainbow' press 'Space' key in console window.")
@@ -280,11 +264,11 @@ def main():
         bgrImage = image # Keep in BGR
         hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) # Convert BGR to HSV
 
-        # Select colour range to detect
-        lower_hsv = LOWER_HSV_ARRAY[colourArrayCntr]
-        upper_hsv = UPPER_HSV_ARRAY[colourArrayCntr]
-        lower_red_lft_hsv = LOWER_RED_LFT_HSV
-        upper_red_lft_hsv = UPPER_RED_LFT_HSV
+        # Select HSV colour range boundaries to detect marker
+        lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
+        upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
+        lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
+        upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
 
         # Create HSV NumPy arrays from the boundaries
         lower_hsv = np.array(lower_hsv, dtype = "uint8")
@@ -311,7 +295,7 @@ def main():
         # Find the colour in blurried image
         mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
         output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur, mask = mask_hsvImageBlur)
-        imageTextString2 = 'Colour = ' + COLOUR_NAME_ARRAY[colourArrayCntr]
+        imageTextString2 = 'Colour = ' + ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
         cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Find the contours
@@ -360,9 +344,9 @@ def main():
             cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255), -1)
 
             # Show area and circularity of chosen contour
-            imageTextString5 = "Area = " + str(cv2.contourArea(cntSortedByCirc[0]))
+            imageTextString5 = "Area = " + str(round(cv2.contourArea(cntSortedByCirc[0]), 2))
             cv2.putText(output_hsv, imageTextString5, (50, 140), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-            imageTextString6 = "Circularity = " + str(cntCircularity[0])
+            imageTextString6 = "Circularity = " + str(round(cntCircularity[0],2))
             cv2.putText(output_hsv, imageTextString6, (50, 160), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Check to see if top three contours are greater than minimum size and circularity
@@ -376,7 +360,7 @@ def main():
                 
         # Change speed depending on distance to front wall
         distanceToFrontWall = view_front.measurement()
-        imageTextString3 = 'Distance = ' + str(distanceToFrontWall)
+        imageTextString3 = 'Distance = ' + str(round(distanceToFrontWall, 2)) + 'cm'
         cv2.putText(output_hsv, imageTextString3, (50, 80), font, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         
         if distanceToFrontWall > FRONT_BUFFER_WARN:
