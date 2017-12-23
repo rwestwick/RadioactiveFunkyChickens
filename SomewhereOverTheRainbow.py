@@ -322,7 +322,10 @@ def main():
         mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
         output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur,
                                               mask=mask_hsvImageBlur)
-        imageTextString2 = 'Colour = ' + ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
+
+        imageTextString2 = 'Colour = ' + \
+                           ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
+
         cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6,
                     (255, 255, 255), 1, cv2.LINE_AA)
 
@@ -355,7 +358,8 @@ def main():
         # Calculate position of contour that still is greater than min area
         cntWithMinArea = []
         for cntCounterArea in range(len(cntSortedByArea)):
-            if cv2.contourArea(cntSortedByArea[cntCounterArea]) >= MIN_MARKER_AREA:
+            if cv2.contourArea(cntSortedByArea[cntCounterArea]) \
+               >= MIN_MARKER_AREA:
                 cntWithMinArea.append(cntSortedByArea[cntCounterArea])
             else:
                 break
@@ -391,9 +395,13 @@ def main():
             # Show area and circularity of chosen contour
             imageTextString5 = "Area = " + \
                 str(round(cv2.contourArea(cntSortedByCirc[0]), 2))
+
             cv2.putText(output_hsv, imageTextString5, (50, 140), font, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
-            imageTextString6 = "Circularity = " + str(round(cntCircularity[0], 2))
+
+            imageTextString6 = "Circularity = " + \
+                               str(round(cntCircularity[0], 2))
+
             cv2.putText(output_hsv, imageTextString6, (50, 160), font, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
 
@@ -436,8 +444,7 @@ def main():
             cv2.putText(output_hsv, 'Full speed.', (50, 100), font, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = SpeedSettings.SPEED_FAST
-        elif distanceToFrontWall < FRONT_BUFFER_WARN and \
-             distanceToFrontWall > FRONT_BUFFER_STOP:
+        elif FRONT_BUFFER_WARN <= distanceToFrontWall >= FRONT_BUFFER_STOP:
             cv2.putText(output_hsv, 'Slowly now.', (50, 100), font, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = SpeedSettings.SPEED_SLOW
@@ -449,30 +456,27 @@ def main():
 
         if contourDetection and speedForward != 0:
             # Work out whether to turn left or right from contour position
-            if foundX >= FAR_LEFT_COL_XLINE1 and \
-               foundX < FAR_LEFT_COL_XLINE2:
+            if FAR_LEFT_COL_XLINE1 <= foundX < FAR_LEFT_COL_XLINE2:
                 cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(0, speedForward)
                 time.sleep(FORWARD_TIME)
-            elif foundX >= LEFT_COL_XLINE1 and foundX < LEFT_COL_XLINE2:
+            elif LEFT_COL_XLINE1 <= foundX < LEFT_COL_XLINE2:
                 cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward((speedForward / 2), speedForward)
                 time.sleep(FORWARD_TIME)
-            elif foundX >= CNTR_COL_XLINE1 and foundX < CNTR_COL_XLINE2:
+            elif CNTR_COL_XLINE1 >= foundX < CNTR_COL_XLINE2:
                 cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.forward(speedForward)
                 time.sleep(FORWARD_TIME)
-            elif foundX >= RIGHT_COL_XLINE1 and \
-                 foundX < RIGHT_COL_XLINE2:
+            elif RIGHT_COL_XLINE1 <= foundX < RIGHT_COL_XLINE2:
                 cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(speedForward, (speedForward / 2))
                 time.sleep(FORWARD_TIME)
-            elif foundX >= FAR_RIGHT_COL_XLINE1 and \
-                 foundX < FAR_RIGHT_COL_XLINE2:
+            elif FAR_RIGHT_COL_XLINE1 <= foundX < FAR_RIGHT_COL_XLINE2:
                 cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font,
                             0.6, (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(speedForward, 0)
@@ -508,7 +512,7 @@ def main():
         elif key == ord("c"):
             # Loop over integers 0 to 3
             colourArrayCntr = (colourArrayCntr + 1) % 4
-            LOGGER.info("The colour selector is now " + \
+            LOGGER.info("The colour selector is now " +
                         ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
         # if the 'p' key was pressed capture the images
         elif key == ord("p"):
