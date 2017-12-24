@@ -138,10 +138,14 @@ def contour_centre(cntr):
     return cX, cY
 
 
-def find_chosen_colour(colourArrayCntr, bgrImage, hsvImage):
+def find_HSV_colour(colourArrayCntr, bgrImage):
     # Find chosen colours in video image
-    # Returns masked bgr image and its mask
-    # masked blurred image and its mask
+    # Inputs:
+    # colourArrayCntr - Integer for selection of upper and lower colour bands
+    # bgrImage - BGR image from camera
+    # Outputs:
+    # Masked BGR image and its mask from colour detection
+    # Masked blurred BGR image and its mask from colour detection
 
     # Select HSV colour range boundaries to detect marker
     lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
@@ -154,6 +158,9 @@ def find_chosen_colour(colourArrayCntr, bgrImage, hsvImage):
     upper_hsv = np.array(upper_hsv, dtype="uint8")
     lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
     upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
+    
+    # Convert BGR to HSV
+    hsvImage = cv2.cvtColor(bgrImage, cv2.COLOR_BGR2HSV)
     
     # Find the colours within the specified boundaries and apply the mask
     mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
@@ -173,7 +180,7 @@ def find_chosen_colour(colourArrayCntr, bgrImage, hsvImage):
     bgrImageBlur = cv2.medianBlur(bgrImage, 5)
     hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2HSV)
 
-    # Find the colour in blurred image
+    # Find the colour in the blurred image
     mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
     if colourArrayCntr == 0:
         mask_hsvImageBlur = mask_hsvImageBlur + cv2.inRange(hsvImage, lower_red_lft_hsv,
@@ -190,6 +197,108 @@ def find_chosen_colour(colourArrayCntr, bgrImage, hsvImage):
 
     return output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur
 
+
+def find_marker_contour(mask, output_hsv):
+    # Find the contours
+    # RETR_TREE works, but is not in piborg example which uses RETR_LIST
+    # RETR_EXTERNAL does not look for contours within contours
+    im2, contours, hierarchy = cv2.findContours(mask,
+                                                cv2.RETR_EXTERNAL,
+                                                cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(output_hsv, contours, -1, (0, 255, 0), 3)
+
+    # Calculate final number of largest area contours
+    if len(contours) == 0:
+        LOGGER.info("No contours found.")
+    elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
+        finalNumLargestAreaContours = len(contours)
+    else:
+        finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
+
+    # Sort for three largest contours by area
+    cntSortedByArea = sorted(contours, key=cv2.contourArea,
+                             reverse=True)[:finalNumLargestAreaContours]
+
+    # Highlight largest contours by area in Yellow even
+    # if smaller than Min area
+    cv2.drawContours(output_hsv, cntSortedByArea, -1, (0, 255, 255), 3)
+
+    # Calculate position of contour that still is greater than Min area
+    cntWithMinArea = []
+    for cntCounterArea in range(len(cntSortedByArea)):
+        if cv2.contourArea(cntSortedByArea[cntCounterArea]) \
+           >= MIN_MARKER_AREA:
+            cntWithMinArea.append(cntSortedByArea[cntCounterArea])
+        else:
+            break
+
+    # Check to see if any contours are found as circularity and
+    # zip does not work without array
+    if len(cntWithMinArea) == 0:
+        contourDetection = False
+        cv2.putText(output_hsv, 'No contours found!', (50, 140), FONT,
+                    0.6, (255, 255, 255), 1, cv2.LINE_AA)
+    else:
+        contourDetection = True
+
+        # Calculate the largest contours' by area circularity value
+        cntCircularity = contour_circularity(cntWithMinArea)
+
+        # Sort contours in order of circularity
+        (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntWithMinArea, cntCircularity),
+                                                        key=lambda x: x[1],
+                                                        reverse=True))
+
+        # Highlight the most circular contour in white
+        cv2.drawContours(output_hsv, cntSortedByCirc[0], -1,
+                         (255, 255, 255), 3)
+
+        # Calculate centre of most circular contour
+        foundX, foundY = contour_centre(cntSortedByCirc[0])
+
+        # Show location of centre of largest contour as white dot
+        cv2.circle(output_hsv, (int(foundX), int(foundY)), 10,
+                   (255, 255, 255), -1)
+
+        # Show area and circularity of chosen contour
+        imageTextString5 = "Area = " + \
+            str(round(cv2.contourArea(cntSortedByCirc[0]), 2))
+
+        cv2.putText(output_hsv, imageTextString5, (50, 140), FONT, 0.6,
+                    (255, 255, 255), 1, cv2.LINE_AA)
+
+        imageTextString6 = "Circularity = " + \
+                           str(round(cntCircularity[0], 2))
+
+        cv2.putText(output_hsv, imageTextString6, (50, 160), FONT, 0.6,
+                    (255, 255, 255), 1, cv2.LINE_AA)
+
+    # Check to see if top three contours are greater than
+    # minimum circularity to prevent false hits
+    imageTextString4 = 'Contour(s) '
+    contoursWithinSizeAndCircularity = True
+
+    for cntCounter in range(len(cntSortedByCirc)):
+        currentCntrCircularity = cntCircularity[cntCounter]
+        if (currentCntrCircularity < MIN_MARKER_CIRCULARITY):
+            # Contours numbered 1 to finalNumLargestAreaContours
+            imageTextString4 = imageTextString4 + str(cntCounter + 1) + ' '
+            contoursWithinSizeAndCircularity = False
+
+    if contoursWithinSizeAndCircularity:
+        imageTextString7 = "Top " + str(len(cntSortedByCirc)) + \
+            " contours within size and circularity boundary."
+        cv2.putText(output_hsv, imageTextString7, (50, 120), FONT, 0.6,
+                    (255, 255, 255), 1, cv2.LINE_AA)
+    else:
+        imageTextString4 = imageTextString4 + 'of ' + \
+                           str(len(cntSortedByCirc)) + \
+                           ' are not circular enough'
+        cv2.putText(output_hsv, imageTextString4, (50, 120), FONT, 0.6,
+                    (255, 255, 255), 1, cv2.LINE_AA)
+
+    return output_hsv, contourDetection, foundX, foundY
+    
 
 # Initialise objects and constants
 
@@ -234,7 +343,7 @@ FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
 # Initial number for down selecting large contours
 # If number too small then will loose circular marker
 NUM_OF_LARGEST_AREA_CONTOURS = 3
-MIN_MARKER_AREA = 100  # Correct value to be decided from testing
+MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 MIN_MARKER_CIRCULARITY = 0.5  # Correct value to be decided
 
 # Initialize tracking columns
@@ -339,113 +448,13 @@ def main():
                                            use_video_port=True):
         # grab the raw NumPy array representing the image,
         # then initialize the time stamp and occupied/unoccupied text
-        image = frame.array
-
-        bgrImage = image  # Keep in BGR
-        hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # Convert BGR to HSV
+        bgrImage = frame.array
 
         # Find chosen colour in image
-        output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_chosen_colour(colourArrayCntr, bgrImage, hsvImage)
+        output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_HSV_colour(colourArrayCntr, bgrImage)
 
-        # Find the contours
-        # imgray = cv2.cvtColor(output_hsvImageBlur, cv2.COLOR_BGR2GRAY)
-        # ret,thresh = cv2.threshold(imgray, 50, 255, cv2.THRESH_BINARY)
-        # RETR_TREE works, but is not in piborg example which uses RETR_LIST
-        # RETR_EXTERNAL does not look for contours within contours
-        im2, contours, hierarchy = cv2.findContours(mask_hsvImageBlur,
-                                                    cv2.RETR_EXTERNAL,
-                                                    cv2.CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(output_hsv, contours, -1, (0, 255, 0), 3)
-
-        # Calculate final number of largest area contours
-        if len(contours) == 0:
-            LOGGER.info("No contours found.")
-        elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
-            finalNumLargestAreaContours = len(contours)
-        else:
-            finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
-
-        # Sort for three largest contours by area
-        cntSortedByArea = sorted(contours, key=cv2.contourArea,
-                                 reverse=True)[:finalNumLargestAreaContours]
-
-        # Highlight largest contours by area in Yellow even
-        # if smaller than Min area
-        cv2.drawContours(output_hsv, cntSortedByArea, -1, (0, 255, 255), 3)
-
-        # Calculate position of contour that still is greater than Min area
-        cntWithMinArea = []
-        for cntCounterArea in range(len(cntSortedByArea)):
-            if cv2.contourArea(cntSortedByArea[cntCounterArea]) \
-               >= MIN_MARKER_AREA:
-                cntWithMinArea.append(cntSortedByArea[cntCounterArea])
-            else:
-                break
-
-        # Check to see if any contours are found as circularity and
-        # zip does not work without array
-        if len(cntWithMinArea) == 0:
-            contourDetection = False
-            cv2.putText(output_hsv, 'No contours found!', (50, 140), FONT,
-                        0.6, (255, 255, 255), 1, cv2.LINE_AA)
-        else:
-            contourDetection = True
-
-            # Calculate the largest contours' by area circularity value
-            cntCircularity = contour_circularity(cntWithMinArea)
-
-            # Sort contours in order of circularity
-            (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntWithMinArea, cntCircularity),
-                                                            key=lambda x: x[1],
-                                                            reverse=True))
-
-            # Highlight the most circular contour in white
-            cv2.drawContours(output_hsv, cntSortedByCirc[0], -1,
-                             (255, 255, 255), 3)
-
-            # Calculate centre of most circular contour
-            foundX, foundY = contour_centre(cntSortedByCirc[0])
-
-            # Show location of centre of largest contour as white dot
-            cv2.circle(output_hsv, (int(foundX), int(foundY)), 10,
-                       (255, 255, 255), -1)
-
-            # Show area and circularity of chosen contour
-            imageTextString5 = "Area = " + \
-                str(round(cv2.contourArea(cntSortedByCirc[0]), 2))
-
-            cv2.putText(output_hsv, imageTextString5, (50, 140), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-
-            imageTextString6 = "Circularity = " + \
-                               str(round(cntCircularity[0], 2))
-
-            cv2.putText(output_hsv, imageTextString6, (50, 160), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-
-        # Check to see if top three contours are greater than
-        # minimum circularity to prevent false hits
-        imageTextString4 = 'Contour(s) '
-        contoursWithinSizeAndCircularity = True
-
-        for cntCounter in range(len(cntSortedByCirc)):
-            currentCntrCircularity = cntCircularity[cntCounter]
-            if (currentCntrCircularity < MIN_MARKER_CIRCULARITY):
-                # Contours numbered 1 to finalNumLargestAreaContours
-                imageTextString4 = imageTextString4 + str(cntCounter + 1) + ' '
-                contoursWithinSizeAndCircularity = False
-
-        if contoursWithinSizeAndCircularity:
-            imageTextString7 = "Top " + str(len(cntSortedByCirc)) + \
-                " contours within size and circularity boundary."
-            cv2.putText(output_hsv, imageTextString7, (50, 120), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-        else:
-            imageTextString4 = imageTextString4 + 'of ' + \
-                               str(len(cntSortedByCirc)) + \
-                               ' are not circular enough'
-            cv2.putText(output_hsv, imageTextString4, (50, 120), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
+        # Find location of contour
+        output_hsv, contourDetection, foundX, foundY = find_marker_contour(mask_hsvImageBlur, output_hsvImageBlur)
 
         # Change speed depending on distance to front wall
         distanceToFrontWall = view_front.measurement()
