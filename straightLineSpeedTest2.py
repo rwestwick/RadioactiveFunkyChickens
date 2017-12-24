@@ -83,20 +83,20 @@ def main():
         leftDistance = viewLeft.measurement()
         LOGGER.info("Average measured left distance: " +
                     str(int(leftDistance)) + " cm")
-					
+
         rightDistance = viewRight.measurement()
         LOGGER.info("Average measured right distance: " +
                     str(int(rightDistance)) + " cm")
-					
+
         # Decide which way to steer
         if (leftDistance < firstBufferWidth):
-            LOGGER.info("Steering right"+str((speed - arcSpeed)))
+            LOGGER.info("Steering right" + str((speed - arcSpeed)))
             robotmove.turn_forward(speed, (speed - arcSpeed))
             time.sleep(correctionTime)
             robotmove.forward(speed)
             time.sleep(correctionTime)
         elif (rightDistance < firstBufferWidth):
-            LOGGER.info("Steering left"+str((speed - arcSpeed)))
+            LOGGER.info("Steering left" + str((speed - arcSpeed)))
             robotmove.turn_forward((speed - arcSpeed), speed)
             time.sleep(correctionTime)
             robotmove.forward(speed)

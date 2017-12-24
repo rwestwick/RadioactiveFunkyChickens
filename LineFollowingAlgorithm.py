@@ -5,7 +5,6 @@ Provides an algorithm for following a black line on a white background.
 """
 
 import logging
-import time
 import MotorController
 import LineFollowerSensor
 import SetupConsoleLogger
@@ -54,8 +53,8 @@ def main():
         MSTATE = not linefollower.get_m_state()
         RSTATE = not linefollower.get_r_state()
 
-        LOGGER.info(str(RSTATE) + " - " + str(MSTATE) +	" - " +	str(LSTATE))
-        #time.sleep(1)
+        LOGGER.info(str(RSTATE) + " - " + str(MSTATE) + " - " + str(LSTATE))
+        # time.sleep(1)
 
         if foundline is False:
             ROBOTMOVE.forward(SpeedSettings.SPEED_SLOW)

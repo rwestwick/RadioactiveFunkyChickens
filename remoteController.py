@@ -11,7 +11,6 @@ http://piwars.org/
 """
 
 # Import required libraries
-import time
 import logging
 import KeyboardCharacterReader
 import MotorController
@@ -29,6 +28,7 @@ robotmove = MotorController.MotorController(
     GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
+
 def changeSpeed(currentDirection, newSpeed):
     """
     """
@@ -42,21 +42,22 @@ def changeSpeed(currentDirection, newSpeed):
         robotmove.spin_left(newSpeed)
     else:
         LOGGER.info("Incorrect currentDirection = " + str(currentDirection))
-    
+
+
 def main():
     """
     """
     # Set initial values
     speed = MotorController.SPEED_FASTEST  # Initial forward speed
     direction = ' '
-    
+
     # Give remote control keys
     print "Steer robot by using the arrow keys to control"
     print "Use , or < to slow down"
     print "Use . or > to speed up"
     print "Speed changes take effect when the next arrow key is pressed"
     print "Press Ctrl-C to end"
-    
+
     # Waiting for start of remote controller
     LOGGER.info("To start remote controller press 'Space' key.")
 
@@ -75,7 +76,7 @@ def main():
             robotmove.forward(speed)
             direction = 'forward'
             LOGGER.info("Forward at speed " + str(speed))
-            
+
         # Go backwards if 'z' or reverse arrow key pressed
         elif keyp == 'z' or ord(keyp) == 17:
             robotmove.reverse(speed)
@@ -87,13 +88,13 @@ def main():
             robotmove.spin_right(speed)
             direction = 'spin_right'
             LOGGER.info("Spin right at speed " + str(speed))
-            
+
         # Spin left if 'a' or left arrow key pressed
         elif keyp == 'a' or ord(keyp) == 19:
             robotmove.spin_left(speed)
             direction = 'spin_left'
             LOGGER.info("Spin left at speed " + str(speed))
-            
+
         # Speed up by 10 if '.' or '>' key pressed
         elif keyp == '.' or keyp == '>':
             speed = min(100, speed + 10)
@@ -106,7 +107,7 @@ def main():
             changeSpeed(direction, speed)
             LOGGER.info("Speed decreased to " + str(speed))
 
-        # Stop if Space (' ') key pressed    
+        # Stop if Space (' ') key pressed
         elif keyp == ' ':
             robotmove.stop()
             LOGGER.info("Stop!")

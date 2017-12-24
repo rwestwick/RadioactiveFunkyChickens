@@ -39,12 +39,12 @@ def wallAngle(distanceOne, distanceTwo, wallWidth):
     yOne = distanceOne + (robotWidth / 2.0)
     yTwo = distanceTwo + (robotWidth / 2.0)
     hypotenuse = yOne + yTwo
-    
+
     # Rounds down numbers greater than one to one
     wallRatio = wallWidth / hypotenuse
     if (wallRatio > 1.0):
         wallRatio = 1.0
-        
+
     theta = math.degrees(math.asin(wallRatio))
     return theta
 
@@ -65,13 +65,18 @@ def main():
     """
     Test functions with possible mesurement values
     """
-    piWarsWallWidth = 52.0 # Width between walls in cm (actual width on PiWars 2017 web-page = 522 mm)
-    piWarsDistanceOne = 40.0 # Distance from one sensor to wall One
-    piWarsDistanceTwo = 30.0 # Distance from one sensor to wall Two
-    
-    piWarsAngle = wallAngle(piWarsDistanceOne, piWarsDistanceTwo, piWarsWallWidth)
-    piWarsDistanceFromWallOne = distanceFromWall(piWarsDistanceOne, piWarsAngle)
-    piWarsDistanceFromWallTwo = distanceFromWall(piWarsDistanceTwo, piWarsAngle)
+    piWarsWallWidth = 52.0  # Width between walls in cm (actual width on PiWars 2017 web-page = 522 mm)
+    piWarsDistanceOne = 40.0  # Distance from one sensor to wall One
+    piWarsDistanceTwo = 30.0  # Distance from one sensor to wall Two
+
+    piWarsAngle = wallAngle(
+        piWarsDistanceOne,
+        piWarsDistanceTwo,
+        piWarsWallWidth)
+    piWarsDistanceFromWallOne = distanceFromWall(
+        piWarsDistanceOne, piWarsAngle)
+    piWarsDistanceFromWallTwo = distanceFromWall(
+        piWarsDistanceTwo, piWarsAngle)
 
     LOGGER.info("Distance to first wall: " +
                 str(piWarsDistanceOne) + " cm")
@@ -83,7 +88,6 @@ def main():
                 str(piWarsDistanceFromWallOne) + " cm")
     LOGGER.info("Closest distance of robot to wall Two: " +
                 str(piWarsDistanceFromWallTwo) + " cm")
-
 
 
 if __name__ == "__main__":

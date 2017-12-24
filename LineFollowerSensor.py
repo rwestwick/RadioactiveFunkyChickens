@@ -66,10 +66,10 @@ if __name__ == "__main__":
             GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
 
         MODULE_LOGGER.info(str(LINEFOLLOWER.get_r_state()) +
-		                   " - " +
-						   str(LINEFOLLOWER.get_m_state()) +
-		                   " - " +
-						   str(LINEFOLLOWER.get_l_state()))
+                           " - " +
+                           str(LINEFOLLOWER.get_m_state()) +
+                           " - " +
+                           str(LINEFOLLOWER.get_l_state()))
 
         MODULE_LOGGER.info("LINEFOLLOWER::left: " +
                            str(LINEFOLLOWER.get_l_state()))

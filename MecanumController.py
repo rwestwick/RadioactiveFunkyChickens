@@ -6,7 +6,6 @@ Provides ability to control the robots Mecanum wheels
 
 import time
 import logging
-import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import GPIOLayout
 import DualMotorController
@@ -30,18 +29,17 @@ class MecanumController(object):
                  left_back_backward,
                  right_back_forward,
                  right_back_backward):
-                 
+
         MODULE_LOGGER.info("Initialising MecanumController")
 
         self.controller = DualMotorController.DualMotorController(left_front_forward,
-                                                    left_front_backward,
-                                                    right_front_forward,
-                                                    right_front_backward,
-                                                    left_back_forward,
-                                                    left_back_backward,
-                                                    right_back_forward,
-                                                    right_back_backward)
-
+                                                                  left_front_backward,
+                                                                  right_front_forward,
+                                                                  right_front_backward,
+                                                                  left_back_forward,
+                                                                  left_back_backward,
+                                                                  right_back_forward,
+                                                                  right_back_backward)
 
     def cleanup(self):
         """
@@ -147,14 +145,14 @@ if __name__ == "__main__":
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         MMCONTROLLER = MecanumController(
-                        GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-                        GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-                        GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-                        GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
         MMCONTROLLER.stop()
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("forward 50%")
@@ -185,7 +183,7 @@ if __name__ == "__main__":
         MMCONTROLLER.backward_diagonal_left(SpeedSettings.SPEED_MEDIUM)
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("backward_diagonal_right 50%")
-        MMCONTROLLER.backward_diagonal_right(SpeedSettings.SPEED_MEDIUM)   
+        MMCONTROLLER.backward_diagonal_right(SpeedSettings.SPEED_MEDIUM)
 
     except KeyboardInterrupt:
         pass

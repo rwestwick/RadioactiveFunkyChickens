@@ -5,13 +5,13 @@ Class for enabling a gpio port to be switched on and off
 """
 
 import logging
+MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
+
 try:
     from gpiozero import GPIODevice
 except ImportError:
-    print("ERROR importing GPIODevice from gpiozero")
+    MODULE_LOGGER.error("ERROR importing GPIODevice from gpiozero")
 import SetupConsoleLogger
-
-MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
 
 class SwitchingGPIO(object):

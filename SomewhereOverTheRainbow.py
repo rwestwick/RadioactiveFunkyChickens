@@ -111,7 +111,8 @@ def contour_circularity(cnts):
         AreaContour = cv2.contourArea(c)
         Perimeter = cv2.arcLength(c, True)
         if Perimeter != 0.0:
-            circularity = (4 * math.pi * AreaContour)/(math.pow(Perimeter, 2))
+            circularity = (4 * math.pi * AreaContour) / \
+                (math.pow(Perimeter, 2))
         else:
             circularity = 0
 
@@ -308,8 +309,8 @@ def find_marker_contour(mask, output_hsv):
                     (255, 255, 255), 1, cv2.LINE_AA)
     else:
         imageTextString4 = imageTextString4 + 'of ' + \
-                           str(len(cntSortedByCirc)) + \
-                           ' are not circular enough'
+            str(len(cntSortedByCirc)) + \
+            ' are not circular enough'
         cv2.putText(output_hsv, imageTextString4, (50, 120), FONT, 0.6,
                     (255, 255, 255), 1, cv2.LINE_AA)
 
@@ -469,10 +470,12 @@ def main():
         bgrImage = frame.array
 
         # Find chosen colour in image
-        output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_HSV_colour(colourArrayCntr, bgrImage)
+        output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_HSV_colour(
+            colourArrayCntr, bgrImage)
 
         # Find location of contour
-        output_hsv, contourDetection, foundX, foundY = find_marker_contour(mask_hsvImageBlur, output_hsvImageBlur)
+        output_hsv, contourDetection, foundX, foundY = find_marker_contour(
+            mask_hsvImageBlur, output_hsvImageBlur)
 
         # Change speed depending on distance to front wall
         distanceToFrontWall = view_front.measurement()

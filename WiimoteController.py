@@ -22,7 +22,7 @@ import GPIOLayout
 import cwiid
 import SpeedSettings
 
-BUTTON_DELAY = 0.1 
+BUTTON_DELAY = 0.1
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -34,33 +34,34 @@ robotmove = MotorController.MotorController(
     GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
-    
+
+
 def main():
     """
     """
     # Set initial values
     speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
-    
+
     # Connecting to the wiimote. This allows several attempts
     # as first few often fail.
     LOGGER.info("Press 1+2 on your Wiimote now ...")
     time.sleep(1)
 
     wm = None
-    i=2
+    i = 2
     while not wm:
-            try:
-                    wm=cwiid.Wiimote()
-            except RuntimeError:
-                    if (i>5):
-                            LOGGER.info("Cannot create Wiimote connection.")
-                            quit()
-                    LOGGER.info("Error opening wiimote connection, attempt "
-                                + str(i))
-                    i +=1
+        try:
+            wm = cwiid.Wiimote()
+        except RuntimeError:
+            if (i > 5):
+                LOGGER.info("Cannot create Wiimote connection.")
+                quit()
+            LOGGER.info("Error opening wiimote connection, attempt "
+                        + str(i))
+            i += 1
 
     LOGGER.info("Wiimote connected.")
-    
+
     # Set wiimote to report button presses
     wm.rpt_mode = cwiid.RPT_BTN | cwiid.RPT_ACC | cwiid.RPT_EXT
 
@@ -76,7 +77,7 @@ def main():
             robotmove.forward(speed)
             LOGGER.info("Forward at speed " + str(speed))
             time.sleep(BUTTON_DELAY)
-            
+
         # Go backwards if 'reverse arrow key pressed
         elif (buttons & cwiid.BTN_DOWN):
             robotmove.reverse(speed)
@@ -88,7 +89,7 @@ def main():
             robotmove.spin_right(speed)
             LOGGER.info("Spin right at speed " + str(speed))
             time.sleep(BUTTON_DELAY)
-            
+
         # Spin left if left arrow key pressed
         elif (buttons & cwiid.BTN_LEFT):
             robotmove.spin_left(speed)

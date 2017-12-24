@@ -59,7 +59,6 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         # Initilise Queue
         self.queue = Queue.Queue()
 
-
     def measurement(self):
         """
         Returns the distance in cm to the nearest reflecting object

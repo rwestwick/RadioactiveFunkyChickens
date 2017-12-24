@@ -20,11 +20,11 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
-FRONT_BUFFER_WARN = 35 # Shortest distance to front (cm)
-FRONT_BUFFER_STOP = 25 # Shortest distance to front (cm)
-SIDE_BUFFER = 10 # Shortest distance to side (cm)
-CORRECTION_TIME = 0.15 # Angle correction delay time in seconds
-FORWARD_TIME = 0.1 # Angle correction delay time in seconds
+FRONT_BUFFER_WARN = 35  # Shortest distance to front (cm)
+FRONT_BUFFER_STOP = 25  # Shortest distance to front (cm)
+SIDE_BUFFER = 10  # Shortest distance to side (cm)
+CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
+FORWARD_TIME = 0.1  # Angle correction delay time in seconds
 TURN_DELAY = 0.65
 
 # Initialise motors
@@ -153,9 +153,24 @@ def main():
     LEFT_SIDE_BUFFER = 9.0
     RIGHT_SIDE_BUFFER = 10.0
 
-    LOGGER.info("Distance view_left at start " + format(view_left.measurement(), '.2f') + " cm")
-    LOGGER.info("Distance view_right at start " + format(view_right.measurement(), '.2f') + " cm")
-    LOGGER.info("Distance view_front at start " + format(view_front.measurement(), '.2f') + " cm")
+    LOGGER.info(
+        "Distance view_left at start " +
+        format(
+            view_left.measurement(),
+            '.2f') +
+        " cm")
+    LOGGER.info(
+        "Distance view_right at start " +
+        format(
+            view_right.measurement(),
+            '.2f') +
+        " cm")
+    LOGGER.info(
+        "Distance view_front at start " +
+        format(
+            view_front.measurement(),
+            '.2f') +
+        " cm")
 
     while True:
         keyp = KeyboardCharacterReader.readkey()

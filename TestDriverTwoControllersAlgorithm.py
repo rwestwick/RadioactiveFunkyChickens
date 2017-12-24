@@ -10,7 +10,6 @@ import DualMotorController
 import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
-import cwiid
 import SpeedSettings
 
 
@@ -28,6 +27,7 @@ DMCONTROLLER = DualMotorController.DualMotorController(
     GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
     GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+
 
 def keyboard_movements():
     """
@@ -121,6 +121,7 @@ def keyboard_movements():
             LOGGER.info("Break control loop!")
             break
 
+
 def one_wheel_movements():
     """
     Performs single wheel movements
@@ -201,12 +202,11 @@ def main_movements():
         time.sleep(3)
 
 
-
 if __name__ == "__main__":
     try:
         keyboard_movements()
-        #main_movements()
-        #one_wheel_movements()
+        # main_movements()
+        # one_wheel_movements()
     except KeyboardInterrupt:
         LOGGER.info("Stopping the drive test")
     finally:

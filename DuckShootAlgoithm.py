@@ -35,10 +35,10 @@ ROBOTMOVE = MotorController.MotorController(
 
 LASER = SwitchingGPIO(
     GPIOLayout.DUCK_SHOOT_LASER)
-    
+
 FIRE = SwitchingGPIO(
     GPIOLayout.DUCK_SHOOT_FIRE)
-    
+
 STICK_DELAY = 0.1
 
 LASER_ON = False
@@ -52,13 +52,13 @@ def wmMove(wm, robotmove):
     Called to move the robot using the numchuck controller
     """
     speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
-    
+
     if 'nunchuk' in wm.state:
         # X axis: Left Max = 25, Middle = 125, RightMax = 225
         NunchukStickX = (wm.state['nunchuk']['stick'][cwiid.X])
         # Y axis: DownMax = 30, Middle = 125, UpMax = 225
         NunchukStickY = (wm.state['nunchuk']['stick'][cwiid.Y])
-        
+
         # Go forward if joystick pushed forward
         if (NunchukStickY > 150) & (NunchukStickY < 190):
             speed = SpeedSettings.SPEED_SLOW
@@ -116,6 +116,7 @@ def wmMove(wm, robotmove):
             robotmove.stop()
             LOGGER.info("Stop!")
 
+
 def keyboardMovementsOfGun(keyp, gunmove):
     """
     Performs the main duck shooting algorithm
@@ -153,7 +154,7 @@ def keyboardMovementsOfGun(keyp, gunmove):
     elif ord(keyp) == 3:
         LOGGER.info("Break control loop!")
         return False
-     
+
      return True
             
             

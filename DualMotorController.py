@@ -6,7 +6,6 @@ Provides ability to control the motors using two controllers on the robot.
 
 import time
 import logging
-import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import GPIOLayout
 import MotorController
@@ -30,19 +29,18 @@ class DualMotorController(object):
                  left_back_backward,
                  right_back_forward,
                  right_back_backward):
-                 
+
         MODULE_LOGGER.info("Initialising DualMotorController")
 
         self.front_controller = MotorController.MotorController(left_front_forward,
-                                                left_front_backward,
-                                                right_front_forward,
-                                                right_front_backward)
+                                                                left_front_backward,
+                                                                right_front_forward,
+                                                                right_front_backward)
 
         self.rear_controller = MotorController.MotorController(left_back_forward,
-                                               left_back_backward,
-                                               right_back_forward,
-                                               right_back_backward)
-
+                                                               left_back_backward,
+                                                               right_back_forward,
+                                                               right_back_backward)
 
     def cleanup(self):
         """
@@ -148,21 +146,20 @@ class DualMotorController(object):
         self.rear_controller.right_backwards(speed)
 
 
-
 if __name__ == "__main__":
     DMCONTROLLER = None
     SLEEP_COUNT = 2
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         DMCONTROLLER = DualMotorController(
-                        GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-                        GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-                        GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-                        GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-                        GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
         DMCONTROLLER.stop()
         time.sleep(SLEEP_COUNT)
         MODULE_LOGGER.info("forward 50%")

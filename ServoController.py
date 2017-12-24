@@ -29,7 +29,7 @@ class ServoController(object):
     TILT_SERVO_ID = 1
     PAN_PIN = 18
     TILT_PIN = 22
-    
+
     def __init__(self):
         """
         Initialises the required properties of the servo controller
@@ -43,8 +43,11 @@ class ServoController(object):
         """
         if self.servos_active is False:
             script_path = os.path.split(os.path.realpath(__file__))[0]
-            # servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' + str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PCM
-            servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PWM hardware
+            # servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' +
+            # str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PCM
+            servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + \
+                str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + \
+                '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             os.system(init_string)
             self.servos_active = True

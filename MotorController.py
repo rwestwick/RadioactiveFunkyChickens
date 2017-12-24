@@ -132,7 +132,7 @@ class MotorController(object):
         """
         self.motor_left_forward.ChangeDutyCycle(speed)
         self.motor_left_backward.ChangeDutyCycle(0)
-        
+
     def left_backwards(self, speed):
         """
         Causes the Robot to turn right using just one wheel
@@ -148,7 +148,7 @@ class MotorController(object):
         """
         self.motor_right_forward.ChangeDutyCycle(speed)
         self.motor_right_backward.ChangeDutyCycle(0)
-        
+
     def right_backwards(self, speed):
         """
         Causes the Robot to turn right using just one wheel

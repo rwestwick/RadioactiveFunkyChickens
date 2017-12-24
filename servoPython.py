@@ -11,27 +11,31 @@ import termios
 
 # Pin numbers are in BCM
 # Tilting is raising or lowering their head to look up or down.
-# Panning is spinning left or right. 
+# Panning is spinning left or right.
 PAN_SERVO_PIN = 25
 TILT_SERVO_PIN = 24
 
-PWM_FREQ = 50.0 # Hz gives pulses at 20ms
+PWM_FREQ = 50.0  # Hz gives pulses at 20ms
 # PWM_FREQ = 200.0 # Hz gives pulses at 5ms - N.B. Jitter worse at higher frequencies
-# PWM_FREQ = 500.0 # Hz gives pulses at 2ms - This is the value used in PiRoCon this though will not give pulse width of 2.5ms
-PERIOD = 1000.0 / PWM_FREQ # ms
-MIN_PULSE_WIDTH = 0.5 # ms for 0 deg
-MAX_PULSE_WIDTH = 2.5 # ms for 180 deg
-DC_ZERO_DEG = (MIN_PULSE_WIDTH/PERIOD) * 100.0 # Duty Cycle % for zero degrees
-DC_PLUS180_SWING = ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH)/PERIOD) * 100.0 # Duty Cycle % change from zero degrees to 180 degrees at 50 Hz
+# PWM_FREQ = 500.0 # Hz gives pulses at 2ms - This is the value used in
+# PiRoCon this though will not give pulse width of 2.5ms
+PERIOD = 1000.0 / PWM_FREQ  # ms
+MIN_PULSE_WIDTH = 0.5  # ms for 0 deg
+MAX_PULSE_WIDTH = 2.5  # ms for 180 deg
+DC_ZERO_DEG = (MIN_PULSE_WIDTH / PERIOD) * \
+    100.0  # Duty Cycle % for zero degrees
+# Duty Cycle % change from zero degrees to 180 degrees at 50 Hz
+DC_PLUS180_SWING = ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) / PERIOD) * 100.0
 
 
 def dutyCycle(angle):
     """
     Calculates the Duty Cycle for the servo
     """
-    dutyCycle = ((angle/180.0) * DC_PLUS180_SWING) + DC_ZERO_DEG
-    
+    dutyCycle = ((angle / 180.0) * DC_PLUS180_SWING) + DC_ZERO_DEG
+
     return dutyCycle
+
 
 def setServo(servo, degrees):
     """
@@ -40,12 +44,13 @@ def setServo(servo, degrees):
     dc = dutyCycle(degrees)
     servo.ChangeDutyCycle(dc)
 
+
 def startServos():
     """
     Initialises the PIN settings for controlling pan and tilt servos
     """
-    
-    GPIO.setwarnings(False) 
+
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
 
     GPIO.setup(PAN_SERVO_PIN, GPIO.OUT)
@@ -62,6 +67,7 @@ def startServos():
 
     return [pwmPan, pwmTilt]
 
+
 def stopServos(servo1, servo2):
     """
     Stops the servos by stopping PWM and cleaning up GPIO
@@ -70,9 +76,10 @@ def stopServos(servo1, servo2):
     servo2.stop()
     GPIO.cleanup()
 
+
 def readchar():
     """
-    
+
     """
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -84,6 +91,7 @@ def readchar():
     if ch == '0x03':
         raise KeyboardInterrupt
     return ch
+
 
 def readkey(getchar_fn=None):
     """
@@ -109,29 +117,29 @@ if __name__ == "__main__":
 
         print "Testing basic functionality"
 
-        pVal = 0.0 # degs
-        tVal = 0.0 # degs
+        pVal = 0.0  # degs
+        tVal = 0.0  # degs
         setServo(pwmPan, pVal)
         setServo(pwmTilt, tVal)
 
         time.sleep(1)
 
-        pVal = 90.0 # degs
-        tVal = 90.0 # degs
+        pVal = 90.0  # degs
+        tVal = 90.0  # degs
         setServo(pwmPan, pVal)
         setServo(pwmTilt, tVal)
 
         time.sleep(1)
 
-        pVal = 180.0 # degs
-        tVal = 180.0 # degs
+        pVal = 180.0  # degs
+        tVal = 180.0  # degs
         setServo(pwmPan, pVal)
         setServo(pwmTilt, tVal)
 
         time.sleep(1)
 
-        pVal = 90.0 # degs
-        tVal = 90.0 # degs
+        pVal = 90.0  # degs
+        tVal = 90.0  # degs
         setServo(pwmPan, pVal)
         setServo(pwmTilt, tVal)
 
@@ -148,48 +156,48 @@ if __name__ == "__main__":
                 setServo(pwmPan, pVal)
                 setServo(pwmTilt, tVal)
                 print "Centre", tVal, pVal
-                
+
             elif key.upper() == 'L':
                 tVal = 0.0
                 pVal = 0.0
                 setServo(pwmPan, pVal)
                 setServo(pwmTilt, tVal)
                 print "Left", tVal, pVal
-                
+
             elif key.upper() == 'R':
                 tVal = 180.0
                 pVal = 180.0
                 setServo(pwmPan, pVal)
                 setServo(pwmTilt, tVal)
                 print "Right", tVal, pVal
-                
+
             elif key == ' x' or key == '.':
                 stopServos(pwmPan, pwmTilt)
                 print "Stop"
 
-            elif key == 'w' or ord(key) == 16: # 16=Up arrow
+            elif key == 'w' or ord(key) == 16:  # 16=Up arrow
                 tVal = max(0.0, tVal - 10.0)
                 setServo(pwmTilt, tVal)
                 print "Up", tVal
 
-            elif key == 'a' or ord(key) == 19: # 19=Left arrow
+            elif key == 'a' or ord(key) == 19:  # 19=Left arrow
                 pVal = max(0.0, pVal - 10.0)
                 setServo(pwmPan, pVal)
                 print "Left", pVal
 
-            elif key == 's' or ord(key) == 18: # 18=Right arrow
+            elif key == 's' or ord(key) == 18:  # 18=Right arrow
                 pVal = min(180.0, pVal + 10.0)
                 setServo(pwmPan, pVal)
                 print "Right", pVal
 
-            elif key == 'z' or ord(key) == 17: # 17=Down arrow
+            elif key == 'z' or ord(key) == 17:  # 17=Down arrow
                 tVal = min(180.0, tVal + 10.0)
                 setServo(pwmTilt, tVal)
                 print "Down", tVal
-                
+
             elif ord(key) == 3:
                 break
-            
+
     except KeyboardInterrupt:
         print("Ending session.")
 

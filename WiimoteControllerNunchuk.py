@@ -50,15 +50,15 @@ def main():
     wm = None
     i = 2
     while not wm:
-            try:
-                    wm = cwiid.Wiimote()
-            except RuntimeError:
-                    if (i > 5):
-                            LOGGER.info("Cannot create Wiimote connection.")
-                            quit()
-                    LOGGER.info("Error opening wiimote connection, attempt " +
-                                str(i))
-                    i += 1
+        try:
+            wm = cwiid.Wiimote()
+        except RuntimeError:
+            if (i > 5):
+                LOGGER.info("Cannot create Wiimote connection.")
+                quit()
+            LOGGER.info("Error opening wiimote connection, attempt " +
+                        str(i))
+            i += 1
 
     LOGGER.info("Wiimote connected.")
 
