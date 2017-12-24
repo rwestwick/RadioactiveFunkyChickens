@@ -124,7 +124,8 @@ initialRightDistance = viewRight.Measurement()
 initialForwardDistance = viewForward.Measurement()
 
 # Check initial side walls
-if ((initialLeftDistance + initialRightDistance + robotWidth) > (initialWallWidth * 1.2)):
+if ((initialLeftDistance + initialRightDistance +
+     robotWidth) > (initialWallWidth * 1.2)):
     print("The walls are too far apart!")
 else:
     print("The walls are NOT too far apart!")
@@ -139,10 +140,10 @@ else:
 print("To start minimal maze challenge press 'Space' key.")
 
 while True:
-        keyp = readkey()
-        if keyp == ' ':
-            print("Go")
-            break
+    keyp = readkey()
+    if keyp == ' ':
+        print("Go")
+        break
 
 # Drive forward
 sonarRFC.forward(speed)

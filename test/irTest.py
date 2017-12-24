@@ -16,7 +16,8 @@ try:
         newR = robohat.irRight()
         newLineL = robohat.irLeftLine()
         newLineR = robohat.irRightLine()
-        if (newL != lastL) or (newR != lastR) or (newLineL != lastLineL) or (newLineR != lastLineR):
+        if (newL != lastL) or (newR != lastR) or (
+                newLineL != lastLineL) or (newLineR != lastLineR):
             print 'Left, Right, LeftLine, RightLine:', newL, newR, newLineL, newLineR
             print
             lastL = newL

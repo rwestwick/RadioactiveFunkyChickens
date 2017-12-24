@@ -71,11 +71,11 @@ img3 = cv2.cvtColor(img2, cv2.COLOR_RGB2GRAY)
 # Adaptive thresholding
 threshImgAd = cv2.adaptiveThreshold(
     img3,
-     255,
-     cv2.ADAPTIVE_THRESH_MEAN_C,
-     cv2.THRESH_BINARY,
-     11,
-     2)
+    255,
+    cv2.ADAPTIVE_THRESH_MEAN_C,
+    cv2.THRESH_BINARY,
+    11,
+    2)
 # threshImgAd = cv2.adaptiveThreshold(img3, 255,
 # cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
 

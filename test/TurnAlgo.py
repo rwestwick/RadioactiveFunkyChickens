@@ -10,16 +10,15 @@ import logging
 import time
 import MotorController
 import UltrasonicSensor
-import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
 
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
-#SetupConsoleLogger.setup_console_logger(LOGGER)
+# SetupConsoleLogger.setup_console_logger(LOGGER)
 
-CORRECTION_TIME = 0.025 # Angle correction delay time in seconds
+CORRECTION_TIME = 0.025  # Angle correction delay time in seconds
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
@@ -33,7 +32,7 @@ def turn_right(ultrasonic_sensor_side):
 
     while True:
         ROBOTMOVE.stop()
-        #time.sleep(CORRECTION_TIME)
+        # time.sleep(CORRECTION_TIME)
 
         distance_side = ultrasonic_sensor_side.measurement()
 

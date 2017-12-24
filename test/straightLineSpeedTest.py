@@ -57,7 +57,8 @@ tilt = 1              # Value for setServo first argument for pan
 tVal = 0              # 0 degrees is horizontal centre
 pVal = 0              # 0 degrees is vertical centre
 wallList = [0, 0]     # Left and right wall distance List
-wallWidth = 52        # Width of the wall in cm (actual width on web-page = 522 mm)
+# Width of the wall in cm (actual width on web-page = 522 mm)
+wallWidth = 52
 
 # Initialise robohat controller
 robohat.init()
@@ -77,7 +78,8 @@ print "Left and right wall distances: ", wallList
 troughWidth = wallList[0] + wallList[1]
 print "Trough width: ", int(troughWidth)
 
-if ((troughWidth > (wallWidth + minRange)) or (troughWidth < (wallWidth - minRange))):
+if ((troughWidth > (wallWidth + minRange))
+        or (troughWidth < (wallWidth - minRange))):
     print "Trough walls not detected properly."
 
 # Control loop
