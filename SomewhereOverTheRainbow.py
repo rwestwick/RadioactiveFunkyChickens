@@ -18,6 +18,7 @@ from __future__ import division
 import logging
 import time
 import math
+import sys
 import SetupConsoleLogger
 import ServoController
 import MotorController
@@ -46,17 +47,17 @@ def camera_centre_check():
     LOGGER.info("Press 'w', 'z', 's' and 'a' keys to "
                 "recentre pan/tilt servos.")
     LOGGER.info("Press 'n' to start main "
-                "Somewhere Over the Rainbow algorithm.")
+                "'Somewhere Over the Rainbow' algorithm.")
 
     for frameServo in camera.capture_continuous(rawCaptureServo, format="bgr",
                                                 use_video_port=True):
-        # Grab the raw NumPy array respresenting the image,
-        # then intialize the timestamp and occupied/unoccupied text
+        # Grab the raw NumPy array representing the image,
+        # then initialize the timestamps and occupied/unoccupied text
         imageServo = frameServo.array
 
         # Show Pan and Tilt values on screen
         imageTextString1 = 'Pan = ' + str(pVal) + ' Tilt = ' + str(tVal)
-        cv2.putText(imageServo, imageTextString1, (50, 20), font, 0.6,
+        cv2.putText(imageServo, imageTextString1, (50, 20), FONT, 0.6,
                     (255, 255, 255), 1, cv2.LINE_AA)
 
         # Show the frame(s)
@@ -87,7 +88,7 @@ def camera_centre_check():
             LOGGER.info("Pan/Tilt servos left.")
 
         elif key == ord("n"):
-            LOGGER.info("Stopped centering servos.")
+            LOGGER.info("Stopped centring servos.")
             break
 
         # Clear the stream in preparation for the next frame
@@ -105,7 +106,7 @@ def contour_circularity(cnts):
     # Initialize the circularity array
     circularityArray = []
 
-    # Calculate cicrcularity for each contour in input array
+    # Calculate circularity for each contour in input array
     for c in cnts:
         AreaContour = cv2.contourArea(c)
         Perimeter = cv2.arcLength(c, True)
@@ -121,7 +122,7 @@ def contour_circularity(cnts):
 
 
 def contour_centre(cntr):
-    # compute the center of the contour area
+    # compute the centre of the contour area
     M = cv2.moments(cntr)
 
     # Prevent division by 0
@@ -133,8 +134,64 @@ def contour_centre(cntr):
         cX = int(M["m10"] / M["m00"])
         cY = int(M["m01"] / M["m00"])
 
-    # return the x and y co-ordinates of the center of contours
+    # return the x and y co-ordinates of the centre of contours
     return cX, cY
+
+
+def find_chosen_colour(colourArrayCntr, bgrImage, hsvImage):
+    # Find chosen colours in video image
+    # Returns masked bgr image and its mask
+    # masked blurred image and its mask
+
+    # Select HSV colour range boundaries to detect marker
+    lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
+    upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
+    lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
+    upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
+
+    # Create HSV NumPy arrays from the boundaries
+    lower_hsv = np.array(lower_hsv, dtype="uint8")
+    upper_hsv = np.array(upper_hsv, dtype="uint8")
+    lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
+    upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
+    
+    # Find the colours within the specified boundaries and apply the mask
+    mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
+    if colourArrayCntr == 0:
+        mask_hsv = mask_hsv + cv2.inRange(hsvImage, lower_red_lft_hsv,
+                                          upper_red_lft_hsv)
+
+    # Applying mask to BGR image gives true colours on display
+    output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask=mask_hsv)
+
+    # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
+    # https://docs.opencv.org/3.0-beta/modules/imgproc/doc/filtering.html
+    # cv2.medianBlur(src, ksize[, dst]) -> dst
+    # Smoothes an image using the median filter with
+    # the ksize * ksize aperture
+    # Computes the median of all the pixels
+    bgrImageBlur = cv2.medianBlur(bgrImage, 5)
+    hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2HSV)
+
+    # Find the colour in blurred image
+    mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
+    if colourArrayCntr == 0:
+        mask_hsvImageBlur = mask_hsvImageBlur + cv2.inRange(hsvImage, lower_red_lft_hsv,
+                                                            upper_red_lft_hsv)
+    
+    output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur,
+                                          mask=mask_hsvImageBlur)
+
+    imageTextString2 = 'Colour = ' + \
+                       ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
+
+    cv2.putText(output_hsv, imageTextString2, (50, 40), FONT, 0.6,
+                (255, 255, 255), 1, cv2.LINE_AA)
+
+    return output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur
+
+
+# Initialise objects and constants
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger("__name__")
@@ -169,10 +226,11 @@ camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
 camera.framerate = 10  # If not set then defaults to 30fps
 camera.vflip = True
 camera.hflip = True
-# Set font for text on image/video
-font = cv2.FONT_HERSHEY_COMPLEX_SMALL
 
-# Image fitering constants
+# Set FONT for text on image/video
+FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
+
+# Image filtering constants
 # Initial number for down selecting large contours
 # If number too small then will loose circular marker
 NUM_OF_LARGEST_AREA_CONTOURS = 3
@@ -207,7 +265,7 @@ rawCaptureServo = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 # Video capture for main algorithm
 rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
-# Allow the camera time to warmup
+# Allow the camera time to warm-up
 time.sleep(1)
 
 
@@ -244,8 +302,7 @@ def main():
                 ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
     # Waiting for start of challenge
-    LOGGER.info("To start 'Somewhere Over the Rainbow' "
-                "press 'Space' key in console window.")
+    LOGGER.info("Press 'Space' in console to start.")
 
     # Create necessary sensor objects
     view_left = UltrasonicSensor.UltrasonicSensor(
@@ -280,54 +337,15 @@ def main():
 
     for frame in camera.capture_continuous(rawCapture, format="bgr",
                                            use_video_port=True):
-        # grab the raw NumPy array respresenting the image,
-        # then intialize the timestamp and occupied/unoccupied text
+        # grab the raw NumPy array representing the image,
+        # then initialize the time stamp and occupied/unoccupied text
         image = frame.array
 
         bgrImage = image  # Keep in BGR
         hsvImage = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # Convert BGR to HSV
 
-        # Select HSV colour range boundaries to detect marker
-        lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
-        upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
-        lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
-        upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
-
-        # Create HSV NumPy arrays from the boundaries
-        lower_hsv = np.array(lower_hsv, dtype="uint8")
-        upper_hsv = np.array(upper_hsv, dtype="uint8")
-        lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
-        upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
-
-        # Find the colours within the specified boundaries and apply the mask
-        mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
-        if colourArrayCntr == 0:
-            mask_hsv = mask_hsv + cv2.inRange(hsvImage, lower_red_lft_hsv,
-                                              upper_red_lft_hsv)
-
-        # Applying mask to BGR image gives true colours on display
-        output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask=mask_hsv)
-
-        # Or use contours
-        # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
-        # https://docs.opencv.org/3.0-beta/modules/imgproc/doc/filtering.html
-        # cv2.medianBlur(src, ksize[, dst]) -> dst
-        # Smoothes an image using the median filter with
-        # the ksize * ksize aperture
-        # Computes the median of all the pixels
-        bgrImageBlur = cv2.medianBlur(bgrImage, 5)
-        hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2HSV)
-
-        # Find the colour in blurried image
-        mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
-        output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur,
-                                              mask=mask_hsvImageBlur)
-
-        imageTextString2 = 'Colour = ' + \
-                           ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
-
-        cv2.putText(output_hsv, imageTextString2, (50, 40), font, 0.6,
-                    (255, 255, 255), 1, cv2.LINE_AA)
+        # Find chosen colour in image
+        output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_chosen_colour(colourArrayCntr, bgrImage, hsvImage)
 
         # Find the contours
         # imgray = cv2.cvtColor(output_hsvImageBlur, cv2.COLOR_BGR2GRAY)
@@ -352,10 +370,10 @@ def main():
                                  reverse=True)[:finalNumLargestAreaContours]
 
         # Highlight largest contours by area in Yellow even
-        # if smaller than min area
+        # if smaller than Min area
         cv2.drawContours(output_hsv, cntSortedByArea, -1, (0, 255, 255), 3)
 
-        # Calculate position of contour that still is greater than min area
+        # Calculate position of contour that still is greater than Min area
         cntWithMinArea = []
         for cntCounterArea in range(len(cntSortedByArea)):
             if cv2.contourArea(cntSortedByArea[cntCounterArea]) \
@@ -368,7 +386,7 @@ def main():
         # zip does not work without array
         if len(cntWithMinArea) == 0:
             contourDetection = False
-            cv2.putText(output_hsv, 'No contours found!', (50, 140), font,
+            cv2.putText(output_hsv, 'No contours found!', (50, 140), FONT,
                         0.6, (255, 255, 255), 1, cv2.LINE_AA)
         else:
             contourDetection = True
@@ -396,13 +414,13 @@ def main():
             imageTextString5 = "Area = " + \
                 str(round(cv2.contourArea(cntSortedByCirc[0]), 2))
 
-            cv2.putText(output_hsv, imageTextString5, (50, 140), font, 0.6,
+            cv2.putText(output_hsv, imageTextString5, (50, 140), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
 
             imageTextString6 = "Circularity = " + \
                                str(round(cntCircularity[0], 2))
 
-            cv2.putText(output_hsv, imageTextString6, (50, 160), font, 0.6,
+            cv2.putText(output_hsv, imageTextString6, (50, 160), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
 
         # Check to see if top three contours are greater than
@@ -420,13 +438,13 @@ def main():
         if contoursWithinSizeAndCircularity:
             imageTextString7 = "Top " + str(len(cntSortedByCirc)) + \
                 " contours within size and circularity boundary."
-            cv2.putText(output_hsv, imageTextString7, (50, 120), font, 0.6,
+            cv2.putText(output_hsv, imageTextString7, (50, 120), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
         else:
             imageTextString4 = imageTextString4 + 'of ' + \
                                str(len(cntSortedByCirc)) + \
                                ' are not circular enough'
-            cv2.putText(output_hsv, imageTextString4, (50, 120), font, 0.6,
+            cv2.putText(output_hsv, imageTextString4, (50, 120), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
 
         # Change speed depending on distance to front wall
@@ -437,19 +455,19 @@ def main():
                            str(round(distanceToFrontWall, 2)) + ', ' + \
                            str(round(distanceToLeftWall, 2)) + ', ' + \
                            str(round(distanceToRightWall, 2)) + 'cm'
-        cv2.putText(output_hsv, imageTextString3, (50, 80), font, 0.6,
+        cv2.putText(output_hsv, imageTextString3, (50, 80), FONT, 0.6,
                     (255, 255, 255), 1, cv2.LINE_AA)
 
         if distanceToFrontWall > FRONT_BUFFER_WARN:
-            cv2.putText(output_hsv, 'Full speed.', (50, 100), font, 0.6,
+            cv2.putText(output_hsv, 'Full speed.', (50, 100), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = SpeedSettings.SPEED_FAST
         elif FRONT_BUFFER_WARN <= distanceToFrontWall >= FRONT_BUFFER_STOP:
-            cv2.putText(output_hsv, 'Slowly now.', (50, 100), font, 0.6,
+            cv2.putText(output_hsv, 'Slowly now.', (50, 100), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = SpeedSettings.SPEED_SLOW
         elif distanceToFrontWall < FRONT_BUFFER_STOP:
-            cv2.putText(output_hsv, 'Breaks on.', (50, 100), font, 0.6,
+            cv2.putText(output_hsv, 'Breaks on.', (50, 100), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = 0
             ROBOTMOVE.stop()
@@ -457,48 +475,50 @@ def main():
         if contourDetection and speedForward != 0:
             # Work out whether to turn left or right from contour position
             if FAR_LEFT_COL_XLINE1 <= foundX < FAR_LEFT_COL_XLINE2:
-                cv2.putText(output_hsv, 'Turn fast left.', (50, 60), font, 0.6,
+                cv2.putText(output_hsv, 'Turn fast left.', (50, 60), FONT, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(0, speedForward)
                 time.sleep(FORWARD_TIME)
             elif LEFT_COL_XLINE1 <= foundX < LEFT_COL_XLINE2:
-                cv2.putText(output_hsv, 'Turn left.', (50, 60), font, 0.6,
+                cv2.putText(output_hsv, 'Turn left.', (50, 60), FONT, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward((speedForward / 2), speedForward)
                 time.sleep(FORWARD_TIME)
             elif CNTR_COL_XLINE1 >= foundX < CNTR_COL_XLINE2:
-                cv2.putText(output_hsv, 'Straight on.', (50, 60), font, 0.6,
+                cv2.putText(output_hsv, 'Straight on.', (50, 60), FONT, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.forward(speedForward)
                 time.sleep(FORWARD_TIME)
             elif RIGHT_COL_XLINE1 <= foundX < RIGHT_COL_XLINE2:
-                cv2.putText(output_hsv, 'Turn right.', (50, 60), font, 0.6,
+                cv2.putText(output_hsv, 'Turn right.', (50, 60), FONT, 0.6,
                             (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(speedForward, (speedForward / 2))
                 time.sleep(FORWARD_TIME)
             elif FAR_RIGHT_COL_XLINE1 <= foundX < FAR_RIGHT_COL_XLINE2:
-                cv2.putText(output_hsv, 'Turn fast right.', (50, 60), font,
+                cv2.putText(output_hsv, 'Turn fast right.', (50, 60), FONT,
                             0.6, (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(speedForward, 0)
                 time.sleep(FORWARD_TIME)
 
         # Spin robot to work out position of each coloured marker
 
-        # Point towards Red marker and go into quarter cirle zone
+        # Point towards Red marker and go into quarter circle zone
 
-        # Point towards Blue marker and go into quarter cirle zone
+        # Point towards Blue marker and go into quarter circle zone
 
-        # Point towards Yellow marker and go into quarter cirle zone
+        # Point towards Yellow marker and go into quarter circle zone
 
-        # Point towards Green marker and go into quarter cirle zone
+        # Point towards Green marker and go into quarter circle zone
 
         # Show the frame(s)
         # cv2.imshow("BGR ColourFrame", bgrImage)
         # cv2.imshow("HSV Mask", mask_hsv)
+        # cv2.imshow("HSV Mask Image Blur", mask_hsvImageBlur)
         cv2.imshow("HSV ColourThreshold", output_hsv)
+        # cv2.imshow("Blurred HSV ColourThreshold", output_hsvImageBlur)
 
         # http://picamera.readthedocs.io/en/release-1.10/api_array.html
-        # Clear the stream in preperation for the next frame
+        # Clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 
         # Capture a key press. The function waits argument in ms
