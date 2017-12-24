@@ -158,10 +158,10 @@ def find_HSV_colour(colourArrayCntr, bgrImage):
     upper_hsv = np.array(upper_hsv, dtype="uint8")
     lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
     upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
-    
+
     # Convert BGR to HSV
     hsvImage = cv2.cvtColor(bgrImage, cv2.COLOR_BGR2HSV)
-    
+
     # Find the colours within the specified boundaries and apply the mask
     mask_hsv = cv2.inRange(hsvImage, lower_hsv, upper_hsv)
     if colourArrayCntr == 0:
@@ -174,18 +174,20 @@ def find_HSV_colour(colourArrayCntr, bgrImage):
     # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
     # https://docs.opencv.org/3.0-beta/modules/imgproc/doc/filtering.html
     # cv2.medianBlur(src, ksize[, dst]) -> dst
-    # Smoothes an image using the median filter with
+    # Smooths an image using the median filter with
     # the ksize * ksize aperture
     # Computes the median of all the pixels
-    bgrImageBlur = cv2.medianBlur(bgrImage, 5)
+    # Should blurring happen in BGR or HSV?
+    bgrImageBlur = cv2.medianBlur(bgrImage, MED_FILTER_APRTRE_SIZE)
     hsvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2HSV)
 
     # Find the colour in the blurred image
     mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
     if colourArrayCntr == 0:
-        mask_hsvImageBlur = mask_hsvImageBlur + cv2.inRange(hsvImage, lower_red_lft_hsv,
+        mask_hsvImageBlur = mask_hsvImageBlur + cv2.inRange(hsvImage,
+                                                            lower_red_lft_hsv,
                                                             upper_red_lft_hsv)
-    
+
     output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur,
                                           mask=mask_hsvImageBlur)
 
@@ -195,10 +197,23 @@ def find_HSV_colour(colourArrayCntr, bgrImage):
     cv2.putText(output_hsv, imageTextString2, (50, 40), FONT, 0.6,
                 (255, 255, 255), 1, cv2.LINE_AA)
 
+    cv2.putText(output_hsvImageBlur, imageTextString2, (50, 40), FONT, 0.6,
+                (255, 255, 255), 1, cv2.LINE_AA)
+
     return output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur
 
 
 def find_marker_contour(mask, output_hsv):
+    # Find location of marker centre
+    # Inputs:
+    # mask - Mask from colour detection
+    # output_hsv - BGR image for modification
+    # Outputs:
+    # output_hsv - BGR image with added text from analysis results
+    # contourDetection - True if contours detected otherwise False
+    # foundX - Location of centre of contour in pixels from left of image
+    # foundY - Location of centre of contour in pixels from top of image
+
     # Find the contours
     # RETR_TREE works, but is not in piborg example which uses RETR_LIST
     # RETR_EXTERNAL does not look for contours within contours
@@ -245,7 +260,8 @@ def find_marker_contour(mask, output_hsv):
         cntCircularity = contour_circularity(cntWithMinArea)
 
         # Sort contours in order of circularity
-        (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntWithMinArea, cntCircularity),
+        (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntWithMinArea,
+                                                            cntCircularity),
                                                         key=lambda x: x[1],
                                                         reverse=True))
 
@@ -298,7 +314,7 @@ def find_marker_contour(mask, output_hsv):
                     (255, 255, 255), 1, cv2.LINE_AA)
 
     return output_hsv, contourDetection, foundX, foundY
-    
+
 
 # Initialise objects and constants
 
@@ -330,16 +346,18 @@ SERVO_CONTROLLER = ServoController.ServoController()
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 camera = PiCamera()  # Initialize camera
-# Camera resolution defaults to the monitors, but needs to be lower for speed
+# Camera resolution defaults to the monitors resolution,
+# but needs to be lower for speed of processing
 camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
 camera.framerate = 10  # If not set then defaults to 30fps
-camera.vflip = True
-camera.hflip = True
+camera.vflip = True  # Needed for mounting of camera on pan/tilt
+camera.hflip = True  # Needed for mounting of camera on pan/tilt
 
 # Set FONT for text on image/video
 FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
 
 # Image filtering constants
+MED_FILTER_APRTRE_SIZE = 5  # Aperture size for median filter
 # Initial number for down selecting large contours
 # If number too small then will loose circular marker
 NUM_OF_LARGEST_AREA_CONTOURS = 3
@@ -347,8 +365,7 @@ MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 MIN_MARKER_CIRCULARITY = 0.5  # Correct value to be decided
 
 # Initialize tracking columns
-# This number is linked to the column constants so cannot be changed
-NUM_COLS = 5
+NUM_COLS = 5  # Number linked to column constants so cannot be changed!
 COL_WIDTH = int(CAMERA_WIDTH / NUM_COLS)
 FAR_LEFT_COL_XLINE1 = 0
 FAR_LEFT_COL_XLINE2 = FAR_LEFT_COL_XLINE1 + COL_WIDTH
@@ -363,6 +380,7 @@ FAR_RIGHT_COL_XLINE2 = FAR_RIGHT_COL_XLINE1 + COL_WIDTH
 
 if FAR_RIGHT_COL_XLINE2 > CAMERA_WIDTH:
     LOGGER.info("Issue with column width calculations!")
+    sys.exit()
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]
@@ -471,12 +489,20 @@ def main():
             cv2.putText(output_hsv, 'Full speed.', (50, 100), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = SpeedSettings.SPEED_FAST
-        elif FRONT_BUFFER_WARN <= distanceToFrontWall >= FRONT_BUFFER_STOP:
+        elif FRONT_BUFFER_WARN >= distanceToFrontWall >= FRONT_BUFFER_STOP:
             cv2.putText(output_hsv, 'Slowly now.', (50, 100), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = SpeedSettings.SPEED_SLOW
         elif distanceToFrontWall < FRONT_BUFFER_STOP:
             cv2.putText(output_hsv, 'Breaks on.', (50, 100), FONT, 0.6,
+                        (255, 255, 255), 1, cv2.LINE_AA)
+            speedForward = 0
+            ROBOTMOVE.stop()
+        else:
+            imageTextString8 = 'Something funny with measurements. ' \
+                               'Boundaries are ' + str(FRONT_BUFFER_WARN) + \
+                               ' and ' + str(FRONT_BUFFER_STOP) + ' cm'
+            cv2.putText(output_hsv, imageTextString8, (50, 100), FONT, 0.6,
                         (255, 255, 255), 1, cv2.LINE_AA)
             speedForward = 0
             ROBOTMOVE.stop()
@@ -508,6 +534,9 @@ def main():
                             0.6, (255, 255, 255), 1, cv2.LINE_AA)
                 ROBOTMOVE.turn_forward(speedForward, 0)
                 time.sleep(FORWARD_TIME)
+        else:
+            cv2.putText(output_hsv, 'Too close to turn.', (50, 60), FONT, 0.6,
+                        (255, 255, 255), 1, cv2.LINE_AA)
 
         # Spin robot to work out position of each coloured marker
 
