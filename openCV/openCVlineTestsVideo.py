@@ -69,7 +69,7 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=
     # cv2.THRESH_TOZERO
     # cv2.THRESH_TOZERO_INV
     
-    ret,threshImg = cv2.threshold(gray, 80, 255, cv2.THRESH_BINARY)
+    ret,threshImg = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
 
     # Create a frame for lower middle part of video
     # Top left is [0, 0] in [rows, columns]
