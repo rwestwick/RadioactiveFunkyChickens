@@ -20,14 +20,14 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
 DMCONTROLLER = DualMotorController.DualMotorController(
-                GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-                GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-                GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-                GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-                GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-                GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-                GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-                GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
 
 def keyboard_movements():
     """
@@ -37,13 +37,13 @@ def keyboard_movements():
                   SpeedSettings.SPEED_MEDIUM,
                   SpeedSettings.SPEED_SLOW,
                   SpeedSettings.SPEED_VERYSLOW,
-                  SpeedSettings.SPEED_VERYVERYSLOW]   
+                  SpeedSettings.SPEED_VERYVERYSLOW]
 
     pos = 0
     x = speed_list[pos]
     LOGGER.info("Speed " + str(x))
     DMCONTROLLER.stop()
-    
+
     # Start the challenge
     while True:
         keyp = KeyboardCharacterReader.readkey()
@@ -109,7 +109,7 @@ def keyboard_movements():
                 pos -= 1
                 x = speed_list[pos]
             LOGGER.info("Speed " + str(x))
-  
+
         elif keyp == '-':
             if pos < len(speed_list) - 1:
                 pos += 1
@@ -175,33 +175,33 @@ def main_movements():
     Performs the main driving algo test
     """
     DMCONTROLLER.stop()
-  
+
     speed_list = [SpeedSettings.SPEED_FASTEST,
                   SpeedSettings.SPEED_MEDIUM,
-                  SpeedSettings.SPEED_VERYVERYSLOW]   
+                  SpeedSettings.SPEED_VERYVERYSLOW]
 
     for x in speed_list:
-		LOGGER.info("Speed " + str(x))
-		DMCONTROLLER.stop()
+        LOGGER.info("Speed " + str(x))
+        DMCONTROLLER.stop()
 
-		LOGGER.info("forward")
-		DMCONTROLLER.forward(x)
-		time.sleep(3)
+        LOGGER.info("forward")
+        DMCONTROLLER.forward(x)
+        time.sleep(3)
 
-		LOGGER.info("reverse")
-		DMCONTROLLER.reverse(x)
-		time.sleep(3)
+        LOGGER.info("reverse")
+        DMCONTROLLER.reverse(x)
+        time.sleep(3)
 
-		LOGGER.info("spin_right")
-		DMCONTROLLER.spin_right(x)
-		time.sleep(3)
+        LOGGER.info("spin_right")
+        DMCONTROLLER.spin_right(x)
+        time.sleep(3)
 
-		LOGGER.info("spin_left")
-		DMCONTROLLER.spin_left(x)
-		time.sleep(3)
+        LOGGER.info("spin_left")
+        DMCONTROLLER.spin_left(x)
+        time.sleep(3)
 
 
-    
+
 if __name__ == "__main__":
     try:
         keyboard_movements()
