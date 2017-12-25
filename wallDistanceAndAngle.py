@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 wallDistanceAndAngle.py
 Functions:
@@ -18,7 +17,7 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Set initial constant values
-robotWidth = 12.0         # Width of the robot in cm
+robotWidth = 12.0  # Width of the robot in cm
 
 
 def wallAngle(distanceOne, distanceTwo, wallWidth):
@@ -69,21 +68,16 @@ def main():
     piWarsDistanceOne = 40.0  # Distance from one sensor to wall One
     piWarsDistanceTwo = 30.0  # Distance from one sensor to wall Two
 
-    piWarsAngle = wallAngle(
-        piWarsDistanceOne,
-        piWarsDistanceTwo,
-        piWarsWallWidth)
-    piWarsDistanceFromWallOne = distanceFromWall(
-        piWarsDistanceOne, piWarsAngle)
-    piWarsDistanceFromWallTwo = distanceFromWall(
-        piWarsDistanceTwo, piWarsAngle)
+    piWarsAngle = wallAngle(piWarsDistanceOne, piWarsDistanceTwo,
+                            piWarsWallWidth)
+    piWarsDistanceFromWallOne = distanceFromWall(piWarsDistanceOne,
+                                                 piWarsAngle)
+    piWarsDistanceFromWallTwo = distanceFromWall(piWarsDistanceTwo,
+                                                 piWarsAngle)
 
-    LOGGER.info("Distance to first wall: " +
-                str(piWarsDistanceOne) + " cm")
-    LOGGER.info("Distance to second wall: " +
-                str(piWarsDistanceTwo) + " cm")
-    LOGGER.info("Angle of robot to walls: " +
-                str(piWarsAngle) + " deg")
+    LOGGER.info("Distance to first wall: " + str(piWarsDistanceOne) + " cm")
+    LOGGER.info("Distance to second wall: " + str(piWarsDistanceTwo) + " cm")
+    LOGGER.info("Angle of robot to walls: " + str(piWarsAngle) + " deg")
     LOGGER.info("Closest distance of robot to wall One: " +
                 str(piWarsDistanceFromWallOne) + " cm")
     LOGGER.info("Closest distance of robot to wall Two: " +

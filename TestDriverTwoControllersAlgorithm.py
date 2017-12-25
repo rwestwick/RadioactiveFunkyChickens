@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides an mechanism to drive the vehicle using two controllers.
 """
@@ -11,7 +10,6 @@ import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
 import SpeedSettings
-
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -32,12 +30,11 @@ DMCONTROLLER = DualMotorController.DualMotorController(
 def keyboard_movements():
     """
     """
-    speed_list = [SpeedSettings.SPEED_FASTEST,
-                  SpeedSettings.SPEED_FAST,
-                  SpeedSettings.SPEED_MEDIUM,
-                  SpeedSettings.SPEED_SLOW,
-                  SpeedSettings.SPEED_VERYSLOW,
-                  SpeedSettings.SPEED_VERYVERYSLOW]
+    speed_list = [
+        SpeedSettings.SPEED_FASTEST, SpeedSettings.SPEED_FAST,
+        SpeedSettings.SPEED_MEDIUM, SpeedSettings.SPEED_SLOW,
+        SpeedSettings.SPEED_VERYSLOW, SpeedSettings.SPEED_VERYVERYSLOW
+    ]
 
     pos = 0
     x = speed_list[pos]
@@ -177,9 +174,10 @@ def main_movements():
     """
     DMCONTROLLER.stop()
 
-    speed_list = [SpeedSettings.SPEED_FASTEST,
-                  SpeedSettings.SPEED_MEDIUM,
-                  SpeedSettings.SPEED_VERYVERYSLOW]
+    speed_list = [
+        SpeedSettings.SPEED_FASTEST, SpeedSettings.SPEED_MEDIUM,
+        SpeedSettings.SPEED_VERYVERYSLOW
+    ]
 
     for x in speed_list:
         LOGGER.info("Speed " + str(x))

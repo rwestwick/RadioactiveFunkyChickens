@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides ability to use the Raspberry Pi Camera to detect the line
 to follow for the line follwowing challenge in PiWars 2017
@@ -33,7 +32,6 @@ MODULE_LOGGER = logging.getLogger("__main__.LineFollowerCamera")
 
 
 class LineFollowerCamera(object):
-
     """
     Provides ability to detect the angle of the line in front of the
     robot.
@@ -64,8 +62,7 @@ class LineFollowerCamera(object):
         # Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
         # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
         self.rawCapture = PiRGBArray(
-            self.camera, size=(
-                CAMERA_WIDTH, CAMERA_HEIGHT))
+            self.camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
         # Allow the camera time to warmup
         time.sleep(0.1)

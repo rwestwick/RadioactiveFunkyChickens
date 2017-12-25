@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides ability to control the robots Mecanum wheels
 """
@@ -15,31 +14,20 @@ MODULE_LOGGER = logging.getLogger("__main__.MecanumController")
 
 
 class MecanumController(object):
-
     """
     Provides ability to control the Mecanum wheeled robot.
     """
 
-    def __init__(self,
-                 left_front_forward,
-                 left_front_backward,
-                 right_front_forward,
-                 right_front_backward,
-                 left_back_forward,
-                 left_back_backward,
-                 right_back_forward,
-                 right_back_backward):
+    def __init__(self, left_front_forward, left_front_backward,
+                 right_front_forward, right_front_backward, left_back_forward,
+                 left_back_backward, right_back_forward, right_back_backward):
 
         MODULE_LOGGER.info("Initialising MecanumController")
 
-        self.controller = DualMotorController.DualMotorController(left_front_forward,
-                                                                  left_front_backward,
-                                                                  right_front_forward,
-                                                                  right_front_backward,
-                                                                  left_back_forward,
-                                                                  left_back_backward,
-                                                                  right_back_forward,
-                                                                  right_back_backward)
+        self.controller = DualMotorController.DualMotorController(
+            left_front_forward, left_front_backward, right_front_forward,
+            right_front_backward, left_back_forward, left_back_backward,
+            right_back_forward, right_back_backward)
 
     def cleanup(self):
         """

@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides ability to read the three sensors of the line
 follower module
@@ -15,7 +14,6 @@ MODULE_LOGGER = logging.getLogger("__main__.LineFollowerSensor")
 
 
 class LineFollowerSensor(object):
-
     """
     Provides ability to read the three sensors of the line
     follower module
@@ -60,23 +58,21 @@ if __name__ == "__main__":
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
-        LINEFOLLOWER = LineFollowerSensor(
-            GPIOLayout.LINE_FOLLOWER_LEFT_PIN,
-            GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
-            GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
+        LINEFOLLOWER = LineFollowerSensor(GPIOLayout.LINE_FOLLOWER_LEFT_PIN,
+                                          GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
+                                          GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
 
-        MODULE_LOGGER.info(str(LINEFOLLOWER.get_r_state()) +
-                           " - " +
-                           str(LINEFOLLOWER.get_m_state()) +
-                           " - " +
-                           str(LINEFOLLOWER.get_l_state()))
+        MODULE_LOGGER.info(
+            str(LINEFOLLOWER.get_r_state()) + " - " +
+            str(LINEFOLLOWER.get_m_state()) + " - " +
+            str(LINEFOLLOWER.get_l_state()))
 
-        MODULE_LOGGER.info("LINEFOLLOWER::left: " +
-                           str(LINEFOLLOWER.get_l_state()))
-        MODULE_LOGGER.info("LINEFOLLOWER::middle: " +
-                           str(LINEFOLLOWER.get_m_state()))
-        MODULE_LOGGER.info("LINEFOLLOWER::right: " +
-                           str(LINEFOLLOWER.get_r_state()))
+        MODULE_LOGGER.info(
+            "LINEFOLLOWER::left: " + str(LINEFOLLOWER.get_l_state()))
+        MODULE_LOGGER.info(
+            "LINEFOLLOWER::middle: " + str(LINEFOLLOWER.get_m_state()))
+        MODULE_LOGGER.info(
+            "LINEFOLLOWER::right: " + str(LINEFOLLOWER.get_r_state()))
     except KeyboardInterrupt:
         pass
     finally:

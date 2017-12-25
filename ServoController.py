@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Python Module to externalise all Initio/RoboHAT specific hardware
 Created by Gareth Davies, Feb 2016
@@ -20,7 +19,6 @@ MODULE_LOGGER = logging.getLogger("__main__.ServoController")
 
 
 class ServoController(object):
-
     """
     Class to control the two (pan/tilt) servos on the initio robot
     """
@@ -92,8 +90,8 @@ class ServoController(object):
         else:
             PIN_STRING = PIN_STRING + str(ServoController.TILT_PIN) + '='
 
-        PIN_STRING = PIN_STRING + str(
-            50 + ((90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
+        PIN_STRING = PIN_STRING + str(50 + (
+            (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
         os.system(PIN_STRING)
 
 

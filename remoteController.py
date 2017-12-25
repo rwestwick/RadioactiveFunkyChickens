@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 remoteController.py needs to be run from the command line
 This code is for the remote-controlled PiWars 2017 challenges:
@@ -23,10 +22,8 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
 robotmove = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
 def changeSpeed(currentDirection, newSpeed):

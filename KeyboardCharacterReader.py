@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Reading single character by forcing stdin to raw mode
 """

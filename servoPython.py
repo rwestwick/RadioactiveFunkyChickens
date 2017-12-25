@@ -107,6 +107,7 @@ def readkey(getchar_fn=None):
     c3 = getchar()
     return chr(0x10 + ord(c3) - 65)  # 16=Up, 17=Down, 18=Right, 19=Left arrows
 
+
 if __name__ == "__main__":
     try:
         # Starts the servos using RPi.GPIO

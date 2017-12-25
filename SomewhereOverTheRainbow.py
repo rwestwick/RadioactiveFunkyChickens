@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # SomewhereOverTheRainbow.pw
 # http://piwars.org/2018-competition/challenges/somewhere-over-the-rainbow/
-
 """
 This algorithm is designed to solve the Somewhere Over the Rainbow Pi Wars 4.0
 challenge.
@@ -49,8 +48,8 @@ def camera_centre_check():
     LOGGER.info("Press 'n' to start main "
                 "'Somewhere Over the Rainbow' algorithm.")
 
-    for frameServo in camera.capture_continuous(rawCaptureServo, format="bgr",
-                                                use_video_port=True):
+    for frameServo in camera.capture_continuous(
+            rawCaptureServo, format="bgr", use_video_port=True):
         # Grab the raw NumPy array representing the image,
         # then initialize the timestamps and occupied/unoccupied text
         imageServo = frameServo.array
@@ -185,12 +184,11 @@ def find_HSV_colour(colourArrayCntr, bgrImage):
     # Find the colour in the blurred image
     mask_hsvImageBlur = cv2.inRange(hsvImageBlur, lower_hsv, upper_hsv)
     if colourArrayCntr == 0:
-        mask_hsvImageBlur = mask_hsvImageBlur + cv2.inRange(hsvImage,
-                                                            lower_red_lft_hsv,
-                                                            upper_red_lft_hsv)
+        mask_hsvImageBlur = mask_hsvImageBlur + cv2.inRange(
+            hsvImage, lower_red_lft_hsv, upper_red_lft_hsv)
 
-    output_hsvImageBlur = cv2.bitwise_and(bgrImageBlur, bgrImageBlur,
-                                          mask=mask_hsvImageBlur)
+    output_hsvImageBlur = cv2.bitwise_and(
+        bgrImageBlur, bgrImageBlur, mask=mask_hsvImageBlur)
 
     imageTextString2 = 'Colour = ' + \
                        ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
@@ -218,8 +216,7 @@ def find_marker_contour(mask, output_hsv):
     # Find the contours
     # RETR_TREE works, but is not in piborg example which uses RETR_LIST
     # RETR_EXTERNAL does not look for contours within contours
-    im2, contours, hierarchy = cv2.findContours(mask,
-                                                cv2.RETR_EXTERNAL,
+    im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                                 cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(output_hsv, contours, -1, (0, 255, 0), 3)
 
@@ -232,8 +229,9 @@ def find_marker_contour(mask, output_hsv):
         finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
 
     # Sort for three largest contours by area
-    cntSortedByArea = sorted(contours, key=cv2.contourArea,
-                             reverse=True)[:finalNumLargestAreaContours]
+    cntSortedByArea = sorted(
+        contours, key=cv2.contourArea,
+        reverse=True)[:finalNumLargestAreaContours]
 
     # Highlight largest contours by area in Yellow even
     # if smaller than Min area
@@ -252,8 +250,8 @@ def find_marker_contour(mask, output_hsv):
     # zip does not work without array
     if len(cntWithMinArea) == 0:
         contourDetection = False
-        cv2.putText(output_hsv, 'No contours found!', (50, 140), FONT,
-                    0.6, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(output_hsv, 'No contours found!', (50, 140), FONT, 0.6,
+                    (255, 255, 255), 1, cv2.LINE_AA)
     else:
         contourDetection = True
 
@@ -261,21 +259,21 @@ def find_marker_contour(mask, output_hsv):
         cntCircularity = contour_circularity(cntWithMinArea)
 
         # Sort contours in order of circularity
-        (cntSortedByCirc, cntCircularity) = zip(*sorted(zip(cntWithMinArea,
-                                                            cntCircularity),
-                                                        key=lambda x: x[1],
-                                                        reverse=True))
+        (cntSortedByCirc, cntCircularity) = zip(*sorted(
+            zip(cntWithMinArea, cntCircularity),
+            key=lambda x: x[1],
+            reverse=True))
 
         # Highlight the most circular contour in white
-        cv2.drawContours(output_hsv, cntSortedByCirc[0], -1,
-                         (255, 255, 255), 3)
+        cv2.drawContours(output_hsv, cntSortedByCirc[0], -1, (255, 255, 255),
+                         3)
 
         # Calculate centre of most circular contour
         foundX, foundY = contour_centre(cntSortedByCirc[0])
 
         # Show location of centre of largest contour as white dot
-        cv2.circle(output_hsv, (int(foundX), int(foundY)), 10,
-                   (255, 255, 255), -1)
+        cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255),
+                   -1)
 
         # Show area and circularity of chosen contour
         imageTextString5 = "Area = " + \
@@ -326,19 +324,17 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 # Set movement constant values
 FRONT_BUFFER_WARN = 35  # Shortest distance to front (cm)
 FRONT_BUFFER_STOP = 20  # Shortest distance to front (cm)
-SIDE_BUFFER = 10        # Shortest distance to side (cm)
+SIDE_BUFFER = 10  # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
-FORWARD_TIME = 0.05     # Forward time iteration delay time in seconds
-TURN_DELAY = 0.65       # Delay when turning in seconds
-PAN_INTIAL = 20         # Initial pan angle in degrees
-TILT_INTIAL = 20        # Initial tilt angle in degrees
+FORWARD_TIME = 0.05  # Forward time iteration delay time in seconds
+TURN_DELAY = 0.65  # Delay when turning in seconds
+PAN_INTIAL = 20  # Initial pan angle in degrees
+TILT_INTIAL = 20  # Initial tilt angle in degrees
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
@@ -433,12 +429,10 @@ def main():
     LOGGER.info("Press 'Space' in console to start.")
 
     # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_LEFT_RX_PIN,
-        GPIOLayout.SONAR_LEFT_TX_PIN)
+    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
+                                                  GPIOLayout.SONAR_LEFT_TX_PIN)
     view_right = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN,
-        GPIOLayout.SONAR_RIGHT_TX_PIN)
+        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
     view_front = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_FRONT_TX_PIN)
 
@@ -463,8 +457,8 @@ def main():
     # The format, use_video_port, splitter_port, resize, and
     # options parameters are the same as in capture()
 
-    for frame in camera.capture_continuous(rawCapture, format="bgr",
-                                           use_video_port=True):
+    for frame in camera.capture_continuous(
+            rawCapture, format="bgr", use_video_port=True):
         # grab the raw NumPy array representing the image,
         # then initialize the time stamp and occupied/unoccupied text
         bgrImage = frame.array
@@ -588,6 +582,7 @@ def main():
             cv2.imwrite(fileNameBGR, bgrImage)
             cv2.imwrite(fileNameMaskHSV, mask_hsv)
             cv2.imwrite(fileNameOutputHSV, output_hsv)
+
 
 if __name__ == "__main__":
     try:

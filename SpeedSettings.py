@@ -1,5 +1,4 @@
 # !/usr/bin/python
-
 """
 Defines some basic speed settings
 """

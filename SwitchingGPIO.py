@@ -1,21 +1,19 @@
 #!/usr/bin/python
-
 """
 Class for enabling a gpio port to be switched on and off
 """
 
 import logging
+import SetupConsoleLogger
 MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
 try:
     from gpiozero import GPIODevice
 except ImportError:
     MODULE_LOGGER.error("ERROR importing GPIODevice from gpiozero")
-import SetupConsoleLogger
 
 
 class SwitchingGPIO(object):
-
     """
     Defines the interaction with a GPIO socket
     """

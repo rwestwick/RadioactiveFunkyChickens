@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 MinimalMazeAlgorithm.py
 This code is for use in the Minimal Maze - PiWars 2017 challenge
@@ -13,7 +12,6 @@ import UltrasonicSensor
 import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
-
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -29,10 +27,8 @@ TURN_DELAY = 0.65
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
 def turn_left(delay):
@@ -49,9 +45,7 @@ def turn_right(delay):
     ROBOTMOVE.stop()
 
 
-def follow_wall(side_buffer,
-                ultrasonic_sensor_left,
-                ultrasonic_sensor_right,
+def follow_wall(side_buffer, ultrasonic_sensor_left, ultrasonic_sensor_right,
                 ultrasonic_sensor_front):
 
     LOGGER.info("====  Following Wall ====")
@@ -140,12 +134,10 @@ def main():
     LOGGER.info("To start maze solving following press 'Space' key.")
 
     # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_LEFT_RX_PIN,
-        GPIOLayout.SONAR_LEFT_TX_PIN)
+    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
+                                                  GPIOLayout.SONAR_LEFT_TX_PIN)
     view_right = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN,
-        GPIOLayout.SONAR_RIGHT_TX_PIN)
+        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
     view_front = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_FRONT_TX_PIN)
 
@@ -153,24 +145,12 @@ def main():
     LEFT_SIDE_BUFFER = 9.0
     RIGHT_SIDE_BUFFER = 10.0
 
-    LOGGER.info(
-        "Distance view_left at start " +
-        format(
-            view_left.measurement(),
-            '.2f') +
-        " cm")
-    LOGGER.info(
-        "Distance view_right at start " +
-        format(
-            view_right.measurement(),
-            '.2f') +
-        " cm")
-    LOGGER.info(
-        "Distance view_front at start " +
-        format(
-            view_front.measurement(),
-            '.2f') +
-        " cm")
+    LOGGER.info("Distance view_left at start " +
+                format(view_left.measurement(), '.2f') + " cm")
+    LOGGER.info("Distance view_right at start " +
+                format(view_right.measurement(), '.2f') + " cm")
+    LOGGER.info("Distance view_front at start " +
+                format(view_front.measurement(), '.2f') + " cm")
 
     while True:
         keyp = KeyboardCharacterReader.readkey()

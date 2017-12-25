@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides an mechanism for competing in the duck shoot stage of the competition.
 """
@@ -14,30 +13,23 @@ import KeyboardCharacterReader
 import cwiid
 import SpeedSettings
 
-
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
 GUNMOUNT = MotorController.MotorController(
-    GPIOLayout.MOTOR_DRIVE_FORWARD_PIN,
-    GPIOLayout.MOTOR_DRIVE_BACKWARD_PIN,
-    GPIOLayout.MOTOR_ELEVATION_PIN,
-    GPIOLayout.MOTOR_DECLINATION_PIN)
+    GPIOLayout.MOTOR_DRIVE_FORWARD_PIN, GPIOLayout.MOTOR_DRIVE_BACKWARD_PIN,
+    GPIOLayout.MOTOR_ELEVATION_PIN, GPIOLayout.MOTOR_DECLINATION_PIN)
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
-LASER = SwitchingGPIO(
-    GPIOLayout.DUCK_SHOOT_LASER)
+LASER = SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER)
 
-FIRE = SwitchingGPIO(
-    GPIOLayout.DUCK_SHOOT_FIRE)
+FIRE = SwitchingGPIO(GPIOLayout.DUCK_SHOOT_FIRE)
 
 STICK_DELAY = 0.1
 
@@ -144,10 +136,8 @@ def keyboardMovementsOfGun(keyp, gunmove):
     elif keyp == 'l':
         if LASER_ON == True:
             LASER.switch_off()
-            LASER_ON = False
         else:
             LASER.switch_on()
-            LASER_ON = True
         time.sleep(0.5)
 
     # To end if Ctrl-C pressed
@@ -155,9 +145,9 @@ def keyboardMovementsOfGun(keyp, gunmove):
         LOGGER.info("Break control loop!")
         return False
 
-     return True
-            
-            
+    return True
+
+
 def main():
     """
     Performs the main duck shooting algorithm
@@ -177,8 +167,7 @@ def main():
             if (i > 5):
                 LOGGER.info("Cannot create Wiimote connection.")
                 quit()
-            LOGGER.info("Error opening wiimote connection, attempt " +
-                str(i))
+            LOGGER.info("Error opening wiimote connection, attempt " + str(i))
             i += 1
 
     LOGGER.info("Wiimote connected.")
@@ -188,7 +177,7 @@ def main():
 
     # Turn on led to show connected
     wm.led = 1
-        
+
     # Give remote control keys
     print "Steer robot by using the numchuck"
     print "Use , or < to lower gun"
@@ -203,7 +192,7 @@ def main():
         # Perform the movement via the numchuck
         wmMove(wn, GUNMOUNT)
 
-    
+
 if __name__ == "__main__":
     try:
         main()

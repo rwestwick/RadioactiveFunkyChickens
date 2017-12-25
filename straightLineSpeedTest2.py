@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 straightLineSpeedTest2.py needs to be run from the command line
 This code is for use in the Straight Line Speed Test - PiWars 2017 challenge
@@ -16,7 +15,6 @@ import SetupConsoleLogger
 import GPIOLayout
 import SpeedSettings
 
-
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
@@ -24,11 +22,11 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 # Set initial constant values
 
 speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed
-arcSpeed = 100          # Difference between left and right for correction
+arcSpeed = 100  # Difference between left and right for correction
 # Width of the wall in cm (actual width on web-page = 522 mm)
 wallWidth = 52
-robotWidth = 12         # Width of the robot in cm
-firstBufferWidth = 20   # First steer correction distance to nearest wall
+robotWidth = 12  # Width of the robot in cm
+firstBufferWidth = 20  # First steer correction distance to nearest wall
 secondBufferWidth = 10  # Second steer correction distance to nearest wall
 # Correction loop speed in seconds. This could be zero!
 loopTime = 0.1
@@ -37,22 +35,18 @@ correctionTime = 0.2
 
 # Initialise motors
 robotmove = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
 def main():
     """
     """
     # Create necessary sensor objects
-    viewLeft = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_LEFT_RX_PIN,
-        GPIOLayout.SONAR_LEFT_TX_PIN)
+    viewLeft = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
+                                                 GPIOLayout.SONAR_LEFT_TX_PIN)
     viewRight = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN,
-        GPIOLayout.SONAR_RIGHT_TX_PIN)
+        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
 
     # Sanity check the distance from edge of robot to walls
     initialLeftDistance = viewLeft.measurement()

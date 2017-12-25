@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides ability to use the Raspberry Pi Camera to detect the line
 to follow for the line follwowing challenge in PiWars 2017
@@ -55,10 +54,8 @@ camera.vflip = True
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]
@@ -152,9 +149,8 @@ for frame in camera.capture_continuous(
     # LOGGER.info("The rectangle with the most black pixels in top row is: ", str(smallSquareTop))
     smallSquareBottom = np.argmin(
         MeanValues[(COL_LENGTH - 1), 0:(ROW_LENGTH - 1)])
-    LOGGER.info(
-        "The rectangle with the most black pixels in bottom row is: " +
-        str(smallSquareBottom))
+    LOGGER.info("The rectangle with the most black pixels in bottom row is: " +
+                str(smallSquareBottom))
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
@@ -164,39 +160,35 @@ for frame in camera.capture_continuous(
     if smallSquareBottom == int(ROW_LENGTH / 2) or smallSquareBottom == int(
             (ROW_LENGTH / 2) - 1):  # Needed for even numbers to get middle two
         LOGGER.info(
-            "Go Forward. Index of mean row value: " +
-            str(smallSquareBottom))
+            "Go Forward. Index of mean row value: " + str(smallSquareBottom))
         ROBOTMOVE.forward(MotorController.SPEED_MEDIUM)
 
     # Go Right
     elif smallSquareBottom > (int(ROW_LENGTH * 3 / 4) - 1):
-        LOGGER.info(
-            "Turn Left fast. Index of mean row value: " +
-            str(smallSquareBottom))
+        LOGGER.info("Turn Left fast. Index of mean row value: " +
+                    str(smallSquareBottom))
         ROBOTMOVE.one_wheel_left(MotorController.SPEED_FAST)
-    elif smallSquareBottom > int(ROW_LENGTH / 2) and smallSquareBottom <= (int(ROW_LENGTH * 3 / 4) - 1):
-        LOGGER.info(
-            "Turn Left medium. Index of mean row value: " +
-            str(smallSquareBottom))
+    elif smallSquareBottom > int(ROW_LENGTH / 2) and smallSquareBottom <= (
+            int(ROW_LENGTH * 3 / 4) - 1):
+        LOGGER.info("Turn Left medium. Index of mean row value: " +
+                    str(smallSquareBottom))
         ROBOTMOVE.one_wheel_left(MotorController.SPEED_MEDIUM)
 
     # Go Left
     elif smallSquareBottom < int(ROW_LENGTH / 4):
-        LOGGER.info(
-            "Turn Right fast. Index of mean row value: " +
-            str(smallSquareBottom))
+        LOGGER.info("Turn Right fast. Index of mean row value: " +
+                    str(smallSquareBottom))
         ROBOTMOVE.one_wheel_right(MotorController.SPEED_FAST)
-    elif smallSquareBottom < int(ROW_LENGTH / 2) and smallSquareBottom >= int(ROW_LENGTH / 4):
-        LOGGER.info(
-            "Turn Right medium. Index of mean row value: " +
-            str(smallSquareBottom))
+    elif smallSquareBottom < int(ROW_LENGTH / 2) and smallSquareBottom >= int(
+            ROW_LENGTH / 4):
+        LOGGER.info("Turn Right medium. Index of mean row value: " +
+                    str(smallSquareBottom))
         ROBOTMOVE.one_wheel_right(MotorController.SPEED_MEDIUM)
 
     # Something is not quite right!?
     else:
-        LOGGER.error(
-            "Some other state! Index of mean row value: " +
-            str(smallSquareBottom))
+        LOGGER.error("Some other state! Index of mean row value: " +
+                     str(smallSquareBottom))
         ROBOTMOVE.stop()
 
     # if the 'q' key was pressed break from the loop
@@ -211,6 +203,5 @@ cv2.destroyAllWindows()
 SERVO_CONTROLLER.stop_servos()
 ROBOTMOVE.stop()
 ROBOTMOVE.cleanup()
-
 
 LOGGER.info("End of line following")

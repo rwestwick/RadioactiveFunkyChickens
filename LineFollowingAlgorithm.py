@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides an algorithm for following a black line on a white background.
 """
@@ -12,17 +11,14 @@ import GPIOLayout
 import KeyboardCharacterReader
 import SpeedSettings
 
-
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
 ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
 def main():
@@ -44,8 +40,7 @@ def main():
     lastturnleft = False
     lastturnright = False
     linefollower = LineFollowerSensor.LineFollowerSensor(
-        GPIOLayout.LINE_FOLLOWER_LEFT_PIN,
-        GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
+        GPIOLayout.LINE_FOLLOWER_LEFT_PIN, GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
         GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
 
     while True:
@@ -106,6 +101,7 @@ def main():
             else:
                 LOGGER.error("Some other state")
                 ROBOTMOVE.reverse(SpeedSettings.SPEED_MEDIUM)
+
 
 if __name__ == "__main__":
     try:

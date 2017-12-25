@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Provides ability to control the motors using two controllers on the robot.
 """
@@ -15,32 +14,23 @@ MODULE_LOGGER = logging.getLogger("__main__.DualMotorController")
 
 
 class DualMotorController(object):
-
     """
     Provides ability to control the motors on the robot.
     """
 
-    def __init__(self,
-                 left_front_forward,
-                 left_front_backward,
-                 right_front_forward,
-                 right_front_backward,
-                 left_back_forward,
-                 left_back_backward,
-                 right_back_forward,
-                 right_back_backward):
+    def __init__(self, left_front_forward, left_front_backward,
+                 right_front_forward, right_front_backward, left_back_forward,
+                 left_back_backward, right_back_forward, right_back_backward):
 
         MODULE_LOGGER.info("Initialising DualMotorController")
 
-        self.front_controller = MotorController.MotorController(left_front_forward,
-                                                                left_front_backward,
-                                                                right_front_forward,
-                                                                right_front_backward)
+        self.front_controller = MotorController.MotorController(
+            left_front_forward, left_front_backward, right_front_forward,
+            right_front_backward)
 
-        self.rear_controller = MotorController.MotorController(left_back_forward,
-                                                               left_back_backward,
-                                                               right_back_forward,
-                                                               right_back_backward)
+        self.rear_controller = MotorController.MotorController(
+            left_back_forward, left_back_backward, right_back_forward,
+            right_back_backward)
 
     def cleanup(self):
         """

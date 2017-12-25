@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Class defines how to interract with the Ultrasonic sensor
 """
@@ -17,7 +16,6 @@ MODULE_LOGGER = logging.getLogger("__main__.UltrasonicSensor")
 
 
 class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
-
     """
     Class defines how to interract with the Ultrasonic sensor
     """
@@ -133,23 +131,23 @@ if __name__ == "__main__":
         for x in range(0, PROXITY_TWO_IO_LEFT.QSIZE * 2):
             PROXITY_TWO_IO_LEFT.measurement()
 
-        MODULE_LOGGER.info("PROXITY_TWO_IO_LEFT: " +
-                           str(PROXITY_TWO_IO_LEFT.measurement()))
+        MODULE_LOGGER.info(
+            "PROXITY_TWO_IO_LEFT: " + str(PROXITY_TWO_IO_LEFT.measurement()))
 
         PROXITY_TWO_IO_RIGHT = UltrasonicSensor(GPIOLayout.SONAR_RIGHT_RX_PIN,
                                                 GPIOLayout.SONAR_RIGHT_TX_PIN)
         for x in range(0, PROXITY_TWO_IO_RIGHT.QSIZE * 2):
             PROXITY_TWO_IO_RIGHT.measurement()
 
-        MODULE_LOGGER.info("PROXITY_TWO_IO_RIGHT: " +
-                           str(PROXITY_TWO_IO_RIGHT.measurement()))
+        MODULE_LOGGER.info(
+            "PROXITY_TWO_IO_RIGHT: " + str(PROXITY_TWO_IO_RIGHT.measurement()))
 
         PROXITY_ONE_IO = UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_PIN)
         for x in range(0, PROXITY_ONE_IO.QSIZE * 2):
             PROXITY_ONE_IO.measurement()
 
-        MODULE_LOGGER.info("PROXITY_ONE_IO: " +
-                           str(PROXITY_ONE_IO.measurement()))
+        MODULE_LOGGER.info(
+            "PROXITY_ONE_IO: " + str(PROXITY_ONE_IO.measurement()))
     except KeyboardInterrupt:
         pass
     finally:

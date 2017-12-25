@@ -1,5 +1,4 @@
 # !/usr/bin/python
-
 """
 Defines the various robot GPIO pins
 """

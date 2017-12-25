@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 Class to interact with ir proximity sensors
 """
@@ -12,7 +11,6 @@ MODULE_LOGGER = logging.getLogger("__main__.IRSensor")
 
 
 class IRSensor(object):  # pylint: disable=too-few-public-methods
-
     """
     Defines the interaction with the ir proximity sensors
     """

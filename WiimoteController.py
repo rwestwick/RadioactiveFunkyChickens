@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 """
 WiimoteController.py needs to be run from the command line
 This code is for the remote-controlled PiWars 2017 challenges:
@@ -30,10 +29,8 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
 robotmove = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 
 def main():
@@ -56,8 +53,7 @@ def main():
             if (i > 5):
                 LOGGER.info("Cannot create Wiimote connection.")
                 quit()
-            LOGGER.info("Error opening wiimote connection, attempt "
-                        + str(i))
+            LOGGER.info("Error opening wiimote connection, attempt " + str(i))
             i += 1
 
     LOGGER.info("Wiimote connected.")
