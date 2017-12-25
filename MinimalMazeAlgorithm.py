@@ -59,14 +59,17 @@ def follow_wall(side_buffer, ultrasonic_sensor_left, ultrasonic_sensor_right,
         # Take measurements
         if ultrasonic_sensor_left is not None:
             distance_left = ultrasonic_sensor_left.measurement()
-            #LOGGER.info("Distance (left side): " + format(distance_left, '.2f') + " cm")
+            # LOGGER.info("Distance (left side): " + 
+            # format(distance_left, '.2f') + " cm")
 
         if ultrasonic_sensor_right is not None:
             distance_right = ultrasonic_sensor_right.measurement()
-            #LOGGER.info("Distance (right side): " + format(distance_right, '.2f') + " cm")
+            # LOGGER.info("Distance (right side): " + 
+            # format(distance_right, '.2f') + " cm")
 
         distance_stop = ultrasonic_sensor_front.measurement()
-        #LOGGER.info("Distance (stop): " + format(distance_stop, '.2f') + " cm")
+        # LOGGER.info("Distance (stop): " + 
+        # format(distance_stop, '.2f') + " cm")
 
         # Will robot follow round the curve? Could use colour of walls
         # and camera
@@ -141,7 +144,7 @@ def main():
     view_front = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_FRONT_TX_PIN)
 
-    #SIDE_BUFFER = view_left.measurement()
+    # SIDE_BUFFER = view_left.measurement()
     LEFT_SIDE_BUFFER = 9.0
     RIGHT_SIDE_BUFFER = 10.0
 

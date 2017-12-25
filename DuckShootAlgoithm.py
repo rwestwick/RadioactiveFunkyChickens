@@ -134,7 +134,7 @@ def keyboardMovementsOfGun(keyp, gunmove):
 
     # laser (enter) is pressed
     elif keyp == 'l':
-        if LASER_ON == True:
+        if LASER_ON is True:
             LASER.switch_off()
         else:
             LASER.switch_on()
@@ -191,7 +191,7 @@ def main():
     while keyboardMovementsOfGun(KeyboardCharacterReader.readkey(), GUNMOUNT):
 
         # Perform the movement via the numchuck
-        wmMove(wn, GUNMOUNT)
+        wmMove(wm, GUNMOUNT)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,8 @@ to follow for the line follwowing challenge in PiWars 2017
 """
 
 # https://www.python.org/dev/peps/pep-0238/
-# The future division statement, spelled "from __future__ import division", will change the / operator to mean true division
+# The future division statement, spelled "from __future__ import division", 
+# will change the / operator to mean true division
 # throughout the module.
 # This is needed for the row and column calculations for rectangle arrays
 # to prevent rounding down to zero.
@@ -59,7 +60,8 @@ class LineFollowerCamera(object):
 
         # http://picamera.readthedocs.io/en/release-1.10/api_array.html
         # class picamera.array.PiRGBArray(camera, size=None)[source]
-        # Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
+        # Produces a 3-dimensional RGB array from an RGB capture with the 
+        # dimensions (rows, columns, plane)
         # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
         self.rawCapture = PiRGBArray(
             self.camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
@@ -77,7 +79,8 @@ class LineFollowerCamera(object):
         """
         for self.frame in self.camera.capture_continuous(
                 self.rawCapture, format="rgb", use_video_port=True):
-            # grab the raw NumPy array respresenting the image, then intialize the timestap
+            # grab the raw NumPy array respresenting the image, 
+            # then intialize the timestap
             # and occupied/unoccupied text
             self.image = self.frame.array
 

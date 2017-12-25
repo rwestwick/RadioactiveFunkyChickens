@@ -5,7 +5,8 @@ to follow for the line follwowing challenge in PiWars 2017
 """
 
 # https://www.python.org/dev/peps/pep-0238/
-# The future division statement, spelled "from __future__ import division", will change the / operator to mean true division
+# The future division statement, spelled "from __future__ import division", 
+# will change the / operator to mean true division
 # throughout the module.
 # This is needed for the row and column calculations for rectangle arrays
 # to prevent rounding down to zero.
@@ -31,7 +32,8 @@ CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 ROW_LENGTH = 10  # Number of rectangles per row for black/white analysis
 COL_LENGTH = 10  # Number of rectangles per column for black/white analysis
-THRESHOLD = 50  # Used to classify gray as black or white. Lower number makes darker shades of grey go to white
+THRESHOLD = 50  # Used to classify gray as black or white. Lower number makes 
+                # darker shades of grey go to white
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -59,7 +61,8 @@ ROBOTMOVE = MotorController.MotorController(
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]
-# Produces a 3-dimensional RGB array from an RGB capture with the dimensions (rows, columns, plane)
+# Produces a 3-dimensional RGB array from an RGB capture with the 
+# dimensions (rows, columns, plane)
 # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
 rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
@@ -84,7 +87,8 @@ while True:
 
 # Capture frames from the camera
 # http://picamera.readthedocs.io/en/release-1.10/api_camera.html
-# capture_continuous(output, format=None, use_video_port=False, resize=None, splitter_port=0, burst=False, **options)
+# capture_continuous(output, format=None, use_video_port=False, resize=None, 
+# splitter_port=0, burst=False, **options)
 # The format, use_video_port, splitter_port, resize, and options
 # parameters are the same as in capture()
 
@@ -101,8 +105,10 @@ for frame in camera.capture_continuous(
     # http://www.pyimagesearch.com/2014/09/08/thresholding-simple-image-segmentation-using-opencv/
     # (T, threshImage) = cv2.threshold(src, thresh, maxval, type)
     # src - source image. This image should be grayscale.
-    # thresh - is the threshold value which is used to classify the pixel intensities in the grayscale image.
-    # maxval - is the pixel value used if any given pixel in the image passes the thresh  test.
+    # thresh - is the threshold value which is used to classify the pixel 
+    # intensities in the grayscale image.
+    # maxval - is the pixel value used if any given pixel in the image passes
+    # the thresh  test.
     # type - the thresholding method to be used. The type  value can be any of:
     # cv2.THRESH_BINARY
     # cv2.THRESH_BINARY_INV
