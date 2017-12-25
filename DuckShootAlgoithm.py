@@ -167,7 +167,8 @@ def main():
             if (i > 5):
                 LOGGER.info("Cannot create Wiimote connection.")
                 quit()
-            LOGGER.info("Error opening wiimote connection, attempt " + str(i))
+            LOGGER.info("Error opening wiimote connection, attempt " +
+                        str(i))
             i += 1
 
     LOGGER.info("Wiimote connected.")

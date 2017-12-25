@@ -62,7 +62,7 @@ def distanceFromWall(distanceOne, theta):
 
 def main():
     """
-    Test functions with possible mesurement values
+    Test functions with possible measurement values
     """
     piWarsWallWidth = 52.0  # Width between walls in cm (actual width on PiWars 2017 web-page = 522 mm)
     piWarsDistanceOne = 40.0  # Distance from one sensor to wall One
