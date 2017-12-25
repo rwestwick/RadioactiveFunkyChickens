@@ -8,5 +8,6 @@ sudo apt-get install python-examples -y
 sudo apt-get install python-dev libffi-dev libssl-dev -y
 sudo pip install --upgrade pip
 sudo pip install --upgrade ndg-httpsclient 
+sudo pip install --upgrade setuptools
 sudo pip install pep8ify
 sudo pip install yapf
