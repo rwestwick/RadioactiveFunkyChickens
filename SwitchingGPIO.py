@@ -22,7 +22,6 @@ class SwitchingGPIO(object):
         """
         Initialise the parameters required for the switching base class
         """
-        SwitchingBase.__init__(self, 0)
         MODULE_LOGGER.info("GPIO Class init on socket" + str(pcm_num))
         self.pcm_num = pcm_num
         self.socket = GPIODevice(pcm_num)
