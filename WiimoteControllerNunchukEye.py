@@ -39,7 +39,6 @@ NUNCHUK_BUFFER = 25.0
 
 # Define rumble function for thread
 
-
 def rumble(currentLogger, currentWiimote):
     """thread rumble function"""
     currentLogger.info("Rumble")
@@ -47,7 +46,6 @@ def rumble(currentLogger, currentWiimote):
     time.sleep(RUMBLE_DELAY)
     currentWiimote.rumble = 0
     return
-
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -109,7 +107,7 @@ def main():
             # Y axis: Down Max = 30, Middle = 132, Up Max = 225
             NunchukStickY = (wm.state['nunchuk']['stick'][cwiid.Y])
 
-            # print("Stick X: ", str(NunchukStickX), 
+            # print("Stick X: ", str(NunchukStickX),
             #       "Stick Y: ", str(NunchukStickY))
 
             # Go forward if joystick pushed forward beyond buffer in central
@@ -291,12 +289,12 @@ def main():
             # else stop
             else:
                 robotmove.stop()
-                # LOGGER.info("Stop! X pos: " + str(NunchukStickX) + 
+                # LOGGER.info("Stop! X pos: " + str(NunchukStickX) +
                 #             " Y pos: " + str(NunchukStickY))
 
-            # Servo Controls
+                # Servo Controls
 
-            # If button up pressed move servo up
+                # If button up pressed move servo up
             if (buttons & cwiid.BTN_UP):
                 pVal = pVal + PAN_STEP
                 if pVal > 90:

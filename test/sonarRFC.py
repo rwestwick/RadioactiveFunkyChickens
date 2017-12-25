@@ -140,7 +140,6 @@ def stop():
 
 # forward(speed): Sets both motors to move forward at speed. 0 <= speed <= 100
 
-
 def forward(speed):
     p.ChangeDutyCycle(speed)
     q.ChangeDutyCycle(0)
@@ -150,7 +149,6 @@ def forward(speed):
     a.ChangeFrequency(speed + 5)
 
 # reverse(speed): Sets both motors to reverse at speed. 0 <= speed <= 100
-
 
 def reverse(speed):
     p.ChangeDutyCycle(0)
@@ -163,7 +161,6 @@ def reverse(speed):
 # spinLeft(speed): Sets motors to turn opposite directions at speed. 0 <=
 # speed <= 100
 
-
 def spinLeft(speed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(speed)
@@ -174,7 +171,6 @@ def spinLeft(speed):
 
 # spinRight(speed): Sets motors to turn opposite directions at speed. 0 <=
 # speed <= 100
-
 
 def spinRight(speed):
     p.ChangeDutyCycle(speed)
@@ -187,7 +183,6 @@ def spinRight(speed):
 # turnForward(leftSpeed, rightSpeed): Moves forwards in an arc by setting
 # different speeds. 0 <= leftSpeed,rightSpeed <= 100
 
-
 def turnForward(leftSpeed, rightSpeed):
     p.ChangeDutyCycle(leftSpeed)
     q.ChangeDutyCycle(0)
@@ -199,7 +194,6 @@ def turnForward(leftSpeed, rightSpeed):
 # turnReverse(leftSpeed, rightSpeed): Moves backwards in an arc by setting
 # different speeds. 0 <= leftSpeed,rightSpeed <= 100
 
-
 def turnReverse(leftSpeed, rightSpeed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(leftSpeed)
@@ -207,6 +201,7 @@ def turnReverse(leftSpeed, rightSpeed):
     b.ChangeDutyCycle(rightSpeed)
     q.ChangeFrequency(leftSpeed + 5)
     b.ChangeFrequency(rightSpeed + 5)
+
 
 # End of Motor Functions
 #======================================================================
@@ -277,7 +272,6 @@ class rightUltraSensor():
 
 # Left hand side ultrasonic sensor
 
-
 class leftUltraSensor():
 
     def __init__(self):
@@ -338,7 +332,6 @@ class leftUltraSensor():
         return average
 
 # Front ultrasonic sensor
-
 
 class frontUltraSensor():
 

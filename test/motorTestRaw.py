@@ -8,7 +8,6 @@
 # To check wiring is correct ensure the order of movement as above is correct
 # Run using: sudo python motorTesta.py
 
-
 import time
 import RPi.GPIO as gpio
 

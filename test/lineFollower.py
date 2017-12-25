@@ -47,11 +47,11 @@ try:
             print 'Do not Panic'
             # break
 
-        # if (newLineL != lastLineL) or (newLineR != lastLineR):
-        #    print 'LeftLine, RightLine:', newLineL, newLineR
-        #    print
-        #    lastLineL = newLineL
-        #    lastLineR = newLineR
+            # if (newLineL != lastLineL) or (newLineR != lastLineR):
+            #    print 'LeftLine, RightLine:', newLineL, newLineR
+            #    print
+            #    lastLineL = newLineL
+            #    lastLineR = newLineR
 
         time.sleep(0.1)
 

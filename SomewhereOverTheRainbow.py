@@ -34,7 +34,6 @@ from picamera.array import PiRGBArray
 
 # Additional functions defined
 
-
 def camera_centre_check():
     # Initial pan/tilt servo angles
     pVal = PAN_INTIAL
@@ -313,7 +312,6 @@ def find_marker_contour(mask, output_hsv):
                     (255, 255, 255), 1, cv2.LINE_AA)
 
     return output_hsv, contourDetection, foundX, foundY
-
 
 # Initialise objects and constants
 

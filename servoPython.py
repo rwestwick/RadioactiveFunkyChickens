@@ -113,7 +113,6 @@ if __name__ == "__main__":
         # Starts the servos using RPi.GPIO
         [pwmPan, pwmTilt] = startServos()
         time.sleep(1)
-
         # Test basic functionality
 
         print "Testing basic functionality"

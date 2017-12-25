@@ -7,7 +7,6 @@
 # To check wiring is correct ensure the order of movement as above is correct
 # Run using: sudo python motorTest.py
 
-
 import robohat
 import time
 

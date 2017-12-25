@@ -39,10 +39,8 @@ def readkey(getchar_fn=None):
         return c1
     c3 = getchar()
     return chr(0x10 + ord(c3) - 65)  # 16=Up, 17=Down, 18=Right, 19=Left arrows
-
 # End of single character reading
 #======================================================================
-
 
 robohat.init()
 # print "Robohat version: ", robohat.version()

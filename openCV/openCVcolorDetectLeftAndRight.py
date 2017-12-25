@@ -47,7 +47,6 @@ UPPER_BGR_ARRAY = [
     UPPER_BLUE_BGR,
     UPPER_GREEN_BGR,
     UPPER_GREEN_BGR]
-
 # Define the colour boundaries in HSV
 # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
 # For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255].
@@ -198,10 +197,9 @@ for frame in camera.capture_continuous(
         mask_hsv2 = cv2.inRange(hsvImage, lower2_hsv, upper2_hsv)
         # mask_hsv = cv2.add(mask_hsv, mask_hsv2)
 
-    #output_hsv = cv2.bitwise_and(hsvImage, hsvImage, mask = mask_hsv)
-    # Applying mask to BGR image gives true colours on display
+        #output_hsv = cv2.bitwise_and(hsvImage, hsvImage, mask = mask_hsv)
+        # Applying mask to BGR image gives true colours on display
     output_hsv = cv2.bitwise_and(bgrImage, bgrImage, mask=mask_hsv)
-
     # Create a frame for lower middle part of video
     # Top left is [0, 0] in [rows, columns]
 

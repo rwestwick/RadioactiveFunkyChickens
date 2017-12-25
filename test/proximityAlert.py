@@ -10,7 +10,6 @@ import time
 
 # Define servo movement function
 
-
 def doServos():
     robohat.setServo(pan, pVal)
     robohat.setServo(tilt, tVal)

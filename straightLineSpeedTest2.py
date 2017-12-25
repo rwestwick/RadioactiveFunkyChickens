@@ -18,7 +18,6 @@ import SpeedSettings
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
-
 # Set initial constant values
 
 speed = SpeedSettings.SPEED_FASTEST  # Initial forward speed

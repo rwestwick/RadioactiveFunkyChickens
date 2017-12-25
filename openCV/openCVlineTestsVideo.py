@@ -61,7 +61,6 @@ for frame in camera.capture_continuous(
 
     # Convert to gray scale
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
     # Simple thresholding of gray sclae image
     # http://www.pyimagesearch.com/2014/09/08/thresholding-simple-image-segmentation-using-opencv/
     # (T, threshImage) = cv2.threshold(src, thresh, maxval, type)
@@ -76,7 +75,6 @@ for frame in camera.capture_continuous(
     # cv2.THRESH_TOZERO_INV
 
     ret, threshImg = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
-
     # Create a frame for lower middle part of video
     # Top left is [0, 0] in [rows, columns]
 

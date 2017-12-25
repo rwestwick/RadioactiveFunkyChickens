@@ -37,11 +37,11 @@ fwidth = (camera_width + 31) // 32 * 32
 fheight = (camera_height + 15) // 16 * 16
 if len(my_stream.getvalue()) != (fwidth * fheight * 3):
     raise PiCameraValueError(
-        'Incorrect buffer length for resolution %dx%d' (
+        'Incorrect buffer length for resolution %dx%d'(
             camera_width,
             camera_height))
 img2 = np.frombuffer(my_stream.getvalue(), dtype=np.uint8).reshape(
-    (fheight, fwidth, 3))[:camera_height, :camera_width, :]
+    (fheight, fwidth, 3))[:camera_height,:camera_width, :]
 
 # Turn the array into a cv2 image
 # img = cv2.imdecode(data, cv2.IMREAD_GRAYSCALE)
@@ -93,7 +93,6 @@ for row in range(1, 3):
         width_stop = column * block_width
         block = threshImgAd[height_start:height_stop, width_start:width_stop]
         print 'The mean of all the values: ', np.mean(block)
-
 
 # Show thresholded image
 cv2.imshow('image', threshImgAd)

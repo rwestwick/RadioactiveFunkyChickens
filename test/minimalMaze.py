@@ -10,7 +10,6 @@
 # Import required libraries
 import sonarRFC
 import time
-
 # Set initial constant values
 
 speed = 40                # Initial forward speed
@@ -77,7 +76,6 @@ import math  # https://docs.python.org/2/library/math.html
 # N.B. Calculation is based on inputs both being in cm and walls being
 # wallWidth apart.
 
-
 def wallAngle(distanceOne, distanceTwo):
     yOne = distanceOne + (robotWidth / 2)
     yTwo = distanceTwo + (robotWidth / 2)
@@ -92,7 +90,6 @@ def wallAngle(distanceOne, distanceTwo):
 #                                       the wall that is at theta degrees angle to wall at a
 #                                       distance of distance distanceOne.
 # Unit of returned value is the same as input e.g. cm
-
 
 def distanceFromWall(distanceOne, theta):
     hypotenuse = distanceOne + (robotWidth / 2)

@@ -89,7 +89,6 @@ ServosActive = False
 #
 # init(). Initialises GPIO pins, switches motors and LEDs Off, etc
 
-
 def init():
     global p, q, a, b
 
@@ -128,7 +127,6 @@ def init():
 
 # cleanup(). Sets all motors off and sets GPIO to standard values
 
-
 def cleanup():
     stop()
     stopServos()
@@ -136,9 +134,9 @@ def cleanup():
 
 # version(). Returns 2. Invalid until after init() has been called
 
-
 def version():
     return 2  # (version 1 is Pirocon, version 2 is RoboHAT)
+
 
 # End of General Functions
 #======================================================================
@@ -156,7 +154,6 @@ def stop():
 
 # forward(speed): Sets both motors to move forward at speed. 0 <= speed <= 100
 
-
 def forward(speed):
     p.ChangeDutyCycle(speed)
     q.ChangeDutyCycle(0)
@@ -166,7 +163,6 @@ def forward(speed):
     a.ChangeFrequency(speed + 5)
 
 # reverse(speed): Sets both motors to reverse at speed. 0 <= speed <= 100
-
 
 def reverse(speed):
     p.ChangeDutyCycle(0)
@@ -179,7 +175,6 @@ def reverse(speed):
 # spinLeft(speed): Sets motors to turn opposite directions at speed. 0 <=
 # speed <= 100
 
-
 def spinLeft(speed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(speed)
@@ -190,7 +185,6 @@ def spinLeft(speed):
 
 # spinRight(speed): Sets motors to turn opposite directions at speed. 0 <=
 # speed <= 100
-
 
 def spinRight(speed):
     p.ChangeDutyCycle(speed)
@@ -203,7 +197,6 @@ def spinRight(speed):
 # turnForward(leftSpeed, rightSpeed): Moves forwards in an arc by setting
 # different speeds. 0 <= leftSpeed,rightSpeed <= 100
 
-
 def turnForward(leftSpeed, rightSpeed):
     p.ChangeDutyCycle(leftSpeed)
     q.ChangeDutyCycle(0)
@@ -215,7 +208,6 @@ def turnForward(leftSpeed, rightSpeed):
 # turnReverse(leftSpeed, rightSpeed): Moves backwards in an arc by setting
 # different speeds. 0 <= leftSpeed,rightSpeed <= 100
 
-
 def turnReverse(leftSpeed, rightSpeed):
     p.ChangeDutyCycle(0)
     q.ChangeDutyCycle(leftSpeed)
@@ -223,6 +215,7 @@ def turnReverse(leftSpeed, rightSpeed):
     b.ChangeDutyCycle(rightSpeed)
     q.ChangeFrequency(leftSpeed + 5)
     b.ChangeFrequency(rightSpeed + 5)
+
 
 # End of Motor Functions
 #======================================================================
@@ -240,7 +233,6 @@ def irLeft():
 
 # irRight(): Returns state of Right IR Obstacle sensor
 
-
 def irRight():
     if GPIO.input(irFR) == 0:
         return True
@@ -248,7 +240,6 @@ def irRight():
         return False
 
 # irAll(): Returns true if any of the Obstacle sensors are triggered
-
 
 def irAll():
     if GPIO.input(irFL) == 0 or GPIO.input(irFR) == 0:
@@ -258,7 +249,6 @@ def irAll():
 
 # irLeftLine(): Returns state of Left IR Line sensor
 
-
 def irLeftLine():
     if GPIO.input(lineLeft) == 0:
         return True
@@ -267,12 +257,12 @@ def irLeftLine():
 
 # irRightLine(): Returns state of Right IR Line sensor
 
-
 def irRightLine():
     if GPIO.input(lineRight) == 0:
         return True
     else:
         return False
+
 
 # End of IR Sensor Functions
 #======================================================================
@@ -313,7 +303,6 @@ def getDistance():
 #======================================================================
 # Servo Functions
 # Pirocon/Microcon/RoboHAT use ServoD to control servos
-
 
 def setServo(Servo, Degrees):
     global ServosActive
