@@ -109,7 +109,8 @@ def main():
             # Y axis: Down Max = 30, Middle = 132, Up Max = 225
             NunchukStickY = (wm.state['nunchuk']['stick'][cwiid.Y])
 
-            # print("Stick X: ", str(NunchukStickX), "Stick Y: ", str(NunchukStickY))
+            # print("Stick X: ", str(NunchukStickX), 
+            #       "Stick Y: ", str(NunchukStickY))
 
             # Go forward if joystick pushed forward beyond buffer in central
             # channel
@@ -290,7 +291,8 @@ def main():
             # else stop
             else:
                 robotmove.stop()
-                # LOGGER.info("Stop! X pos: " + str(NunchukStickX) + " Y pos: " + str(NunchukStickY))
+                # LOGGER.info("Stop! X pos: " + str(NunchukStickX) + 
+                #             " Y pos: " + str(NunchukStickY))
 
             # Servo Controls
 

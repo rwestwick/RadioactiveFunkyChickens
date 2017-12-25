@@ -26,7 +26,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         """
 
         # Running average settings
-        self.QSIZE = 1
+        self.qsize = 1
 
         GPIO.setwarnings(False)
 
@@ -63,7 +63,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         """
         self.queue = Queue.Queue()
 
-        for x in range(0, self.QSIZE):
+        for num_readings in range(0, self.qsize):
             # If the two pins are actually the same, then
             # they need to be switched between input and
             # output
@@ -105,7 +105,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
             distance = elapsed * 17000
 
             # Add latest distance to queue
-            if self.queue.qsize() > self.QSIZE:
+            if self.queue.qsize() > self.qsize:
                 self.queue.get()
             self.queue.put(distance)
 
@@ -128,7 +128,7 @@ if __name__ == "__main__":
 
         PROXITY_TWO_IO_LEFT = UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
                                                GPIOLayout.SONAR_LEFT_TX_PIN)
-        for x in range(0, PROXITY_TWO_IO_LEFT.QSIZE * 2):
+        for x in range(0, PROXITY_TWO_IO_LEFT.qsize * 2):
             PROXITY_TWO_IO_LEFT.measurement()
 
         MODULE_LOGGER.info(
@@ -136,14 +136,14 @@ if __name__ == "__main__":
 
         PROXITY_TWO_IO_RIGHT = UltrasonicSensor(GPIOLayout.SONAR_RIGHT_RX_PIN,
                                                 GPIOLayout.SONAR_RIGHT_TX_PIN)
-        for x in range(0, PROXITY_TWO_IO_RIGHT.QSIZE * 2):
+        for x in range(0, PROXITY_TWO_IO_RIGHT.qsize * 2):
             PROXITY_TWO_IO_RIGHT.measurement()
 
         MODULE_LOGGER.info(
             "PROXITY_TWO_IO_RIGHT: " + str(PROXITY_TWO_IO_RIGHT.measurement()))
 
         PROXITY_ONE_IO = UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_PIN)
-        for x in range(0, PROXITY_ONE_IO.QSIZE * 2):
+        for x in range(0, PROXITY_ONE_IO.qsize * 2):
             PROXITY_ONE_IO.measurement()
 
         MODULE_LOGGER.info(
