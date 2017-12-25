@@ -144,10 +144,8 @@ def keyboardMovementsOfGun(keyp, gunmove):
     elif keyp == 'l':
         if LASER_ON == True:
             LASER.switch_off()
-            LASER_ON = False
         else:
             LASER.switch_on()
-            LASER_ON = True
         time.sleep(0.5)
 
     # To end if Ctrl-C pressed
@@ -155,9 +153,9 @@ def keyboardMovementsOfGun(keyp, gunmove):
         LOGGER.info("Break control loop!")
         return False
 
-     return True
-            
-            
+    return True
+
+
 def main():
     """
     Performs the main duck shooting algorithm
@@ -178,7 +176,7 @@ def main():
                 LOGGER.info("Cannot create Wiimote connection.")
                 quit()
             LOGGER.info("Error opening wiimote connection, attempt " +
-                str(i))
+                        str(i))
             i += 1
 
     LOGGER.info("Wiimote connected.")
@@ -188,7 +186,7 @@ def main():
 
     # Turn on led to show connected
     wm.led = 1
-        
+
     # Give remote control keys
     print "Steer robot by using the numchuck"
     print "Use , or < to lower gun"
@@ -203,7 +201,7 @@ def main():
         # Perform the movement via the numchuck
         wmMove(wn, GUNMOUNT)
 
-    
+
 if __name__ == "__main__":
     try:
         main()
