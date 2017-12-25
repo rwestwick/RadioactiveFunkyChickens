@@ -35,10 +35,7 @@ class IRSensor(object):  # pylint: disable=too-few-public-methods
         """
         Returns state of Left IR Obstacle sensor
         """
-        if GPIO.input(self.gpio_id) == 0:
-            return True
-        else:
-            return False
+        return bool(GPIO.input(self.gpio_id) == 0)
 
 
 if __name__ == "__main__":
