@@ -8,7 +8,11 @@ from __future__ import division
 import Queue
 import time
 import logging
-import RPi.GPIO as GPIO
+import platform
+if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+    import RPi.GPIO as GPIO
+else:
+    import GPIOStub as GPIO
 import SetupConsoleLogger
 import GPIOLayout
 
@@ -20,13 +24,13 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
     Class defines how to interract with the Ultrasonic sensor
     """
 
-    def __init__(self, input_pin, output_pin=None):
+    def __init__(self, input_pin, output_pin=None, qsize=1):
         """
         Initialises the class
         """
 
         # Running average settings
-        self.qsize = 1
+        self.qsize = qsize
 
         GPIO.setwarnings(False)
 
@@ -61,7 +65,6 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         """
         Returns the distance in cm to the nearest reflecting object
         """
-        self.queue = Queue.Queue()
 
         for num_readings in range(0, self.qsize):
             # If the two pins are actually the same, then
@@ -116,39 +119,12 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
             stringvals += format(val, '.2f') + " : "
             total = total + val
 
-        #stringvals += "avg " + format((total / self.queue.qsize()), '.2f')
         MODULE_LOGGER.info("Ultrasonic values: " + stringvals)
 
         return total / self.queue.qsize()
 
-
-if __name__ == "__main__":
-    try:
-        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-
-        PROXITY_TWO_IO_LEFT = UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
-                                               GPIOLayout.SONAR_LEFT_TX_PIN)
-        for x in range(0, PROXITY_TWO_IO_LEFT.qsize * 2):
-            PROXITY_TWO_IO_LEFT.measurement()
-
-        MODULE_LOGGER.info(
-            "PROXITY_TWO_IO_LEFT: " + str(PROXITY_TWO_IO_LEFT.measurement()))
-
-        PROXITY_TWO_IO_RIGHT = UltrasonicSensor(GPIOLayout.SONAR_RIGHT_RX_PIN,
-                                                GPIOLayout.SONAR_RIGHT_TX_PIN)
-        for x in range(0, PROXITY_TWO_IO_RIGHT.qsize * 2):
-            PROXITY_TWO_IO_RIGHT.measurement()
-
-        MODULE_LOGGER.info(
-            "PROXITY_TWO_IO_RIGHT: " + str(PROXITY_TWO_IO_RIGHT.measurement()))
-
-        PROXITY_ONE_IO = UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_PIN)
-        for x in range(0, PROXITY_ONE_IO.qsize * 2):
-            PROXITY_ONE_IO.measurement()
-
-        MODULE_LOGGER.info(
-            "PROXITY_ONE_IO: " + str(PROXITY_ONE_IO.measurement()))
-    except KeyboardInterrupt:
-        pass
-    finally:
+    def cleanup(self):
+        """
+        clears down the GPIO
+        """
         GPIO.cleanup()
