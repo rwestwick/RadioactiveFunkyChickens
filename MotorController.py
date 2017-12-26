@@ -3,12 +3,12 @@
 Provides ability to control the motors on the robot.
 """
 
-import time
 import logging
-import RPi.GPIO as GPIO
-import SetupConsoleLogger
-import GPIOLayout
-import SpeedSettings
+import platform
+if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+    import RPi.GPIO as GPIO
+else:
+    import GPIOStub as GPIO
 
 MODULE_LOGGER = logging.getLogger("__main__.MotorController")
 
@@ -167,56 +167,3 @@ class MotorController(object):
         self.motor_left_backward.ChangeDutyCycle(left_speed)
         self.motor_right_forward.ChangeDutyCycle(0)
         self.motor_right_backward.ChangeDutyCycle(right_speed)
-
-
-if __name__ == "__main__":
-    MCONTROLLER = None
-
-    try:
-        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-        MCONTROLLER = MotorController(GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-                                      GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-                                      GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-                                      GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
-
-        MCONTROLLER.stop()
-        time.sleep(5)
-        MODULE_LOGGER.info("forward 50%")
-        MCONTROLLER.forward(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("reverse 50%")
-        MCONTROLLER.reverse(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("spin_left 50%")
-        MCONTROLLER.spin_left(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("spin_right 50%")
-        MCONTROLLER.spin_right(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("turn_forward (left) 50%")
-        MCONTROLLER.turn_forward(0, SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("turn_forward (right) 50%")
-        MCONTROLLER.turn_forward(SpeedSettings.SPEED_MEDIUM, 0)
-        time.sleep(5)
-        MODULE_LOGGER.info("turn_reverse (right) 50%")
-        MCONTROLLER.turn_reverse(0, SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("turn_reverse (left) 50%")
-        MCONTROLLER.turn_reverse(SpeedSettings.SPEED_MEDIUM, 0)
-        time.sleep(5)
-        MODULE_LOGGER.info("left_forwards 50%")
-        MCONTROLLER.left_forwards(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("left_backwards 50%")
-        MCONTROLLER.left_backwards(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("right_forwards 50%")
-        MCONTROLLER.right_forwards(SpeedSettings.SPEED_MEDIUM)
-        time.sleep(5)
-        MODULE_LOGGER.info("right_backwards 50%")
-        MCONTROLLER.right_backwards(SpeedSettings.SPEED_MEDIUM)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        MCONTROLLER.cleanup()

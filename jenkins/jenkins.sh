@@ -20,7 +20,7 @@ echo "**************** $(date) - flake8 complete ****************"
 
 
 #--------------------------------------------------------------
-# Run the sloccount utility
+# Run the cloc utility
 #--------------------------------------------------------------
 echo "**************** $(date) - Running cloc ****************"
 
@@ -31,3 +31,18 @@ cloc --by-file \
 	 .
 
 echo "**************** $(date) - cloc complete ****************"
+
+
+#--------------------------------------------------------------
+# Create coverage report
+#--------------------------------------------------------------
+coverage erase
+#coverage run -a --omit=/usr/*,*_test.py MotorController_test.py 
+#coverage run -a --omit=/usr/*,*_test.py DualMotorController.py
+#coverage run -a --omit=/usr/*,*_test.py MecanumController.py 
+#coverage xml -o coverage.xml
+pytest -s --cov=. --cov-config ./jenkins/.coveragerc \
+       --cov-report=xml --cov-report=html --cov-report term-missing \
+       MotorController_test.py \
+       DualMotorController_test.py \
+       MecanumController_test.py 
