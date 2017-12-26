@@ -106,7 +106,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
             distance = elapsed * 17000
 
             # Add latest distance to queue
-            if self.queue.qsize() > self.qsize:
+            if self.queue.qsize() >= self.qsize:
                 self.queue.get()
             self.queue.put(distance)
 

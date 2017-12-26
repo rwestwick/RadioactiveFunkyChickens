@@ -14,3 +14,14 @@ sudo pip install pep8ify
 sudo pip install yapf
 sudo pip install pytest
 sudo pip install pytest-cov
+sudo apt-get purge wiringpi
+sudo apt-get install git-core
+cd code
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+git pull origin
+sudo ./build
+cd wiringPi
+make static
+sudo make install-static
+cd ../..
