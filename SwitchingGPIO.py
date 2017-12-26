@@ -11,7 +11,7 @@ if platform.machine() == "armv6l" or platform.machine() == "armv7l":
     except ImportError:
         print "ERROR importing GPIODevice from gpiozero"
 else:
-    pass
+    from GPIOZeroStub import GPIODevice as GPIODevice
 
 MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 

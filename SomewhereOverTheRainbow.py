@@ -34,7 +34,6 @@ from picamera.array import PiRGBArray
 
 # Additional functions defined
 
-
 def camera_centre_check():
     # Initial pan/tilt servo angles
     pVal = PAN_INTIAL
