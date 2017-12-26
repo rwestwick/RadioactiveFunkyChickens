@@ -3,12 +3,8 @@
 Provides ability to control the motors using two controllers on the robot.
 """
 
-import time
 import logging
-import SetupConsoleLogger
-import GPIOLayout
 import MotorController
-import SpeedSettings
 
 MODULE_LOGGER = logging.getLogger("__main__.DualMotorController")
 

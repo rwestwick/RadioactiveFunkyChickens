@@ -46,4 +46,5 @@ pytest --junit-xml unittest.xml -s --cov=. --cov-config ./jenkins/.coveragerc \
        MotorController_test.py \
        DualMotorController_test.py \
        MecanumController_test.py \
-       UltrasonicSensor_test.py
+       UltrasonicSensor_test.py \
+       SwitchingGPIO_test.py

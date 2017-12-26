@@ -4,13 +4,16 @@ Class for enabling a gpio port to be switched on and off
 """
 
 import logging
-import SetupConsoleLogger
-MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
+import platform
+if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+    try:
+        from gpiozero import GPIODevice
+    except ImportError:
+        print "ERROR importing GPIODevice from gpiozero"
+else:
+    pass
 
-try:
-    from gpiozero import GPIODevice
-except ImportError:
-    MODULE_LOGGER.error("ERROR importing GPIODevice from gpiozero")
+MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
 
 class SwitchingGPIO(object):
@@ -45,15 +48,3 @@ class SwitchingGPIO(object):
         """
         MODULE_LOGGER.info("Switching off " + str(self.pcm_num))
         self.socket.off()
-
-
-if __name__ == "__main__":
-    try:
-        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-        SWITCH = SwitchingGPIO(1)
-        SWITCH.switch_on()
-        SWITCH.switch_off()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        pass

@@ -3,12 +3,8 @@
 Provides ability to control the robots Mecanum wheels
 """
 
-import time
 import logging
-import SetupConsoleLogger
-import GPIOLayout
 import DualMotorController
-import SpeedSettings
 
 MODULE_LOGGER = logging.getLogger("__main__.MecanumController")
 

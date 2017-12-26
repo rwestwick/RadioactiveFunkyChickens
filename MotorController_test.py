@@ -67,5 +67,6 @@ def test_motorcontroller(sleep_len=0):
     finally:
         MCONTROLLER.cleanup()
 
+
 if __name__ == "__main__":
     test_motorcontroller(5)
