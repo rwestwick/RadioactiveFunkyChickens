@@ -5,7 +5,7 @@ it doesn't exist.
 """
 
 
-class GPIODevice:
+class GPIODevice(object):
     """
     Provides a stub for the GPIODevice class defined in GPIOZero
     """
@@ -15,6 +15,7 @@ class GPIODevice:
         Stub function
         """
 
+    # pylint: disable=C0103
     def on(self):
         """
         Stub function
