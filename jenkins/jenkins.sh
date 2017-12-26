@@ -41,7 +41,7 @@ coverage erase
 #coverage run -a --omit=/usr/*,*_test.py DualMotorController.py
 #coverage run -a --omit=/usr/*,*_test.py MecanumController.py 
 #coverage xml -o coverage.xml
-pytest -s --cov=. --cov-config ./jenkins/.coveragerc \
+pytest --junit-xml unittest.xml -s --cov=. --cov-config ./jenkins/.coveragerc \
        --cov-report=xml --cov-report=html --cov-report term-missing \
        MotorController_test.py \
        DualMotorController_test.py \
