@@ -37,7 +37,6 @@ NUNCHUK_MID = 126.0
 NUNCHUK_MIN = 32.0
 NUNCHUK_BUFFER = 25.0
 
-    
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
@@ -50,6 +49,7 @@ robotmove = MotorController.MotorController(
 # Initialise ServoController
 SERVO_CONTROLLER = ServoController.ServoController()
 SERVO_CONTROLLER.start_servos()
+
 
 def rumble(currentLogger, currentWiimote):
     """
