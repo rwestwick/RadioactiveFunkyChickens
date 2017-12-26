@@ -94,8 +94,8 @@ while True:
 
 for frame in camera.capture_continuous(
         rawCapture, format="rgb", use_video_port=True):
-    # grab the raw NumPy array respresenting the image, then intialize the timestap
-    # and occupied/unoccupied text
+    # grab the raw NumPy array representing the image, 
+    # then intialize the timestamp and occupied/unoccupied text
     image = frame.array
 
     # Convert to gray scale
@@ -117,7 +117,8 @@ for frame in camera.capture_continuous(
 
     ret, threshImg = cv2.threshold(gray, THRESHOLD, 255, cv2.THRESH_BINARY)
 
-    # show the frames - used for testing and not essential for algorithm and will not work will over SSH/X
+    # show the frames - used for testing and not essential for algorithm 
+    # and will not work will over SSH/X
     # cv2.imshow("ColourFrame", image)
     # cv2.imshow("GrayFrame", gray)
     cv2.imshow("ThresholdFrame", threshImg)
@@ -126,9 +127,10 @@ for frame in camera.capture_continuous(
     # event
     key = cv2.waitKey(1) & 0xFF
 
-    # Capture number of white/black pixels in ROW_LENGTH rectanges along lower row of threshold frame
-    # N.B. May want to make this for several rows to track the line further in the horizon and
-    # allow for sharp 90deg turns.
+    # Capture number of white/black pixels in ROW_LENGTH rectanges along 
+    # lower row of threshold frame
+    # N.B. May want to make this for several rows to track the line further
+    # in the horizon and allow for sharp 90deg turns.
 
     # Loop over all rows
     for j in range(COL_LENGTH):
@@ -147,11 +149,14 @@ for frame in camera.capture_continuous(
             # Mean of all the values in rectangular "square" array
             MeanValues[j, i] = int(np.mean(square))
 
-    # Find index of first minimum mean value per row N.B. Black = 0, White = 255
-    # As it is the first then if there are two fully black rectangles this could lead to errors
+    # Find index of first minimum mean value per row 
+    # N.B. Black = 0, White = 255
+    # As it is the first then if there are two fully black rectangles 
+    # this could lead to errors
     # print("The mean values array: ", MeanValues)
     # smallSquareTop = np.argmin(MeanValues[0, 0:(ROW_LENGTH-1)])
-    # LOGGER.info("The rectangle with the most black pixels in top row is: ", str(smallSquareTop))
+    # LOGGER.info("The rectangle with the most black pixels in top row is: ", 
+    #             str(smallSquareTop))
     smallSquareBottom = np.argmin(
         MeanValues[(COL_LENGTH - 1), 0:(ROW_LENGTH - 1)])
     LOGGER.info("The rectangle with the most black pixels in bottom row is: " +
@@ -200,7 +205,8 @@ for frame in camera.capture_continuous(
     if key == ord("q"):
         break
 
-# simply destroys all windows created - used for testing and not essential for algorithm
+# simply destroys all windows created - used for testing and not essential 
+# for algorithm
 # Can use cv2.destroyWindow(frameName) to destroy a specific window
 cv2.destroyAllWindows()
 

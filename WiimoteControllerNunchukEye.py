@@ -37,10 +37,11 @@ NUNCHUK_MID = 126.0
 NUNCHUK_MIN = 32.0
 NUNCHUK_BUFFER = 25.0
 
-# Define rumble function for thread
 
 def rumble(currentLogger, currentWiimote):
-    """thread rumble function"""
+    """
+    thread rumble function
+    """
     currentLogger.info("Rumble")
     currentWiimote.rumble = 1
     time.sleep(RUMBLE_DELAY)
