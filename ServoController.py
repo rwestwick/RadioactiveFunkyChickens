@@ -12,8 +12,6 @@ Pirocon/Microcon/RoboHAT use ServoD to control servos
 
 import logging
 import os
-import time
-import SetupConsoleLogger
 
 MODULE_LOGGER = logging.getLogger("__main__.ServoController")
 
@@ -93,32 +91,3 @@ class ServoController(object):
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
         os.system(PIN_STRING)
-
-
-if __name__ == "__main__":
-    try:
-        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-        SERVO_CONTROLLER = ServoController()
-
-        SERVO_CONTROLLER.start_servos()
-        time.sleep(1)
-        SERVO_CONTROLLER.set_pan_servo(0)
-        time.sleep(1)
-        SERVO_CONTROLLER.set_pan_servo(90)
-        time.sleep(1)
-        SERVO_CONTROLLER.set_pan_servo(-90)
-        time.sleep(1)
-        SERVO_CONTROLLER.set_pan_servo(0)
-        time.sleep(1)
-
-        SERVO_CONTROLLER.set_tilt_servo(0)
-        time.sleep(1)
-        SERVO_CONTROLLER.set_tilt_servo(90)
-        time.sleep(1)
-        SERVO_CONTROLLER.set_tilt_servo(-90)
-        time.sleep(1)
-        SERVO_CONTROLLER.set_tilt_servo(0)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        SERVO_CONTROLLER.stop_servos()
