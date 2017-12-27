@@ -34,6 +34,7 @@ from picamera.array import PiRGBArray
 
 # Additional functions defined
 
+
 def camera_centre_check():
     # Initial pan/tilt servo angles
     pVal = PAN_INTIAL
@@ -138,7 +139,7 @@ def contour_centre(cntr):
 
 
 def find_HSV_colour(colourArrayCntr, bgrImage):
-    # Find chosen colours in video image
+    # Find chosen colours in video image using HSV
     # Inputs:
     # colourArrayCntr - Integer for selection of upper and lower colour bands
     # bgrImage - BGR image from camera
@@ -199,6 +200,60 @@ def find_HSV_colour(colourArrayCntr, bgrImage):
                 (255, 255, 255), 1, cv2.LINE_AA)
 
     return output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur
+
+
+def find_YUV_colour(colourArrayCntr, bgrImage):
+    # Find chosen colours in video image using YUV
+    # Inputs:
+    # colourArrayCntr - Integer for selection of upper and lower colour bands
+    # bgrImage - BGR image from camera
+    # Outputs:
+    # Masked BGR image and its mask from colour detection
+    # Masked blurred BGR image and its mask from colour detection
+
+    # Select YUV colour range boundaries to detect marker
+    lower_yuv = ColourBoundaries.LOWER_YUV_ARRAY[colourArrayCntr]
+    upper_yuv = ColourBoundaries.UPPER_YUV_ARRAY[colourArrayCntr]
+
+    # Create YUV NumPy arrays from the boundaries
+    lower_yuv = np.array(lower_yuv, dtype="uint8")
+    upper_yuv = np.array(upper_yuv, dtype="uint8")
+
+    # Convert BGR to YUV
+    yuvImage = cv2.cvtColor(bgrImage, cv2.COLOR_BGR2YUV)
+
+    # Find the colours within the specified boundaries and apply the mask
+    mask_yuv = cv2.inRange(yuvImage, lower_yuv, upper_yuv)
+
+    # Applying mask to BGR image gives true colours on display
+    output_yuv = cv2.bitwise_and(bgrImage, bgrImage, mask=mask_yuv)
+
+    # https://www.piborg.org/blog/build/diddyborg-v2-build/diddyborg-v2-examples-ball-following
+    # https://docs.opencv.org/3.0-beta/modules/imgproc/doc/filtering.html
+    # cv2.medianBlur(src, ksize[, dst]) -> dst
+    # Smooths an image using the median filter with
+    # the ksize * ksize aperture
+    # Computes the median of all the pixels
+    # Should blurring happen in BGR or YUV?
+    bgrImageBlur = cv2.medianBlur(bgrImage, MED_FILTER_APRTRE_SIZE)
+    yuvImageBlur = cv2.cvtColor(bgrImageBlur, cv2.COLOR_BGR2YUV)
+
+    # Find the colour in the blurred image
+    mask_yuvImageBlur = cv2.inRange(yuvImageBlur, lower_yuv, upper_yuv)
+
+    output_yuvImageBlur = cv2.bitwise_and(
+        bgrImageBlur, bgrImageBlur, mask=mask_yuvImageBlur)
+
+    imageTextString2 = 'Colour = ' + \
+                       ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
+
+    cv2.putText(output_yuv, imageTextString2, (50, 40), FONT, 0.6,
+                (255, 255, 255), 1, cv2.LINE_AA)
+
+    cv2.putText(output_yuvImageBlur, imageTextString2, (50, 40), FONT, 0.6,
+                (255, 255, 255), 1, cv2.LINE_AA)
+
+    return output_yuv, mask_yuv, output_yuvImageBlur, mask_yuvImageBlur
 
 
 def find_marker_contour(mask, output_hsv):
@@ -464,6 +519,8 @@ def main():
         # Find chosen colour in image
         output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_HSV_colour(
             colourArrayCntr, bgrImage)
+        # output_hsv, mask_hsv, output_hsvImageBlur, mask_hsvImageBlur = find_YUV_colour(
+        #    colourArrayCntr, bgrImage)
 
         # Find location of contour
         output_hsv, contourDetection, foundX, foundY = find_marker_contour(
