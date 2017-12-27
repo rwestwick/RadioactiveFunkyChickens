@@ -13,12 +13,14 @@ MODULE_LOGGER = logging.getLogger("__main__")
 SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
 CALLBACK_CALLED = False
+DISTANCE = 0.0
 
 
 def __callback_UltrasonicSensorThread(data):
     MODULE_LOGGER.info("UltrasonicSensorThread callback: " + str(data))
-    global CALLBACK_CALLED
+    global CALLBACK_CALLED, DISTANCE
     CALLBACK_CALLED = True
+    DISTANCE = data
 
 
 def test_ultrasonicthread_poll(sleep_len=2):
@@ -42,13 +44,16 @@ def test_ultrasonicthread_poll(sleep_len=2):
 def test_ultrasonicthread_callback(sleep_len=2):
     MODULE_LOGGER.info("test_ultrasonicthread_callback")
     try:
-        global CALLBACK_CALLED
+        global CALLBACK_CALLED, DISTANCE
         CALLBACK_CALLED = False
+        DISTANCE = 0.0
         SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
             1, __callback_UltrasonicSensorThread,
             GPIOLayout.SONAR_FRONT_TX_PIN, GPIOLayout.SONAR_FRONT_RX_PIN, 1)
         SENSOR.start()
         time.sleep(sleep_len)
+        MODULE_LOGGER.info(
+            'Read distance from callback ={0:0.2f} cm '.format(DISTANCE))
         assert CALLBACK_CALLED is True
     except KeyboardInterrupt:
         pass
