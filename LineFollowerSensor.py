@@ -5,10 +5,7 @@ follower module
 """
 
 import logging
-import RPi.GPIO as GPIO
 import IRSensor
-import SetupConsoleLogger
-import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.LineFollowerSensor")
 
@@ -24,12 +21,6 @@ class LineFollowerSensor(object):
         Initialises the class
         """
         MODULE_LOGGER.info("Setting up LineFollowerSensor Module")
-
-        # Use physical pin numbering
-        GPIO.setmode(GPIO.BOARD)
-
-        # Disable warnings
-        GPIO.setwarnings(False)
 
         self.sensor_l = IRSensor.IRSensor(left_sensor_id)
         self.sensor_m = IRSensor.IRSensor(middle_sensor_id)
@@ -53,27 +44,8 @@ class LineFollowerSensor(object):
         """
         return self.sensor_r.ir_active()
 
-
-if __name__ == "__main__":
-    try:
-        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
-
-        LINEFOLLOWER = LineFollowerSensor(GPIOLayout.LINE_FOLLOWER_LEFT_PIN,
-                                          GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
-                                          GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
-
-        MODULE_LOGGER.info(
-            str(LINEFOLLOWER.get_r_state()) + " - " +
-            str(LINEFOLLOWER.get_m_state()) + " - " +
-            str(LINEFOLLOWER.get_l_state()))
-
-        MODULE_LOGGER.info(
-            "LINEFOLLOWER::left: " + str(LINEFOLLOWER.get_l_state()))
-        MODULE_LOGGER.info(
-            "LINEFOLLOWER::middle: " + str(LINEFOLLOWER.get_m_state()))
-        MODULE_LOGGER.info(
-            "LINEFOLLOWER::right: " + str(LINEFOLLOWER.get_r_state()))
-    except KeyboardInterrupt:
-        pass
-    finally:
-        GPIO.cleanup()
+    def cleanup(self):
+        """
+        Cleans up the GPIO port
+        """
+        self.sensor_l.cleanup()

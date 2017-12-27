@@ -11,7 +11,7 @@ OUT = 2
 IN = 3
 
 
-class pwmObject(object):
+class PWMObject(object):
     """
     Provides a stub for the PWM class defined in Rpi
     """
@@ -21,13 +21,16 @@ class pwmObject(object):
         Stub function
         """
 
-    def start(self, param):
+    @staticmethod
+    def start(param):
         """
         Stub function
         """
         del param
 
-    def ChangeDutyCycle(self, param1):
+    @staticmethod
+    # pylint: disable=C0103
+    def ChangeDutyCycle(param1):
         """
         Stub function
         """
@@ -52,16 +55,17 @@ def setup(param1, param2):
     """
     Stub function
     """
-    del param2
+    del param1, param2
 
 
 def output(param1, param2):
     """
     Stub function
     """
-    del param2
+    del param1, param2
 
 
+# pylint: disable=W0622
 def input(param1):
     """
     Stub function
@@ -70,12 +74,13 @@ def input(param1):
     return random.randint(0, 1)
 
 
+# pylint: disable=C0103
 def PWM(param1, param2):
     """
     Stub function
     """
     del param1, param2
-    return pwmObject()
+    return PWMObject()
 
 
 def cleanup():
