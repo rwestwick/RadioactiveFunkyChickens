@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Class defines how to interract with the Ultrasonic sensor
+Class defines how to interact with the Ultrasonic sensor
 """
 
 # Used for floating point division in Python 2.7
@@ -56,7 +56,7 @@ class UltrasonicSensor(object):
             GPIO.setup(self.sonar_out, GPIO.OUT)
             GPIO.setup(self.sonar_in, GPIO.IN)
 
-        # Initilise Queue
+        # Initialise Queue
         self.queue = Queue.Queue()
 
     def measurement(self):
