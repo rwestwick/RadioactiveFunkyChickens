@@ -17,9 +17,9 @@ else:
 MODULE_LOGGER = logging.getLogger("__main__.UltrasonicSensor")
 
 
-class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
+class UltrasonicSensor(object):
     """
-    Class defines how to interract with the Ultrasonic sensor
+    Class defines how to interact with the Ultrasonic sensor
     """
 
     def __init__(self, input_pin, output_pin=None, qsize=1):
@@ -65,6 +65,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
         """
 
         for num_readings in range(0, self.qsize):
+            num_readings = num_readings
             # If the two pins are actually the same, then
             # they need to be switched between input and
             # output
@@ -101,7 +102,7 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
             # Calculate pulse length
             elapsed = stop - start
 
-            # Distance pulse travelled in that time is time
+            # Distance pulse traveled in that time is time
             # multiplied by the speed of sound 34000(cm/s) divided by 2
             distance = elapsed * 17000
 
@@ -121,7 +122,8 @@ class UltrasonicSensor(object):  # pylint: disable=too-few-public-methods
 
         return total / self.queue.qsize()
 
-    def cleanup(self):
+    @staticmethod
+    def cleanup():
         """
         clears down the GPIO
         """
