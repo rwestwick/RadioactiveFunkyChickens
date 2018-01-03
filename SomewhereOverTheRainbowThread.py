@@ -80,6 +80,7 @@ class StreamProcessor(threading.Thread):
         # View the original image seen by the camera.
         if debug:
             cv2.imshow('Original BGR', bgr_image)
+            cv2.waitKey(1)
             
         # Blur the image
         bgr_image = cv2.medianBlur(bgr_image, 5)
@@ -253,9 +254,6 @@ def main():
     LOGGER.info("The colour selector is now " +
                 ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
-    # Waiting for start of challenge
-    LOGGER.info("Press 'Space' in console to start.")
-
     # Create necessary sensor objects
     view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
                                                   GPIOLayout.SONAR_LEFT_TX_PIN)
@@ -271,7 +269,10 @@ def main():
     LOGGER.info("Distance view_front at start " +
                 format(view_front.measurement(), '.2f') + " cm")
 
+    # Loop indefinitely until we are no longer running
     while running:
+        # Wait for the interval period
+        time.sleep(1)
         # Capture a key press. The function waits argument in ms
         # for any keyboard event
         key = cv2.waitKey(1) & 0xFF
@@ -280,7 +281,6 @@ def main():
         if key == ord("q"):
             break
         
-    return 0  # Is this needed?
 
 if __name__ == "__main__":
     try:
