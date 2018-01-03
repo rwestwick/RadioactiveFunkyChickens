@@ -107,22 +107,22 @@ class StreamProcessor(threading.Thread):
     
         # Applying mask to BGR image gives true colours on display
         output_hsv = cv2.bitwise_and(bgr_image, bgr_image, mask=mask_hsv)
-        
 
-	def find_marker_contour(self, mask, output_hsv):
-		""" Compute the location of the marker contour."""
-		
-		# Calculate contours
-		im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-													cv2.CHAIN_APPROX_SIMPLE)
-		
-		# Calculate final number of largest area contours
-		if len(contours) == 0:
-			LOGGER.info("No contours found.")
-		elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
-			finalNumLargestAreaContours = len(contours)
-		else:
-			finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
+
+    def find_marker_contour(self, mask, output_hsv):
+        """ Compute the location of the marker contour."""
+        
+        # Calculate contours
+        im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                                    cv2.CHAIN_APPROX_SIMPLE)
+        
+        # Calculate final number of largest area contours
+        if len(contours) == 0:
+            LOGGER.info("No contours found.")
+        elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
+            finalNumLargestAreaContours = len(contours)
+        else:
+            finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
 
     def contour_circularity(self, cnts):
         """Compute the circularity of the contours in the array
@@ -276,7 +276,7 @@ def main():
         # for any keyboard event
         key = cv2.waitKey(1) & 0xFF
         
-		# if the 'q' key was pressed break from the loop
+        # if the 'q' key was pressed break from the loop
         if key == ord("q"):
             break
         
