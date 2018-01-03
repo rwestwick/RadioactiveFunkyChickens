@@ -35,6 +35,10 @@ import numpy as np
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
+# Global values
+global camera
+global processor
+
 # Image stream processing thread
 class StreamProcessor(threading.Thread):
     def __init__(self):
@@ -44,6 +48,7 @@ class StreamProcessor(threading.Thread):
         self.terminated = False
         self.start()
         self.begin = 0
+
 
     def run(self):
         # This method runs in a separate thread
@@ -60,15 +65,102 @@ class StreamProcessor(threading.Thread):
                     self.stream.truncate()
                     self.event.clear()
 
+
     # Image processing function
-    def ProcessImage(self, image, colour):
+    def ProcessImage(self, bgr_mage, colour):
 
         # Blur the image
-        image = cv2.medianBlur(image, 5)
+        bgr_image = cv2.medianBlur(bgr_image, 5)
 
         # Convert the image from 'BGR' to HSV colour space
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+        hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_RGB2HSV)
+        
+		# Select HSV colour range boundaries to detect marker
+	    lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
+	    upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
+	    lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
+	    upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
+	
+	    # Create HSV NumPy arrays from the boundaries
+	    lower_hsv = np.array(lower_hsv, dtype="uint8")
+	    upper_hsv = np.array(upper_hsv, dtype="uint8")
+	    lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
+	    upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
+	    
+        # Find the colours within the specified boundaries and apply the mask
+	    mask_hsv = cv2.inRange(hsv_image, lower_hsv, upper_hsv)
+	    if colourArrayCntr == 0:
+	        mask_hsv = mask_hsv + cv2.inRange(hsv_image, lower_red_lft_hsv,
+	                                          upper_red_lft_hsv)
+	
+	    # Applying mask to BGR image gives true colours on display
+	    output_hsv = cv2.bitwise_and(bgr_image, bgr_image, mask=mask_hsv)
+        
 
+	    def find_marker_contour(self, mask, output_hsv):
+			""" Compute the location of the marker contour."""
+			
+			# Calculate contours
+		    im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+		                                                cv2.CHAIN_APPROX_SIMPLE)
+		    
+	        # Calculate final number of largest area contours
+		    if len(contours) == 0:
+		        LOGGER.info("No contours found.")
+		    elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
+		        finalNumLargestAreaContours = len(contours)
+		    else:
+		        finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
+    
+    def contour_circularity(self, cnts):
+	    """Compute the circularity of the contours in the array
+	    The lower the value the less circular
+	    Perfect circle has value of one"""
+	
+	    # Initialize the circularity array
+	    circularityArray = []
+	
+	    # Calculate circularity for each contour in input array
+	    for c in cnts:
+	        AreaContour = cv2.contourArea(c)
+	        Perimeter = cv2.arcLength(c, True)
+	        if Perimeter != 0.0:
+	            circularity = (4 * math.pi * AreaContour) / \
+	                (math.pow(Perimeter, 2))
+	        else:
+	            circularity = 0
+	
+	        circularityArray.append(circularity)
+	
+	    # return an array of circularity values
+	    return circularityArray
+
+
+# Image capture thread
+class ImageCapture(threading.Thread):
+    def __init__(self):
+        super(ImageCapture, self).__init__()
+        self.start()
+
+    def run(self):
+        global camera
+        global processor
+        print('Start the stream using the video port')
+        camera.capture_sequence(self.TriggerStream(), format='bgr', use_video_port=True)
+        print('Terminating camera processing...')
+        processor.terminated = True
+        processor.join()
+        print('Processing terminated.')
+
+    # Stream delegation loop
+    def TriggerStream(self):
+        global running
+        while running:
+            if processor.event.is_set():
+                time.sleep(0.01)
+            else:
+                yield processor.stream
+                processor.event.set()
 
 # Initialise objects and constants
 
@@ -78,6 +170,45 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
+
+# Initialise motors
+ROBOTMOVE = MotorController.MotorController(
+    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+
+# Initialise camera
+CAMERA_WIDTH = 640
+CAMERA_HEIGHT = 480
+camera = PiCamera()  # Initialize camera
+# Camera resolution defaults to the monitors resolution,
+# but needs to be lower for speed of processing
+camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
+camera.framerate = 10  # If not set then defaults to 30fps
+camera.vflip = True  # Needed for mounting of camera on pan/tilt
+camera.hflip = True  # Needed for mounting of camera on pan/tilt
+
+processor = StreamProcessor()
+
+# Set movement constant values
+FRONT_BUFFER_WARN = 35  # Shortest distance to front (cm)
+FRONT_BUFFER_STOP = 20  # Shortest distance to front (cm)
+SIDE_BUFFER = 10  # Shortest distance to side (cm)
+CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
+FORWARD_TIME = 0.05  # Forward time iteration delay time in seconds
+TURN_DELAY = 0.65  # Delay when turning in seconds
+PAN_INTIAL = 20  # Initial pan angle in degrees
+TILT_INTIAL = 20  # Initial tilt angle in degrees
+
+# Set FONT for text on image/video
+FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
+
+# Image filtering constants
+MED_FILTER_APRTRE_SIZE = 5  # Aperture size for median filter
+# Initial number for down selecting large contours
+# If number too small then will loose circular marker
+NUM_OF_LARGEST_AREA_CONTOURS = 3
+MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
+MIN_MARKER_CIRCULARITY = 0.5  # Correct value to be decided
 
 
 def main():
