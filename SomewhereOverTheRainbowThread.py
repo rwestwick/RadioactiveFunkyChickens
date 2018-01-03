@@ -35,9 +35,17 @@ import numpy as np
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
-# Global values
+# Global values and their initial values
 global camera
 global processor
+global debug
+global colourArrayCntr
+
+running = True
+debug = True
+# Set initial colour from COLOUR_NAME_ARRAY array position -
+# 'Red', 'Blue', 'Green', 'Yellow'
+colourArrayCntr = 0
 
 # Image stream processing thread
 class StreamProcessor(threading.Thread):
@@ -58,7 +66,7 @@ class StreamProcessor(threading.Thread):
                 try:
                     # Read the image and do some processing on it
                     self.stream.seek(0)
-                    self.ProcessImage(self.stream.array, colour)
+                    self.ProcessImage(self.stream.array)
                 finally:
                     # Reset the stream and event
                     self.stream.seek(0)
@@ -67,73 +75,78 @@ class StreamProcessor(threading.Thread):
 
 
     # Image processing function
-    def ProcessImage(self, bgr_mage, colour):
-
+    def ProcessImage(self, bgr_image):
+        
+        # View the original image seen by the camera.
+        if debug:
+            cv2.imshow('Original BGR', bgr_image)
+            cv2.waitKey(0)
+            
         # Blur the image
         bgr_image = cv2.medianBlur(bgr_image, 5)
 
         # Convert the image from 'BGR' to HSV colour space
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_RGB2HSV)
         
-		# Select HSV colour range boundaries to detect marker
-	    lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
-	    upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
-	    lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
-	    upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
-	
-	    # Create HSV NumPy arrays from the boundaries
-	    lower_hsv = np.array(lower_hsv, dtype="uint8")
-	    upper_hsv = np.array(upper_hsv, dtype="uint8")
-	    lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
-	    upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
-	    
+        # Select HSV colour range boundaries to detect marker
+        lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
+        upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
+        lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
+        upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
+    
+        # Create HSV NumPy arrays from the boundaries
+        lower_hsv = np.array(lower_hsv, dtype="uint8")
+        upper_hsv = np.array(upper_hsv, dtype="uint8")
+        lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
+        upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
+        
         # Find the colours within the specified boundaries and apply the mask
-	    mask_hsv = cv2.inRange(hsv_image, lower_hsv, upper_hsv)
-	    if colourArrayCntr == 0:
-	        mask_hsv = mask_hsv + cv2.inRange(hsv_image, lower_red_lft_hsv,
-	                                          upper_red_lft_hsv)
-	
-	    # Applying mask to BGR image gives true colours on display
-	    output_hsv = cv2.bitwise_and(bgr_image, bgr_image, mask=mask_hsv)
+        mask_hsv = cv2.inRange(hsv_image, lower_hsv, upper_hsv)
+        if colourArrayCntr == 0:
+            mask_hsv = mask_hsv + cv2.inRange(hsv_image, lower_red_lft_hsv,
+                                              upper_red_lft_hsv)
+    
+        # Applying mask to BGR image gives true colours on display
+        output_hsv = cv2.bitwise_and(bgr_image, bgr_image, mask=mask_hsv)
         
 
-	    def find_marker_contour(self, mask, output_hsv):
-			""" Compute the location of the marker contour."""
-			
-			# Calculate contours
-		    im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-		                                                cv2.CHAIN_APPROX_SIMPLE)
-		    
-	        # Calculate final number of largest area contours
-		    if len(contours) == 0:
-		        LOGGER.info("No contours found.")
-		    elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
-		        finalNumLargestAreaContours = len(contours)
-		    else:
-		        finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
+        def find_marker_contour(self, mask, output_hsv):
+            """ Compute the location of the marker contour."""
+            
+            # Calculate contours
+            im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                                        cv2.CHAIN_APPROX_SIMPLE)
+            
+            # Calculate final number of largest area contours
+            if len(contours) == 0:
+                LOGGER.info("No contours found.")
+            elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
+                finalNumLargestAreaContours = len(contours)
+            else:
+                finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
     
     def contour_circularity(self, cnts):
-	    """Compute the circularity of the contours in the array
-	    The lower the value the less circular
-	    Perfect circle has value of one"""
-	
-	    # Initialize the circularity array
-	    circularityArray = []
-	
-	    # Calculate circularity for each contour in input array
-	    for c in cnts:
-	        AreaContour = cv2.contourArea(c)
-	        Perimeter = cv2.arcLength(c, True)
-	        if Perimeter != 0.0:
-	            circularity = (4 * math.pi * AreaContour) / \
-	                (math.pow(Perimeter, 2))
-	        else:
-	            circularity = 0
-	
-	        circularityArray.append(circularity)
-	
-	    # return an array of circularity values
-	    return circularityArray
+        """Compute the circularity of the contours in the array
+        The lower the value the less circular
+        Perfect circle has value of one"""
+    
+        # Initialize the circularity array
+        circularityArray = []
+    
+        # Calculate circularity for each contour in input array
+        for c in cnts:
+            AreaContour = cv2.contourArea(c)
+            Perimeter = cv2.arcLength(c, True)
+            if Perimeter != 0.0:
+                circularity = (4 * math.pi * AreaContour) / \
+                    (math.pow(Perimeter, 2))
+            else:
+                circularity = 0
+    
+            circularityArray.append(circularity)
+    
+        # return an array of circularity values
+        return circularityArray
 
 
 # Image capture thread
@@ -145,12 +158,12 @@ class ImageCapture(threading.Thread):
     def run(self):
         global camera
         global processor
-        print('Start the stream using the video port')
+        LOGGER.info('Start the stream using the video port')
         camera.capture_sequence(self.TriggerStream(), format='bgr', use_video_port=True)
-        print('Terminating camera processing...')
+        LOGGER.info('Terminating camera processing...')
         processor.terminated = True
         processor.join()
-        print('Processing terminated.')
+        LOGGER.info('Processing terminated.')
 
     # Stream delegation loop
     def TriggerStream(self):
@@ -179,7 +192,10 @@ ROBOTMOVE = MotorController.MotorController(
 # Initialise camera
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
-camera = PiCamera()  # Initialize camera
+IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
+IMAGE_CENTRE_y = CAMERA_HEIGHT / 2.0
+
+camera = PiCamera()
 # Camera resolution defaults to the monitors resolution,
 # but needs to be lower for speed of processing
 camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
@@ -188,6 +204,8 @@ camera.vflip = True  # Needed for mounting of camera on pan/tilt
 camera.hflip = True  # Needed for mounting of camera on pan/tilt
 
 processor = StreamProcessor()
+time.sleep(2) # This us the value used in the PiBorg example
+captureThread = ImageCapture()
 
 # Set movement constant values
 FRONT_BUFFER_WARN = 35  # Shortest distance to front (cm)
@@ -225,10 +243,6 @@ def main():
     SERVO_CONTROLLER.start_servos()
     time.sleep(1)
 
-    # Set initial colour from COLOUR_NAME_ARRAY array position -
-    # 'Red', 'Blue', 'Green', 'Yellow'
-    colourArrayCntr = 0
-
     # Initialize photo capture
     imageNum = 1
 
@@ -265,7 +279,11 @@ def main():
             LOGGER.info("Go")
             break
 
-	return 0
+    while running:
+        # Wait for the interval period
+        time.sleep(1.0)
+        
+    return 0  # Is this needed?
 
 if __name__ == "__main__":
     try:
@@ -273,7 +291,13 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
     finally:
-        LOGGER.info("'Somewhere Over the Rainbow' Finished.")
+        running = False
+        captureThread.join()
+        processor.terminated = True
+        processor.join()
+        del camera  # Is this needed?
         SERVO_CONTROLLER.stop_servos()
+        ROBOTMOVE.cleanup()
         cv2.destroyAllWindows()
         GPIO.cleanup()
+        LOGGER.info("'Somewhere Over the Rainbow' Finished.")
