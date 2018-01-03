@@ -32,8 +32,8 @@ import KeyboardCharacterReader
 import RPi.GPIO as GPIO
 import cv2
 import numpy as np
-from picamera import PiCamera
-from picamera.array import PiRGBArray
+import picamera
+import picamera.array
 
 # Global values and their initial values
 global camera
@@ -80,7 +80,6 @@ class StreamProcessor(threading.Thread):
         # View the original image seen by the camera.
         if debug:
             cv2.imshow('Original BGR', bgr_image)
-            cv2.waitKey(0)
             
         # Blur the image
         bgr_image = cv2.medianBlur(bgr_image, 5)
@@ -110,21 +109,21 @@ class StreamProcessor(threading.Thread):
         output_hsv = cv2.bitwise_and(bgr_image, bgr_image, mask=mask_hsv)
         
 
-        def find_marker_contour(self, mask, output_hsv):
-            """ Compute the location of the marker contour."""
-            
-            # Calculate contours
-            im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-                                                        cv2.CHAIN_APPROX_SIMPLE)
-            
-            # Calculate final number of largest area contours
-            if len(contours) == 0:
-                LOGGER.info("No contours found.")
-            elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
-                finalNumLargestAreaContours = len(contours)
-            else:
-                finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
-    
+	def find_marker_contour(self, mask, output_hsv):
+		""" Compute the location of the marker contour."""
+		
+		# Calculate contours
+		im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+													cv2.CHAIN_APPROX_SIMPLE)
+		
+		# Calculate final number of largest area contours
+		if len(contours) == 0:
+			LOGGER.info("No contours found.")
+		elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
+			finalNumLargestAreaContours = len(contours)
+		else:
+			finalNumLargestAreaContours = NUM_OF_LARGEST_AREA_CONTOURS
+
     def contour_circularity(self, cnts):
         """Compute the circularity of the contours in the array
         The lower the value the less circular
@@ -195,7 +194,7 @@ CAMERA_HEIGHT = 480
 IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
 IMAGE_CENTRE_y = CAMERA_HEIGHT / 2.0
 
-camera = PiCamera()
+camera = picamera.PiCamera()
 # Camera resolution defaults to the monitors resolution,
 # but needs to be lower for speed of processing
 camera.resolution = (CAMERA_WIDTH, CAMERA_HEIGHT)
@@ -272,16 +271,14 @@ def main():
     LOGGER.info("Distance view_front at start " +
                 format(view_front.measurement(), '.2f') + " cm")
 
-    # Start the challenge when space key presses
-    while True:
-        keyp = KeyboardCharacterReader.readkey()
-        if keyp == ' ':
-            LOGGER.info("Go")
-            break
-
     while running:
-        # Wait for the interval period
-        time.sleep(1.0)
+        # Capture a key press. The function waits argument in ms
+        # for any keyboard event
+        key = cv2.waitKey(1) & 0xFF
+        
+		# if the 'q' key was pressed break from the loop
+        if key == ord("q"):
+            break
         
     return 0  # Is this needed?
 
