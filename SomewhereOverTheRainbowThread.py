@@ -39,6 +39,7 @@ import picamera.array
 global camera
 global processor
 global debug
+global maxProcessingDelay
 global colourArrayCntr
 
 running = True
@@ -46,6 +47,7 @@ debug = True
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
 colourArrayCntr = 0
+maxProcessingDelay = 0
 
 # Image stream processing thread
 class StreamProcessor(threading.Thread):
@@ -75,32 +77,38 @@ class StreamProcessor(threading.Thread):
 
 
     # Image processing function
-    def ProcessImage(self, bgr_image):
+    def ProcessImage(self, image):
+        global colourArrayCntr
+        global maxProcessingDelay
         
         # View the original image seen by the camera.
         if debug:
-            cv2.imshow('Original BGR', bgr_image)
+            cv2.imshow('Original BGR', image)
             cv2.waitKey(1) # Is this needed?
             e1 = cv2.getTickCount()
 
         # Find chosen colour in image
-        output_hsv, mask_hsv = self.find_HSV_colour(
-            colourArrayCntr, bgrImage)
+        output_hsv, mask_hsv = self.find_HSV_colour(colourArrayCntr, image)
 
         # Find location of contour
-        output_hsv, contourDetection, foundX, foundY = self.find_marker_contour(
-            mask_hsv, output_hsv)
+        # contourDetection, foundX, foundY = self.find_marker_contour(
+        #     mask_hsv, output_hsv)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
         if debug:
             e2 = cv2.getTickCount()
             time = (e2 - e1)/ cv2.getTickFrequency()
-            
+            if time > maxProcessingDelay:
+                maxProcessingDelay = time
+                LOGGER.info(str(maxProcessingDelay))
+
+
         # Steer robot
         # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
 
-    def find_HSV_colour(self, colourArrayCntr, bgrImage):
+
+    def find_HSV_colour(self, colourArrayCntr, bgr_image):
         """Find chosen colours in video image using HSV
         Inputs:
         colourArrayCntr - Integer for selection of upper and lower colour bands
@@ -110,10 +118,10 @@ class StreamProcessor(threading.Thread):
         Masked blurred BGR image and its mask from colour detection"""
     
         # Blur the image
-        bgr_image = cv2.medianBlur(bgr_image, MED_FILTER_APRTRE_SIZE)
+        bgr_blur_image = cv2.medianBlur(bgr_image, MED_FILTER_APRTRE_SIZE)
 
         # Convert the image from 'BGR' to HSV colour space
-        hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_RGB2HSV)
+        hsv_image = cv2.cvtColor(bgr_blur_image, cv2.COLOR_RGB2HSV)
         
         # Select HSV colour range boundaries to detect marker
         lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
@@ -135,22 +143,11 @@ class StreamProcessor(threading.Thread):
 
         # Applying mask to BGR image gives true colours on display
         output_hsv = cv2.bitwise_and(bgr_image, bgr_image, mask=mask_hsv)
-    
-        # Add text to output for debugging
-        if debug:
-            imageTextString2 = 'Colour = ' + \
-                               ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr]
-        
-            cv2.putText(output_hsv, imageTextString2, (50, 40), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-        
-            cv2.putText(output_hsvImageBlur, imageTextString2, (50, 40), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-    
+
         return output_hsv, mask_hsv
 
 
-    def find_marker_contour(self, mask, output_hsv):
+    def find_marker_contour(self, mask, input_hsv):
         """ Compute the location of the marker contour."""
         
         # Calculate contours
@@ -170,10 +167,6 @@ class StreamProcessor(threading.Thread):
             contours, key=cv2.contourArea,
             reverse=True)[:finalNumLargestAreaContours]
 
-        # Highlight largest contours by area in Yellow even
-        # if smaller than Min area
-        cv2.drawContours(output_hsv, cntSortedByArea, -1, (0, 255, 255), 3)
-
         # Calculate position of contour that still is greater than Min area
         cntWithMinArea = []
         for cntCounterArea in range(len(cntSortedByArea)):
@@ -187,8 +180,7 @@ class StreamProcessor(threading.Thread):
         # zip does not work without array
         if len(cntWithMinArea) == 0:
             contourDetection = False
-            cv2.putText(output_hsv, 'No contours found!', (50, 140), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
+
         else:
             contourDetection = True
     
@@ -201,56 +193,10 @@ class StreamProcessor(threading.Thread):
                 key=lambda x: x[1],
                 reverse=True))
     
-            # Highlight the most circular contour in white
-            cv2.drawContours(output_hsv, cntSortedByCirc[0], -1, (255, 255, 255),
-                             3)
-    
             # Calculate centre of most circular contour
             foundX, foundY = self.contour_centre(cntSortedByCirc[0])
-    
-            # Show location of centre of largest contour as white dot
-            cv2.circle(output_hsv, (int(foundX), int(foundY)), 10, (255, 255, 255),
-                       -1)
-    
-            # Show area and circularity of chosen contour
-            if debug:
-                imageTextString5 = "Area = " + \
-                    str(round(cv2.contourArea(cntSortedByCirc[0]), 2))
-        
-                cv2.putText(output_hsv, imageTextString5, (50, 140), FONT, 0.6,
-                            (255, 255, 255), 1, cv2.LINE_AA)
-        
-                imageTextString6 = "Circularity = " + \
-                                   str(round(cntCircularity[0], 2))
-        
-                cv2.putText(output_hsv, imageTextString6, (50, 160), FONT, 0.6,
-                            (255, 255, 255), 1, cv2.LINE_AA)
-    
-        # Check to see if top three contours are greater than
-        # minimum circularity to prevent false hits
-        imageTextString4 = 'Contour(s) '
-        contoursWithinSizeAndCircularity = True
-    
-        for cntCounter in range(len(cntSortedByCirc)):
-            currentCntrCircularity = cntCircularity[cntCounter]
-            if (currentCntrCircularity < MIN_MARKER_CIRCULARITY):
-                # Contours numbered 1 to finalNumLargestAreaContours
-                imageTextString4 = imageTextString4 + str(cntCounter + 1) + ' '
-                contoursWithinSizeAndCircularity = False
-    
-        if contoursWithinSizeAndCircularity:
-            imageTextString7 = "Top " + str(len(cntSortedByCirc)) + \
-                " contours within size and circularity boundary."
-            cv2.putText(output_hsv, imageTextString7, (50, 120), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-        else:
-            imageTextString4 = imageTextString4 + 'of ' + \
-                str(len(cntSortedByCirc)) + \
-                ' are not circular enough'
-            cv2.putText(output_hsv, imageTextString4, (50, 120), FONT, 0.6,
-                        (255, 255, 255), 1, cv2.LINE_AA)
-    
-        return output_hsv, contourDetection, foundX, foundY
+
+        return contourDetection, foundX, foundY
 
 
     def contour_circularity(self, cnts):
@@ -306,7 +252,7 @@ class StreamProcessor(threading.Thread):
                 driveRight = speed
                 ROBOTMOVE.turn_forward(driveLeft, driveRight)
                 
-            TextStringSpeed = 'Left speed: ' + str(driveLeft) +
+            TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
                 ' Right speed: ' + str(driveRight)
             LOGGER.info(TextStringSpeed)
             
@@ -368,7 +314,10 @@ camera.framerate = 10  # If not set then defaults to 30fps
 camera.vflip = True  # Needed for mounting of camera on pan/tilt
 camera.hflip = True  # Needed for mounting of camera on pan/tilt
 
+LOGGER.info('Setup the stream processing thread')
 processor = StreamProcessor()
+
+LOGGER.info('Wait ...')
 time.sleep(2) # This us the value used in the PiBorg example
 captureThread = ImageCapture()
 
@@ -412,10 +361,7 @@ def main():
     imageNum = 1
 
     # Show commands and status
-    LOGGER.info("Press 'q' to quit.")
-    LOGGER.info("Press 'c' to change colour selector.")
-    LOGGER.info("Press 'p' to take picture of current frame.")
-    LOGGER.info("All key presses must be in a video frame window.")
+    LOGGER.info("CTRL^C to terminate program")
     LOGGER.info("The colour selector is now " +
                 ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
@@ -437,15 +383,9 @@ def main():
     # Loop indefinitely until we are no longer running
     while running:
         # Wait for the interval period
-        time.sleep(1)
-        # Capture a key press. The function waits argument in ms
-        # for any keyboard event
-        key = cv2.waitKey(1) & 0xFF
-        
-        # if the 'q' key was pressed break from the loop
-        if key == ord("q"):
-            break
-        
+        time.sleep(1.0)
+
+
 
 if __name__ == "__main__":
     try:
