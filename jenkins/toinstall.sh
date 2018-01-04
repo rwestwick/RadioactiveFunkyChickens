@@ -25,3 +25,4 @@ cd wiringPi
 make static
 sudo make install-static
 cd ../..
+sudo apt-get install libcwiid1 lswm wmgui wminput
