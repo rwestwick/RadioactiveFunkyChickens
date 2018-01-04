@@ -80,7 +80,8 @@ class StreamProcessor(threading.Thread):
         # View the original image seen by the camera.
         if debug:
             cv2.imshow('Original BGR', bgr_image)
-            cv2.waitKey(1)
+            cv2.waitKey(1) # Is this needed?
+            e1 = cv2.getTickCount()
 
         # Find chosen colour in image
         output_hsv, mask_hsv = self.find_HSV_colour(
@@ -89,6 +90,15 @@ class StreamProcessor(threading.Thread):
         # Find location of contour
         output_hsv, contourDetection, foundX, foundY = self.find_marker_contour(
             mask_hsv, output_hsv)
+
+        # Calculate image processing overhead
+        # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
+        if debug:
+            e2 = cv2.getTickCount()
+            time = (e2 - e1)/ cv2.getTickFrequency()
+            
+        # Steer robot
+        # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
 
     def find_HSV_colour(self, colourArrayCntr, bgrImage):
         """Find chosen colours in video image using HSV
@@ -265,6 +275,43 @@ class StreamProcessor(threading.Thread):
     
         # return an array of circularity values
         return circularityArray
+
+    # Set the motor speeds from the marker position
+    def SetSpeedFromMarker(self, contourDetection, foundX, distanceToFrontWall):
+        """Calulates the speed of the motors."""
+        
+        if contourDetection:
+            if distanceToFrontWall < FRONT_BUFFER_STOP:
+                LOGGER.info('Too close!')
+                ROBOTMOVE.stop()
+                driveLeft = 0
+                driveRight = 0
+            elif distanceToFrontWall < FRONT_BUFFER_WARN:
+                LOGGER.info('Getting closer')
+                speed = SpeedSettings.SPEED_SLOW
+                driveLeft
+            else:
+                speed = SpeedSettings.SPEED_FAST
+
+            direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
+            if direction < 0.0:
+                # Turn right
+                LOGGER.info('Steer Right')
+                driveLeft = speed
+                driveRight = speed * (1.0 + direction)
+            else:
+                # Turn left
+                LOGGER.info('Steer Left')
+                driveLeft = speed * (1.0 - direction)
+                driveRight = speed
+                ROBOTMOVE.turn_forward(driveLeft, driveRight)
+                
+            TextStringSpeed = 'Left speed: ' + str(driveLeft) +
+                ' Right speed: ' + str(driveRight)
+            LOGGER.info(TextStringSpeed)
+            
+        else:
+            LOGGER.info('No marker')
 
 
 # Image capture thread
