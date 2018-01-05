@@ -38,13 +38,18 @@ import picamera.array
 # Global values and their initial values
 global camera
 global processor
-global debug
+global debug  # Used for processing time
+global debug_show_input
+global debug_show_output
 global maxProcessingDelay
 global minProcessingDelay
 global colourArrayCntr
 
 running = True
 debug = True
+debug_show_input = False
+debug_show_output = True
+
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
 colourArrayCntr = 0
@@ -88,18 +93,22 @@ class StreamProcessor(threading.Thread):
         global colourArrayCntr
         global maxProcessingDelay
         global minProcessingDelay
+        global debug
+        global debug_show_input
+        global debug_show_output
         
         # View the original image seen by the camera.
-        if debug:
+        if debug_show_input:
             cv2.imshow('Original BGR', image)
-            cv2.waitKey(1) # Is this needed?
+            cv2.waitKey(1) # For some reason image does not show without this!
+        if debug:
             e1 = cv2.getTickCount()
 
         # Find chosen colour in image
         output_hsv, mask_hsv = self.find_HSV_colour(colourArrayCntr, image)
 
         # Find location of contour
-        contourDetection, foundX, foundY = self.find_marker_contour(mask_hsv, output_hsv)
+        contourDetection, foundX, foundY, input_hsv = self.find_marker_contour(mask_hsv, output_hsv)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
@@ -110,7 +119,11 @@ class StreamProcessor(threading.Thread):
                 maxProcessingDelay = time
             elif time < minProcessingDelay:
                 minProcessingDelay = time
-
+        
+        if debug_show_output:
+            cv2.imshow('Final BGR', input_hsv)
+            cv2.waitKey(1) # For some reason image does not show without this!
+            
         # Steer robot
         # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
 
@@ -128,7 +141,7 @@ class StreamProcessor(threading.Thread):
         bgr_blur_image = cv2.medianBlur(bgr_image, MED_FILTER_APRTRE_SIZE)
 
         # Convert the image from 'BGR' to HSV colour space
-        hsv_image = cv2.cvtColor(bgr_blur_image, cv2.COLOR_RGB2HSV)
+        hsv_image = cv2.cvtColor(bgr_blur_image, cv2.COLOR_BGR2HSV)
         
         # Select HSV colour range boundaries to detect marker
         lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
@@ -207,8 +220,12 @@ class StreamProcessor(threading.Thread):
     
             # Calculate centre of most circular contour
             foundX, foundY = self.contour_centre(cntSortedByCirc[0])
+            
+            if debug:
+                # Highlight the most circular contour in white
+                cv2.drawContours(input_hsv, cntSortedByCirc[0], -1, (255, 255, 255), 3)
 
-        return contourDetection, foundX, foundY
+        return contourDetection, foundX, foundY, input_hsv
 
 
     def contour_circularity(self, cnts):
@@ -395,7 +412,7 @@ def main():
 
     # Show commands and status
     LOGGER.info("CTRL^C to terminate program")
-    LOGGER.info("The colour selector is now " +
+    LOGGER.info("The colour selector starts as " +
                 ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
     # Create necessary sensor objects
