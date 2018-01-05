@@ -191,7 +191,8 @@ class StreamProcessor(threading.Thread):
         # zip does not work without array
         if len(cntWithMinArea) == 0:
             contourDetection = False
-
+            foundX = None
+            foundY = None
         else:
             contourDetection = True
     
@@ -232,6 +233,25 @@ class StreamProcessor(threading.Thread):
     
         # return an array of circularity values
         return circularityArray
+
+
+    def contour_centre(self, cntr):
+        """ Compute the centre of the contour area"""
+        
+        M = cv2.moments(cntr)
+    
+        # Prevent division by 0
+        if M["m00"] == 0:
+            x, y, w, h = cv2.boundingRect(cntr)
+            cX = x + (w / 2)
+            cY = y + (h / 2)
+        else:
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
+    
+        # return the x and y co-ordinates of the centre of contours
+        return cX, cY
+
 
     # Set the motor speeds from the marker position
     def SetSpeedFromMarker(self, contourDetection, foundX, distanceToFrontWall):
