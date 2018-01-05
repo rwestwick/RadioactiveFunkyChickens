@@ -50,20 +50,25 @@ colourArrayCntr = 0
 maxProcessingDelay = 0
 
 # Image stream processing thread
+# For threading tutourials see
+# https://www.tutorialspoint.com/python/python_multithreading.htm
+# http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
 class StreamProcessor(threading.Thread):
     def __init__(self):
         super(StreamProcessor, self).__init__()
         self.stream = picamera.array.PiRGBArray(camera)
         self.event = threading.Event()
         self.terminated = False
-        self.start()
+        self.start()  # The start() method starts a thread by calling the run method.
         self.begin = 0
 
 
-    def run(self):
+    def run(self):  # The run() method is the entry point for a thread
         # This method runs in a separate thread
         while not self.terminated:
             # Wait for an image to be written to the stream
+            # The wait() method takes an argument representing the number of 
+            # seconds to wait for the event before timing out.
             if self.event.wait(1):
                 try:
                     # Read the image and do some processing on it
@@ -264,7 +269,7 @@ class StreamProcessor(threading.Thread):
 class ImageCapture(threading.Thread):
     def __init__(self):
         super(ImageCapture, self).__init__()
-        self.start()
+        self.start() # The start() method starts a thread by calling the run method.
 
     def run(self):
         global camera
@@ -273,7 +278,7 @@ class ImageCapture(threading.Thread):
         camera.capture_sequence(self.TriggerStream(), format='bgr', use_video_port=True)
         LOGGER.info('Terminating camera processing...')
         processor.terminated = True
-        processor.join()
+        processor.join()  # The join() waits for threads to terminate
         LOGGER.info('Processing terminated.')
 
     # Stream delegation loop
@@ -314,11 +319,13 @@ camera.framerate = 10  # If not set then defaults to 30fps
 camera.vflip = True  # Needed for mounting of camera on pan/tilt
 camera.hflip = True  # Needed for mounting of camera on pan/tilt
 
+# Start thread objects
 LOGGER.info('Setup the stream processing thread')
 processor = StreamProcessor()
 
 LOGGER.info('Wait ...')
-time.sleep(2) # This us the value used in the PiBorg example
+# Allow the camera time to warm-up
+time.sleep(2) # This is the value/line used in the PiBorg example
 captureThread = ImageCapture()
 
 # Set movement constant values
