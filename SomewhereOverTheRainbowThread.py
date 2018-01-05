@@ -40,6 +40,7 @@ global camera
 global processor
 global debug
 global maxProcessingDelay
+global minProcessingDelay
 global colourArrayCntr
 
 running = True
@@ -48,6 +49,7 @@ debug = True
 # 'Red', 'Blue', 'Green', 'Yellow'
 colourArrayCntr = 0
 maxProcessingDelay = 0
+minProcessingDelay = 100
 
 # Image stream processing thread
 # For threading tutourials see
@@ -107,7 +109,8 @@ class StreamProcessor(threading.Thread):
             if time > maxProcessingDelay:
                 maxProcessingDelay = time
                 LOGGER.info(str(maxProcessingDelay))
-
+            elif time < minProcessingDelay:
+                minProcessingDelay = time
 
         # Steer robot
         # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
@@ -409,4 +412,7 @@ if __name__ == "__main__":
         ROBOTMOVE.cleanup()
         cv2.destroyAllWindows()
         GPIO.cleanup()
+        LOGGER.info("Image processing delays min and max " +
+                format(minProcessingDelay, '.2f') + " " +
+                format(maxProcessingDelay, '.2f') + " sec")
         LOGGER.info("'Somewhere Over the Rainbow' Finished.")
