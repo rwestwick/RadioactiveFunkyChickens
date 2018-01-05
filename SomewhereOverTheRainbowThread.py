@@ -87,6 +87,7 @@ class StreamProcessor(threading.Thread):
     def ProcessImage(self, image):
         global colourArrayCntr
         global maxProcessingDelay
+        global minProcessingDelay
         
         # View the original image seen by the camera.
         if debug:
@@ -98,8 +99,7 @@ class StreamProcessor(threading.Thread):
         output_hsv, mask_hsv = self.find_HSV_colour(colourArrayCntr, image)
 
         # Find location of contour
-        # contourDetection, foundX, foundY = self.find_marker_contour(
-        #     mask_hsv, output_hsv)
+        contourDetection, foundX, foundY = self.find_marker_contour(mask_hsv, output_hsv)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
@@ -108,7 +108,6 @@ class StreamProcessor(threading.Thread):
             time = (e2 - e1)/ cv2.getTickFrequency()
             if time > maxProcessingDelay:
                 maxProcessingDelay = time
-                LOGGER.info(str(maxProcessingDelay))
             elif time < minProcessingDelay:
                 minProcessingDelay = time
 
@@ -165,6 +164,10 @@ class StreamProcessor(threading.Thread):
         # Calculate final number of largest area contours
         if len(contours) == 0:
             LOGGER.info("No contours found.")
+            finalNumLargestAreaContours = 0
+            contourDetection = False
+            foundX = None
+            foundY = None
         elif len(contours) < NUM_OF_LARGEST_AREA_CONTOURS:
             finalNumLargestAreaContours = len(contours)
         else:
