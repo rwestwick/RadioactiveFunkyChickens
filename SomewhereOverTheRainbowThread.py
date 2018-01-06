@@ -105,10 +105,14 @@ class StreamProcessor(threading.Thread):
             e1 = cv2.getTickCount()
 
         # Find chosen colour in image
-        output_hsv, mask_hsv = self.find_HSV_colour(colourArrayCntr, image)
+        colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(
+                                                        colourArrayCntr, 
+                                                        image)
 
         # Find location of contour
-        contourDetection, foundX, foundY, input_hsv = self.find_marker_contour(mask_hsv, output_hsv)
+        contourDetection, foundX, foundY, contour_marked_image = self.find_marker_contour(
+                                                                    colour_filtered_mask, 
+                                                                    colour_filtered_output)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
@@ -121,7 +125,8 @@ class StreamProcessor(threading.Thread):
                 minProcessingDelay = time
         
         if debug_show_output:
-            cv2.imshow('Final BGR', input_hsv)
+            cv2.imshow('Filtered image with marker contour', 
+                        contour_marked_image)
             cv2.waitKey(1) # For some reason image does not show without this!
             
         # Steer robot
@@ -349,8 +354,8 @@ ROBOTMOVE = MotorController.MotorController(
     GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
 
 # Initialise camera
-CAMERA_WIDTH = 640
-CAMERA_HEIGHT = 480
+CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
+CAMERA_HEIGHT = 240
 IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
 IMAGE_CENTRE_y = CAMERA_HEIGHT / 2.0
 
@@ -385,7 +390,8 @@ TILT_INTIAL = 20  # Initial tilt angle in degrees
 FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
 
 # Image filtering constants
-MED_FILTER_APRTRE_SIZE = 5  # Aperture size for median filter
+# Aperture size for median filter based on PiBorg numbers of 5 with 320 * 240
+MED_FILTER_APRTRE_SIZE = 5  # Must be odd number
 # Initial number for down selecting large contours
 # If number too small then will loose circular marker
 NUM_OF_LARGEST_AREA_CONTOURS = 3
