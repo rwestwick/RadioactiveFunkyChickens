@@ -5,7 +5,7 @@ it doesn't exist.
 """
 
 
-class GPIODevice(object):
+class OutputDevice(object):
     """
     Provides a stub for the GPIODevice class defined in GPIOZero
     """

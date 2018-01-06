@@ -7,11 +7,11 @@ import logging
 import platform
 if platform.machine() == "armv6l" or platform.machine() == "armv7l":
     try:
-        from gpiozero import GPIODevice
+        from gpiozero import OutputDevice
     except ImportError:
-        print "ERROR importing GPIODevice from gpiozero"
+        print "ERROR importing OutputDevice from gpiozero"
 else:
-    from GPIOZeroStub import GPIODevice as GPIODevice
+    from GPIOZeroStub import OutputDevice as OutputDevice
 
 MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
@@ -27,7 +27,7 @@ class SwitchingGPIO(object):
         """
         MODULE_LOGGER.info("GPIO Class init on socket" + str(pcm_num))
         self.pcm_num = pcm_num
-        self.socket = GPIODevice(pcm_num)
+        self.socket = OutputDevice(pcm_num)
 
     def __del__(self):
         """
