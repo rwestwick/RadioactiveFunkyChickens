@@ -15,7 +15,7 @@ MODULE_LOGGER = logging.getLogger("__main__.UltrasonicSensorThread")
 
 class UltrasonicSensorThread(threading.Thread):
     """
-    Defines the interaction with a temperature sensor
+    Defines the threading aspects for an ultrasonic sensor
     """
     DEFAULT_TEMP = -42.0
 
