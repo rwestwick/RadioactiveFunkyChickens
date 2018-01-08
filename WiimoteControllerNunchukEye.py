@@ -15,7 +15,7 @@ https://help.ubuntu.com/community/CWiiD
 # Import required libraries
 import time
 import logging
-import MotorController
+import DualMotorController
 import SetupConsoleLogger
 import GPIOLayout
 import cwiid
@@ -42,9 +42,15 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
-robotmove = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+robotmove = DualMotorController.DualMotorController(
+            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
 
 # Initialise ServoController
 SERVO_CONTROLLER = ServoController.ServoController()
@@ -170,9 +176,10 @@ def main():
                             (NUNCHUK_MID - NUNCHUK_MIN))
                 if speed > SpeedSettings.SPEED_FASTEST:
                     speed = SpeedSettings.SPEED_FASTEST
-                robotmove.spin_left(speed)
-
+                    
                 LOGGER.info("Spin left at speed " + str(speed))
+
+                robotmove.spin_left(speed)
                 time.sleep(STICK_DELAY)
 
             # Turn forward left if joystick pushed top left outside central
@@ -190,17 +197,23 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                    
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
+                if lengthY > SpeedSettings.SPEED_FASTEST:
+                    lengthY = SpeedSettings.SPEED_FASTEST
 
                 # Calculate wheel speeds
                 speedLeftWheel = int(lengthY)
                 speedRightWheel = overallSpeed
-                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
-
+                
                 LOGGER.info(
                     "Steer left. Left wheel at speed: " + str(speedLeftWheel) +
                     " Right wheel at speed: " + str(speedRightWheel))
+                
+                #robotmove.turn_forward(speedLeftWheel, speedRightWheel)
+                robotmove.front_left_forward(speedLeftWheel)
+                robotmove.front_right_forward(speedRightWheel)                
                 time.sleep(STICK_DELAY)
 
             # Turn forward right if joystick pushed top right outside central
@@ -218,17 +231,23 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                    
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
+                if lengthY > SpeedSettings.SPEED_FASTEST:
+                    lengthY = SpeedSettings.SPEED_FASTEST
 
                 # Calculate wheel speeds
                 speedLeftWheel = overallSpeed
                 speedRightWheel = int(lengthY)
-                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info(
                     "Steer right. Left wheel at speed: " + str(speedLeftWheel)
                     + " Right wheel at speed: " + str(speedRightWheel))
+
+                #robotmove.turn_forward(speedLeftWheel, speedRightWheel)
+                robotmove.front_left_forward(speedLeftWheel)
+                robotmove.front_right_forward(speedRightWheel)                
                 time.sleep(STICK_DELAY)
 
             # Turn reverse left if joystick pushed bottom left outside central
@@ -246,17 +265,23 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                  
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
+                if lengthY > SpeedSettings.SPEED_FASTEST:
+                    lengthY = SpeedSettings.SPEED_FASTEST
 
                 # Calculate wheel speeds
                 speedLeftWheel = int(lengthY)
                 speedRightWheel = overallSpeed
-                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info(
                     "Reverse left. Left wheel at speed: " + str(speedLeftWheel)
                     + " Right wheel at speed: " + str(speedRightWheel))
+
+                #robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
+                robotmove.front_left_backward(speedLeftWheel)
+                robotmove.front_right_backward(speedRightWheel)
                 time.sleep(STICK_DELAY)
 
             # Turn reverse right if joystick pushed top right outside central
@@ -274,17 +299,23 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
+                    
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
+                if lengthY > SpeedSettings.SPEED_FASTEST:
+                    lengthY = SpeedSettings.SPEED_FASTEST
 
                 # Calculate wheel speeds
                 speedLeftWheel = overallSpeed
                 speedRightWheel = int(lengthY)
-                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
 
                 LOGGER.info("Reverse right. Left wheel at speed: " +
                             str(speedLeftWheel) + " Right wheel at speed: " +
                             str(speedRightWheel))
+
+                #robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
+                robotmove.front_left_backward(speedLeftWheel)
+                robotmove.front_right_backward(speedRightWheel)
                 time.sleep(STICK_DELAY)
 
             # else stop
