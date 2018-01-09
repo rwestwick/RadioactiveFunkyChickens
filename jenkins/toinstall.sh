@@ -14,6 +14,7 @@ sudo pip install pep8ify
 sudo pip install yapf
 sudo pip install pytest
 sudo pip install pytest-cov
+sudo pip install colorlog
 sudo apt-get purge wiringpi
 sudo apt-get install git-core
 cd code
