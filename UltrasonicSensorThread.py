@@ -17,7 +17,6 @@ class UltrasonicSensorThread(threading.Thread):
     """
     Defines the threading aspects for an ultrasonic sensor
     """
-    DEFAULT_TEMP = -42.0
 
     def __init__(self, delay, callback, input_pin, output_pin=None, qsize=1):
         """
