@@ -17,14 +17,14 @@ DISTANCE = 0.0
 
 
 def __callback_UltrasonicSensorThread(data):
-    MODULE_LOGGER.info("UltrasonicSensorThread callback: " + str(data))
+    MODULE_LOGGER.critical("UltrasonicSensorThread callback: " + str(data))
     global CALLBACK_CALLED, DISTANCE
     CALLBACK_CALLED = True
     DISTANCE = data
 
 
 def test_ultrasonicthread_poll(sleep_len=2):
-    MODULE_LOGGER.info("test_ultrasonicthread_poll")
+    MODULE_LOGGER.critical("test_ultrasonicthread_poll")
     try:
         SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
             1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
@@ -64,7 +64,7 @@ def test_ultrasonicthread_callback(sleep_len=2):
 
         
 def test_ultrasonicthread_multiplesensors(sleep_len=2):
-    MODULE_LOGGER.info("test_ultrasonicthread_multiplesensors")
+    MODULE_LOGGER.critical("test_ultrasonicthread_multiplesensors")
     try:
         FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
                         1, None, GPIOLayout.SONAR_FRONT_TX_PIN,

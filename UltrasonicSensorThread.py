@@ -22,6 +22,8 @@ class UltrasonicSensorThread(threading.Thread):
         """
         Initialise the parameters required for UltrasonicSensorThread
         """
+        MODULE_LOGGER.info("Setting up UltrasonicSensorThread Module")
+
         self._distance = 0.0
         self._delay = delay
         self._mutex = threading.Lock()
@@ -29,8 +31,6 @@ class UltrasonicSensorThread(threading.Thread):
         self._callback = callback
         self._sensor = UltrasonicSensor.UltrasonicSensor(
             input_pin, output_pin, qsize)
-
-        MODULE_LOGGER.info("Setting up UltrasonicSensorThread Module")
 
         threading.Thread.__init__(self)
 
