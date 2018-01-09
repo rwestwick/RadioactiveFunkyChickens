@@ -25,7 +25,7 @@ import SetupConsoleLogger
 import ServoController
 import MotorController
 import SpeedSettings
-import UltrasonicSensor
+import UltrasonicSensorThread
 import ColourBoundaries
 import GPIOLayout
 import KeyboardCharacterReader
@@ -129,6 +129,7 @@ class StreamProcessor(threading.Thread):
                         contour_marked_image)
             cv2.waitKey(1) # For some reason image does not show without this!
             
+        distanceToFrontWall = FRONT_SENSOR.read_data()
         # Steer robot
         # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
 
@@ -398,6 +399,22 @@ NUM_OF_LARGEST_AREA_CONTOURS = 3
 MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 MIN_MARKER_CIRCULARITY = 0.5  # Correct value to be decided
 
+# Initialise Ultrasonic Sensors
+FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
+                1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
+                GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+FRONT_SENSOR.start()
+
+RIGHT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
+                1, None, GPIOLayout.SONAR_RIGHT_TX_PIN,
+                GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
+RIGHT_SENSOR.start()
+
+LEFT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
+                1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
+                GPIOLayout.SONAR_LEFT_RX_PIN, 1)
+LEFT_SENSOR.start()
+
 
 def main():
     """
@@ -421,21 +438,6 @@ def main():
     LOGGER.info("The colour selector starts as " +
                 ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
-    # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
-                                                  GPIOLayout.SONAR_LEFT_TX_PIN)
-    view_right = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
-    view_front = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_FRONT_TX_PIN)
-
-    LOGGER.info("Distance view_left at start " +
-                format(view_left.measurement(), '.2f') + " cm")
-    LOGGER.info("Distance view_right at start " +
-                format(view_right.measurement(), '.2f') + " cm")
-    LOGGER.info("Distance view_front at start " +
-                format(view_front.measurement(), '.2f') + " cm")
-
     # Loop indefinitely until we are no longer running
     while running:
         # Wait for the interval period
@@ -449,16 +451,27 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
     finally:
+        LOGGER.info('Read distance from front sensor ={0:0.2f} cm '.format(
+            FRONT_SENSOR.read_data()))
+        LOGGER.info("Image processing delays min and max " +
+            format(minProcessingDelay, '.2f') + " " +
+            format(maxProcessingDelay, '.2f') + " sec")
         running = False
         captureThread.join()
         processor.terminated = True
         processor.join()
         del camera  # Is this needed?
+        FRONT_SENSOR.exit_now()
+        FRONT_SENSOR.join()
+        FRONT_SENSOR.__del__()
+        RIGHT_SENSOR.exit_now()
+        RIGHT_SENSOR.join()
+        RIGHT_SENSOR.__del__()
+        LEFT_SENSOR.exit_now()
+        LEFT_SENSOR.join()
+        LEFT_SENSOR.__del__()
         SERVO_CONTROLLER.stop_servos()
         ROBOTMOVE.cleanup()
         cv2.destroyAllWindows()
         GPIO.cleanup()
-        LOGGER.info("Image processing delays min and max " +
-                format(minProcessingDelay, '.2f') + " " +
-                format(maxProcessingDelay, '.2f') + " sec")
         LOGGER.info("'Somewhere Over the Rainbow' Finished.")
