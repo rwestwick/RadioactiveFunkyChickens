@@ -38,7 +38,8 @@ class UltrasonicSensorThread(threading.Thread):
         """
         Destructor
         """
-        self.exit_now()
+        if not self._exit_now:
+            self.exit_now()
         MODULE_LOGGER.debug("Destructor")
 
     def __store_data(self, params):

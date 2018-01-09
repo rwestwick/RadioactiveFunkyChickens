@@ -10,7 +10,7 @@ import UltrasonicSensorThread
 import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__")
-SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
+SetupConsoleLogger.setup_console_logger(MODULE_LOGGER, logging.DEBUG)
 
 CALLBACK_CALLED = False
 DISTANCE = 0.0
@@ -66,28 +66,41 @@ def test_ultrasonicthread_callback(sleep_len=2):
 def test_ultrasonicthread_multiplesensors(sleep_len=2):
     MODULE_LOGGER.info("test_ultrasonicthread_multiplesensors")
     try:
-        SENSOR1 = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
-            GPIOLayout.SONAR_LEFT_RX_PIN, 1)
-        SENSOR1.start()
-        SENSOR2 = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
-            GPIOLayout.SONAR_FRONT_RX_PIN, 1)
-        SENSOR2.start()
+        FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
+                        1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
+                        GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+        FRONT_SENSOR.start()
+
+        RIGHT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
+                        1, None, GPIOLayout.SONAR_RIGHT_TX_PIN,
+                        GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
+        RIGHT_SENSOR.start()
+
+        LEFT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
+                        1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
+                        GPIOLayout.SONAR_LEFT_RX_PIN, 1)
+        LEFT_SENSOR.start()
         time.sleep(sleep_len)
-        MODULE_LOGGER.info('Read distance from thread ={0:0.2f} cm '.format(
-            SENSOR1.read_data()))
-        MODULE_LOGGER.info('Read distance from thread ={0:0.2f} cm '.format(
-            SENSOR2.read_data()))
+        MODULE_LOGGER.info('FRONT_SENSOR distance from thread ={0:0.2f} cm '.format(
+            FRONT_SENSOR.read_data()))
+        MODULE_LOGGER.info('RIGHT_SENSOR distance from thread ={0:0.2f} cm '.format(
+            RIGHT_SENSOR.read_data()))
+        MODULE_LOGGER.info('LEFT_SENSOR distance from thread ={0:0.2f} cm '.format(
+            LEFT_SENSOR.read_data()))
     except KeyboardInterrupt:
         pass
     finally:
-        SENSOR1.exit_now()
-        SENSOR1.join()
-        SENSOR1.__del__()
-        SENSOR2.exit_now()
-        SENSOR2.join()
-        SENSOR2.__del__()
+        MODULE_LOGGER.info('Starting cleanup')
+        FRONT_SENSOR.exit_now()
+        FRONT_SENSOR.join()
+        FRONT_SENSOR.__del__()
+        RIGHT_SENSOR.exit_now()
+        RIGHT_SENSOR.join()
+        RIGHT_SENSOR.__del__()
+        LEFT_SENSOR.exit_now()
+        LEFT_SENSOR.join()
+        LEFT_SENSOR.__del__()
+        MODULE_LOGGER.info('Cleanup complete')
 
 
 if __name__ == "__main__":
