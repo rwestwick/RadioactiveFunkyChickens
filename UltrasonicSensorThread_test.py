@@ -93,13 +93,10 @@ def test_ultrasonicthread_multiplesensors(sleep_len=2):
         MODULE_LOGGER.info('Starting cleanup')
         FRONT_SENSOR.exit_now()
         FRONT_SENSOR.join()
-        FRONT_SENSOR.__del__()
         RIGHT_SENSOR.exit_now()
         RIGHT_SENSOR.join()
-        RIGHT_SENSOR.__del__()
         LEFT_SENSOR.exit_now()
         LEFT_SENSOR.join()
-        LEFT_SENSOR.__del__()
         MODULE_LOGGER.info('Cleanup complete')
 
 
