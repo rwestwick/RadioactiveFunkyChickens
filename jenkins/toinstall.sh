@@ -12,6 +12,7 @@ sudo apt-get install git-core -y
 sudo apt-get install libcwiid1 lswm wmgui wminput -y
 sudo apt-get install cloc -y
 sudo apt-get install doxygen -y
+sudo apt install googletest
 
 sudo apt remove wolfram-engine -y
 
@@ -24,6 +25,38 @@ sudo pip install pytest
 sudo pip install pytest-cov
 sudo pip install colorlog
 sudo pip install coverage
+sudo pip install pyzmq
+
+
+cd ~/code
+git clone https://github.com/google/protobuf
+cd protobuf
+./autogen.sh
+./configure
+make
+sudo make install
+sudo ldconfig
+
+
+cd ~/code
+git clone https://github.com/jedisct1/libsodium.git
+cd libsodium
+./autogen.sh 
+./configure
+make
+sudo make install
+sudo ldconfig
+
+
+cd ~/code
+wget http://download.zeromq.org/zeromq-4.1.4.tar.gz
+tar -zxvf zeromq-4.1.4.tar.gz
+cd zeromq-4.1.4/
+./configure
+make
+sudo make install
+sudo ldconfig
+
 
 #cd code
 #git clone git://git.drogon.net/wiringPi

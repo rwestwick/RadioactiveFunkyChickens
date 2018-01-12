@@ -25,6 +25,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D INSTALL_PYTHON_EXAMPLES=ON \
       -D OPENCV_EXTRA_MODULES_PATH=~/code/opencv/opencv_contrib/modules \
       -D BUILD_EXAMPLES=ON ..
+ a new line
 
 make
 sudo make install
