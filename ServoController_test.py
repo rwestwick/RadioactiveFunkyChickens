@@ -9,7 +9,7 @@ import SetupConsoleLogger
 import ServoController
 
 MODULE_LOGGER = logging.getLogger("__main__")
-SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
+SetupConsoleLogger.setup_console_logger(MODULE_LOGGER, logging.DEBUG)
 
 
 def test_servocontroller(sleep_len=0):
@@ -18,20 +18,37 @@ def test_servocontroller(sleep_len=0):
     try:
         SERVO_CONTROLLER = ServoController.ServoController()
 
+        MODULE_LOGGER.debug("Starting")
         SERVO_CONTROLLER.start_servos()
+        time.sleep(sleep_len)
+        MODULE_LOGGER.info("Start Position PAN")
+        SERVO_CONTROLLER.set_pan_servo(0)
+        MODULE_LOGGER.info("Start Position TILT")
+        SERVO_CONTROLLER.set_tilt_servo(0)
+        time.sleep(2*sleep_len)       
+
+        MODULE_LOGGER.info("PAN Tests")
+        SERVO_CONTROLLER.set_pan_servo(90)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_pan_servo(45)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(0)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_pan_servo(90)
+        SERVO_CONTROLLER.set_pan_servo(-45)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(-90)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(0)
         time.sleep(sleep_len)
 
+        MODULE_LOGGER.info("TILT Tests")
+        SERVO_CONTROLLER.set_tilt_servo(90)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_tilt_servo(45)
+        time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(0)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_tilt_servo(90)
+        SERVO_CONTROLLER.set_tilt_servo(-45)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(-90)
         time.sleep(sleep_len)
@@ -39,8 +56,11 @@ def test_servocontroller(sleep_len=0):
     except KeyboardInterrupt:
         pass
     finally:
+        SERVO_CONTROLLER.set_pan_servo(0)
+        SERVO_CONTROLLER.set_tilt_servo(0)
+        time.sleep(sleep_len)
         SERVO_CONTROLLER.stop_servos()
 
 
 if __name__ == "__main__":
-    test_servocontroller(1)
+    test_servocontroller(2)

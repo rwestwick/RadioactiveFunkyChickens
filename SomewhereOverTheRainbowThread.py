@@ -344,7 +344,7 @@ class ImageCapture(threading.Thread):
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger("__name__")
-SetupConsoleLogger.setup_console_logger(LOGGER)
+SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
