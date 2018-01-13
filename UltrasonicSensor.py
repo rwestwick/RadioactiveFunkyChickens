@@ -118,7 +118,7 @@ class UltrasonicSensor(object):
             stringvals += format(val, '.2f') + " : "
             total = total + val
 
-        MODULE_LOGGER.info("Ultrasonic values: " + stringvals)
+        MODULE_LOGGER.debug("Ultrasonic values: " + stringvals)
 
         return total / self.queue.qsize()
 
