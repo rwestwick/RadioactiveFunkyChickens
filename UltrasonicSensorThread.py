@@ -60,7 +60,7 @@ class UltrasonicSensorThread(threading.Thread):
         Returns the temperature that has been read
         """
         distance = self._sensor.measurement()
-        MODULE_LOGGER.debug('Timed Reading = {0:0.2f} cm '.format(distance))
+        MODULE_LOGGER.info('Timed Reading = {0:0.2f} cm '.format(distance))
         return distance
 
     def read_data(self):
@@ -90,7 +90,7 @@ class UltrasonicSensorThread(threading.Thread):
         """
         MODULE_LOGGER.debug("Starting sensor reading thread")
         while not self._exit_now:
-            MODULE_LOGGER.info("timer fired")
+            MODULE_LOGGER.debug("timer fired")
             self.__store_data(self.__get_distance())
             time.sleep(self._delay)
         MODULE_LOGGER.debug("Finished thread")

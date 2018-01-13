@@ -53,7 +53,7 @@ def test_ultrasonicthread_callback(sleep_len=2):
         SENSOR.start()
         time.sleep(sleep_len)
         MODULE_LOGGER.info(
-            'Read distance from callback ={0:0.2f} cm '.format(DISTANCE))
+            'Read distance from callback {0:0.2f} cm '.format(DISTANCE))
         assert CALLBACK_CALLED is True
     except KeyboardInterrupt:
         pass
@@ -81,16 +81,16 @@ def test_ultrasonicthread_multiplesensors(sleep_len=2):
                         GPIOLayout.SONAR_LEFT_RX_PIN, 1)
         LEFT_SENSOR.start()
         time.sleep(sleep_len)
-        MODULE_LOGGER.info('FRONT_SENSOR distance from thread ={0:0.2f} cm '.format(
+        MODULE_LOGGER.info('FRONT_SENSOR distance from thread {0:0.2f} cm '.format(
             FRONT_SENSOR.read_data()))
-        MODULE_LOGGER.info('RIGHT_SENSOR distance from thread ={0:0.2f} cm '.format(
+        MODULE_LOGGER.info('RIGHT_SENSOR distance from thread {0:0.2f} cm '.format(
             RIGHT_SENSOR.read_data()))
-        MODULE_LOGGER.info('LEFT_SENSOR distance from thread ={0:0.2f} cm '.format(
+        MODULE_LOGGER.info('LEFT_SENSOR distance from thread {0:0.2f} cm '.format(
             LEFT_SENSOR.read_data()))
     except KeyboardInterrupt:
         pass
     finally:
-        MODULE_LOGGER.info('Starting cleanup')
+        MODULE_LOGGER.debug('Starting cleanup')
         FRONT_SENSOR.exit_now()
         FRONT_SENSOR.join()
         RIGHT_SENSOR.exit_now()
