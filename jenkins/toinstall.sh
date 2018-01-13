@@ -12,9 +12,10 @@ sudo apt-get install git-core -y
 sudo apt-get install libcwiid1 lswm wmgui wminput -y
 sudo apt-get install cloc -y
 sudo apt-get install doxygen -y
-sudo apt install googletest
-
+sudo apt-get install googletest -y
+sudo apt-get install samba -y
 sudo apt remove wolfram-engine -y
+
 
 sudo pip install --upgrade pip
 sudo pip install --upgrade ndg-httpsclient 
