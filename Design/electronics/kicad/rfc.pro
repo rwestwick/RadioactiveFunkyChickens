@@ -1,4 +1,4 @@
-update=08/01/2018 00:35:36
+update=13/01/2018 15:22:26
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,7 +27,7 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=C:/Code/RadioactiveFunkyChickens/design/kicad_parts
+LibDir=../kicad_parts
 [eeschema/libraries]
 LibName1=power
 LibName2=device
