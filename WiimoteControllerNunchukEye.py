@@ -187,7 +187,7 @@ def main():
             elif (NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER)
                   and NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
-                # Calculate lenghts in range <100, min value depends on
+                # Calculate lengths in range <100, min value depends on
                 # NUNCHUK_BUFFER value
                 lengthX = SpeedSettings.SPEED_FASTEST * \
                     (NUNCHUK_MID - NunchukStickX) / (NUNCHUK_MID - NUNCHUK_MIN)
@@ -211,9 +211,7 @@ def main():
                     "Steer left. Left wheel at speed: " + str(speedLeftWheel) +
                     " Right wheel at speed: " + str(speedRightWheel))
                 
-                #robotmove.turn_forward(speedLeftWheel, speedRightWheel)
-                robotmove.front_left_forward(speedLeftWheel)
-                robotmove.front_right_forward(speedRightWheel)                
+                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
                 time.sleep(STICK_DELAY)
 
             # Turn forward right if joystick pushed top right outside central
@@ -221,7 +219,7 @@ def main():
             elif (NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER)
                   and NunchukStickY > (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
-                # Calculate lenghts in range <100, min value depends on
+                # Calculate lengths in range <100, min value depends on
                 # NUNCHUK_BUFFER value
                 lengthX = SpeedSettings.SPEED_FASTEST * \
                     (NUNCHUK_MID - NunchukStickX) / (NUNCHUK_MID - NUNCHUK_MIN)
@@ -245,9 +243,7 @@ def main():
                     "Steer right. Left wheel at speed: " + str(speedLeftWheel)
                     + " Right wheel at speed: " + str(speedRightWheel))
 
-                #robotmove.turn_forward(speedLeftWheel, speedRightWheel)
-                robotmove.front_left_forward(speedLeftWheel)
-                robotmove.front_right_forward(speedRightWheel)                
+                robotmove.turn_forward(speedLeftWheel, speedRightWheel)
                 time.sleep(STICK_DELAY)
 
             # Turn reverse left if joystick pushed bottom left outside central
@@ -255,7 +251,7 @@ def main():
             elif (NunchukStickX < (NUNCHUK_MID - NUNCHUK_BUFFER)
                   and NunchukStickY < (NUNCHUK_MID - NUNCHUK_BUFFER)):
 
-                # Calculate lenghts in range <100, min value depends on
+                # Calculate lengths in range <100, min value depends on
                 # NUNCHUK_BUFFER value
                 lengthX = SpeedSettings.SPEED_FASTEST * \
                     (NUNCHUK_MID - NunchukStickX) / (NUNCHUK_MID - NUNCHUK_MIN)
@@ -279,9 +275,7 @@ def main():
                     "Reverse left. Left wheel at speed: " + str(speedLeftWheel)
                     + " Right wheel at speed: " + str(speedRightWheel))
 
-                #robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
-                robotmove.front_left_backward(speedLeftWheel)
-                robotmove.front_right_backward(speedRightWheel)
+                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
                 time.sleep(STICK_DELAY)
 
             # Turn reverse right if joystick pushed top right outside central
@@ -289,7 +283,7 @@ def main():
             elif (NunchukStickX > (NUNCHUK_MID + NUNCHUK_BUFFER)
                   and NunchukStickY < (NUNCHUK_MID + NUNCHUK_BUFFER)):
 
-                # Calculate lenghts in range <100, min value depends on
+                # Calculate lengths in range <100, min value depends on
                 # NUNCHUK_BUFFER value
                 lengthX = SpeedSettings.SPEED_FASTEST * \
                     (NUNCHUK_MID - NunchukStickX) / (NUNCHUK_MID - NUNCHUK_MIN)
@@ -313,9 +307,7 @@ def main():
                             str(speedLeftWheel) + " Right wheel at speed: " +
                             str(speedRightWheel))
 
-                #robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
-                robotmove.front_left_backward(speedLeftWheel)
-                robotmove.front_right_backward(speedRightWheel)
+                robotmove.turn_reverse(speedLeftWheel, speedRightWheel)
                 time.sleep(STICK_DELAY)
 
             # else stop
@@ -362,7 +354,7 @@ def main():
                 SERVO_CONTROLLER.set_tilt_servo(tVal)
                 time.sleep(BUTTON_DELAY)
 
-            # If botton A pressed centre Servo
+            # If button A pressed centre Servo
             elif (buttons & cwiid.BTN_A):
                 pVal = 0
                 tVal = 0
