@@ -7,7 +7,7 @@ http://piwars.org/
 
 import logging
 import time
-import MotorController
+import DualMotorController
 import UltrasonicSensor
 import SetupConsoleLogger
 import GPIOLayout
@@ -26,9 +26,15 @@ FORWARD_TIME = 0.1  # Angle correction delay time in seconds
 TURN_DELAY = 0.65
 
 # Initialise motors
-ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
 
 
 def turn_left(delay):
