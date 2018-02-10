@@ -77,22 +77,22 @@ class DualMotorController(object):
 
     def turn_forward(self, left_speed, right_speed):
         """
-        Causes the Robot to turn 
+        Causes the Robot to turn
         Sets motors to turn opposite directions at speed. 0 <= speed <= 100
         """
         self.stop()
         self.front_controller.turn_forward(left_speed, right_speed)
         self.rear_controller.turn_forward(left_speed, right_speed)
-        
+
     def turn_reverse(self, left_speed, right_speed):
         """
-        Causes the Robot to turn 
+        Causes the Robot to turn
         Sets motors to turn opposite directions at speed. 0 <= speed <= 100
         """
         self.stop()
         self.front_controller.turn_reverse(left_speed, right_speed)
         self.rear_controller.turn_reverse(left_speed, right_speed)
-        
+
     def front_left_forward(self, speed):
         """
         Causes the Robot to turn right using just one wheel

@@ -62,31 +62,34 @@ def test_ultrasonicthread_callback(sleep_len=2):
         SENSOR.join()
         SENSOR.__del__()
 
-        
+
 def test_ultrasonicthread_multiplesensors(sleep_len=2):
     MODULE_LOGGER.critical("test_ultrasonicthread_multiplesensors")
     try:
         FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-                        1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
-                        GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
+            GPIOLayout.SONAR_FRONT_RX_PIN, 1)
         FRONT_SENSOR.start()
 
         RIGHT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-                        1, None, GPIOLayout.SONAR_RIGHT_TX_PIN,
-                        GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_RIGHT_TX_PIN,
+            GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
         RIGHT_SENSOR.start()
 
         LEFT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-                        1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
-                        GPIOLayout.SONAR_LEFT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
+            GPIOLayout.SONAR_LEFT_RX_PIN, 1)
         LEFT_SENSOR.start()
         time.sleep(sleep_len)
-        MODULE_LOGGER.info('FRONT_SENSOR distance from thread {0:0.2f} cm '.format(
-            FRONT_SENSOR.read_data()))
-        MODULE_LOGGER.info('RIGHT_SENSOR distance from thread {0:0.2f} cm '.format(
-            RIGHT_SENSOR.read_data()))
-        MODULE_LOGGER.info('LEFT_SENSOR distance from thread {0:0.2f} cm '.format(
-            LEFT_SENSOR.read_data()))
+        MODULE_LOGGER.info(
+            'FRONT_SENSOR distance from thread {0:0.2f} cm '.format(
+                FRONT_SENSOR.read_data()))
+        MODULE_LOGGER.info(
+            'RIGHT_SENSOR distance from thread {0:0.2f} cm '.format(
+                RIGHT_SENSOR.read_data()))
+        MODULE_LOGGER.info(
+            'LEFT_SENSOR distance from thread {0:0.2f} cm '.format(
+                LEFT_SENSOR.read_data()))
     except KeyboardInterrupt:
         pass
     finally:

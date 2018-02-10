@@ -19,7 +19,6 @@ from __future__ import division
 import logging
 import time
 import math
-import sys
 import threading
 import SetupConsoleLogger
 import ServoController
@@ -28,7 +27,6 @@ import SpeedSettings
 import UltrasonicSensorThread
 import ColourBoundaries
 import GPIOLayout
-import KeyboardCharacterReader
 import RPi.GPIO as GPIO
 import cv2
 import numpy as np
@@ -56,25 +54,27 @@ colourArrayCntr = 0
 maxProcessingDelay = 0
 minProcessingDelay = 100
 
+
 # Image stream processing thread
 # For threading tutourials see
 # https://www.tutorialspoint.com/python/python_multithreading.htm
 # http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
 class StreamProcessor(threading.Thread):
+
     def __init__(self):
         super(StreamProcessor, self).__init__()
         self.stream = picamera.array.PiRGBArray(camera)
         self.event = threading.Event()
         self.terminated = False
-        self.start()  # The start() method starts a thread by calling the run method.
+        self.start(
+        )  # The start() method starts a thread by calling the run method.
         self.begin = 0
-
 
     def run(self):  # The run() method is the entry point for a thread
         # This method runs in a separate thread
         while not self.terminated:
             # Wait for an image to be written to the stream
-            # The wait() method takes an argument representing the number of 
+            # The wait() method takes an argument representing the number of
             # seconds to wait for the event before timing out.
             if self.event.wait(1):
                 try:
@@ -87,7 +87,6 @@ class StreamProcessor(threading.Thread):
                     self.stream.truncate()
                     self.event.clear()
 
-
     # Image processing function
     def ProcessImage(self, image):
         global colourArrayCntr
@@ -96,43 +95,40 @@ class StreamProcessor(threading.Thread):
         global debug
         global debug_show_input
         global debug_show_output
-        
+
         # View the original image seen by the camera.
         if debug_show_input:
             cv2.imshow('Original BGR', image)
-            cv2.waitKey(1) # For some reason image does not show without this!
+            cv2.waitKey(1)  # For some reason image does not show without this!
         if debug:
             e1 = cv2.getTickCount()
 
         # Find chosen colour in image
         colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(
-                                                        colourArrayCntr, 
-                                                        image)
+            colourArrayCntr, image)
 
         # Find location of contour
         contourDetection, foundX, foundY, contour_marked_image = self.find_marker_contour(
-                                                                    colour_filtered_mask, 
-                                                                    colour_filtered_output)
+            colour_filtered_mask, colour_filtered_output)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
         if debug:
             e2 = cv2.getTickCount()
-            time = (e2 - e1)/ cv2.getTickFrequency()
+            time = (e2 - e1) / cv2.getTickFrequency()
             if time > maxProcessingDelay:
                 maxProcessingDelay = time
             elif time < minProcessingDelay:
                 minProcessingDelay = time
-        
+
         if debug_show_output:
-            cv2.imshow('Filtered image with marker contour', 
-                        contour_marked_image)
-            cv2.waitKey(1) # For some reason image does not show without this!
-            
-        distanceToFrontWall = FRONT_SENSOR.read_data()
+            cv2.imshow('Filtered image with marker contour',
+                       contour_marked_image)
+            cv2.waitKey(1)  # For some reason image does not show without this!
+
+        FRONT_SENSOR.read_data()
         # Steer robot
         # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
-
 
     def find_HSV_colour(self, colourArrayCntr, bgr_image):
         """Find chosen colours in video image using HSV
@@ -142,25 +138,25 @@ class StreamProcessor(threading.Thread):
         Outputs:
         Masked BGR image and its mask from colour detection
         Masked blurred BGR image and its mask from colour detection"""
-    
+
         # Blur the image
         bgr_blur_image = cv2.medianBlur(bgr_image, MED_FILTER_APRTRE_SIZE)
 
         # Convert the image from 'BGR' to HSV colour space
         hsv_image = cv2.cvtColor(bgr_blur_image, cv2.COLOR_BGR2HSV)
-        
+
         # Select HSV colour range boundaries to detect marker
         lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
         upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
         lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
         upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
-    
+
         # Create HSV NumPy arrays from the boundaries
         lower_hsv = np.array(lower_hsv, dtype="uint8")
         upper_hsv = np.array(upper_hsv, dtype="uint8")
         lower_red_lft_hsv = np.array(lower_red_lft_hsv, dtype="uint8")
         upper_red_lft_hsv = np.array(upper_red_lft_hsv, dtype="uint8")
-        
+
         # Find the colours within the specified boundaries and apply the mask
         mask_hsv = cv2.inRange(hsv_image, lower_hsv, upper_hsv)
         if colourArrayCntr == 0:
@@ -172,10 +168,9 @@ class StreamProcessor(threading.Thread):
 
         return output_hsv, mask_hsv
 
-
     def find_marker_contour(self, mask, input_hsv):
         """ Compute the location of the marker contour."""
-        
+
         # Calculate contours
         im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                                     cv2.CHAIN_APPROX_SIMPLE)
@@ -214,34 +209,34 @@ class StreamProcessor(threading.Thread):
             foundY = None
         else:
             contourDetection = True
-    
+
             # Calculate the largest contours' by area circularity value
             cntCircularity = self.contour_circularity(cntWithMinArea)
-    
+
             # Sort contours in order of circularity
             (cntSortedByCirc, cntCircularity) = zip(*sorted(
                 zip(cntWithMinArea, cntCircularity),
                 key=lambda x: x[1],
                 reverse=True))
-    
+
             # Calculate centre of most circular contour
             foundX, foundY = self.contour_centre(cntSortedByCirc[0])
-            
+
             if debug:
                 # Highlight the most circular contour in white
-                cv2.drawContours(input_hsv, cntSortedByCirc[0], -1, (255, 255, 255), 3)
+                cv2.drawContours(input_hsv, cntSortedByCirc[0], -1,
+                                 (255, 255, 255), 3)
 
         return contourDetection, foundX, foundY, input_hsv
-
 
     def contour_circularity(self, cnts):
         """Compute the circularity of the contours in the array
         The lower the value the less circular
         Perfect circle has value of one"""
-    
+
         # Initialize the circularity array
         circularityArray = []
-    
+
         # Calculate circularity for each contour in input array
         for c in cnts:
             AreaContour = cv2.contourArea(c)
@@ -251,18 +246,17 @@ class StreamProcessor(threading.Thread):
                     (math.pow(Perimeter, 2))
             else:
                 circularity = 0
-    
+
             circularityArray.append(circularity)
-    
+
         # return an array of circularity values
         return circularityArray
 
-
     def contour_centre(self, cntr):
         """ Compute the centre of the contour area"""
-        
+
         M = cv2.moments(cntr)
-    
+
         # Prevent division by 0
         if M["m00"] == 0:
             x, y, w, h = cv2.boundingRect(cntr)
@@ -271,15 +265,15 @@ class StreamProcessor(threading.Thread):
         else:
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
-    
+
         # return the x and y co-ordinates of the centre of contours
         return cX, cY
 
-
     # Set the motor speeds from the marker position
-    def SetSpeedFromMarker(self, contourDetection, foundX, distanceToFrontWall):
+    def SetSpeedFromMarker(self, contourDetection, foundX,
+                           distanceToFrontWall):
         """Calulates the speed of the motors."""
-        
+
         if contourDetection:
             if distanceToFrontWall < FRONT_BUFFER_STOP:
                 LOGGER.info('Too close!')
@@ -305,26 +299,29 @@ class StreamProcessor(threading.Thread):
                 driveLeft = speed * (1.0 - direction)
                 driveRight = speed
                 ROBOTMOVE.turn_forward(driveLeft, driveRight)
-                
+
             TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
                 ' Right speed: ' + str(driveRight)
             LOGGER.info(TextStringSpeed)
-            
+
         else:
             LOGGER.info('No marker')
 
 
 # Image capture thread
 class ImageCapture(threading.Thread):
+
     def __init__(self):
         super(ImageCapture, self).__init__()
-        self.start() # The start() method starts a thread by calling the run method.
+        self.start(
+        )  # The start() method starts a thread by calling the run method.
 
     def run(self):
         global camera
         global processor
         LOGGER.info('Start the stream using the video port')
-        camera.capture_sequence(self.TriggerStream(), format='bgr', use_video_port=True)
+        camera.capture_sequence(
+            self.TriggerStream(), format='bgr', use_video_port=True)
         LOGGER.info('Terminating camera processing...')
         processor.terminated = True
         processor.join()  # The join() waits for threads to terminate
@@ -374,7 +371,7 @@ processor = StreamProcessor()
 
 LOGGER.info('Wait ...')
 # Allow the camera time to warm-up
-time.sleep(2) # This is the value/line used in the PiBorg example
+time.sleep(2)  # This is the value/line used in the PiBorg example
 captureThread = ImageCapture()
 
 # Set movement constant values
@@ -401,18 +398,15 @@ MIN_MARKER_CIRCULARITY = 0.5  # Correct value to be decided
 
 # Initialise Ultrasonic Sensors
 FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-                1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
-                GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+    1, None, GPIOLayout.SONAR_FRONT_TX_PIN, GPIOLayout.SONAR_FRONT_RX_PIN, 1)
 FRONT_SENSOR.start()
 
 RIGHT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-                1, None, GPIOLayout.SONAR_RIGHT_TX_PIN,
-                GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
+    1, None, GPIOLayout.SONAR_RIGHT_TX_PIN, GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
 RIGHT_SENSOR.start()
 
 LEFT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-                1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
-                GPIOLayout.SONAR_LEFT_RX_PIN, 1)
+    1, None, GPIOLayout.SONAR_LEFT_TX_PIN, GPIOLayout.SONAR_LEFT_RX_PIN, 1)
 LEFT_SENSOR.start()
 
 
@@ -431,7 +425,6 @@ def main():
     time.sleep(1)
 
     # Initialize photo capture
-    imageNum = 1
 
     # Show commands and status
     LOGGER.info("CTRL^C to terminate program")
@@ -444,7 +437,6 @@ def main():
         time.sleep(1.0)
 
 
-
 if __name__ == "__main__":
     try:
         main()
@@ -454,8 +446,8 @@ if __name__ == "__main__":
         LOGGER.info('Read distance from front sensor ={0:0.2f} cm '.format(
             FRONT_SENSOR.read_data()))
         LOGGER.info("Image processing delays min and max " +
-            format(minProcessingDelay, '.2f') + " " +
-            format(maxProcessingDelay, '.2f') + " sec")
+                    format(minProcessingDelay, '.2f') + " " +
+                    format(maxProcessingDelay, '.2f') + " sec")
         running = False
         captureThread.join()
         processor.terminated = True

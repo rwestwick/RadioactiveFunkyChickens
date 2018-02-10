@@ -73,9 +73,11 @@ def test_motorcontroller(sleep_len=0):
         DMCONTROLLER.stop()
         DMCONTROLLER.rear_right_backward(SpeedSettings.SPEED_MEDIUM)
         time.sleep(sleep_len)
-        DMCONTROLLER.turn_forward(SpeedSettings.SPEED_FASTEST, SpeedSettings.SPEED_MEDIUM)
+        DMCONTROLLER.turn_forward(SpeedSettings.SPEED_FASTEST,
+                                  SpeedSettings.SPEED_MEDIUM)
         time.sleep(sleep_len)
-        DMCONTROLLER.turn_reverse(SpeedSettings.SPEED_FASTEST, SpeedSettings.SPEED_MEDIUM)
+        DMCONTROLLER.turn_reverse(SpeedSettings.SPEED_FASTEST,
+                                  SpeedSettings.SPEED_MEDIUM)
         time.sleep(sleep_len)
 
     except KeyboardInterrupt:

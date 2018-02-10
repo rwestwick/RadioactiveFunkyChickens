@@ -43,14 +43,14 @@ SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
 robotmove = DualMotorController.DualMotorController(
-            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
 
 # Initialise ServoController
 SERVO_CONTROLLER = ServoController.ServoController()
@@ -176,7 +176,7 @@ def main():
                             (NUNCHUK_MID - NUNCHUK_MIN))
                 if speed > SpeedSettings.SPEED_FASTEST:
                     speed = SpeedSettings.SPEED_FASTEST
-                    
+
                 LOGGER.info("Spin left at speed " + str(speed))
 
                 robotmove.spin_left(speed)
@@ -197,7 +197,7 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                    
+
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
                 if lengthY > SpeedSettings.SPEED_FASTEST:
@@ -206,11 +206,11 @@ def main():
                 # Calculate wheel speeds
                 speedLeftWheel = int(lengthY)
                 speedRightWheel = overallSpeed
-                
+
                 LOGGER.info(
                     "Steer left. Left wheel at speed: " + str(speedLeftWheel) +
                     " Right wheel at speed: " + str(speedRightWheel))
-                
+
                 robotmove.turn_forward(speedLeftWheel, speedRightWheel)
                 time.sleep(STICK_DELAY)
 
@@ -229,7 +229,7 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                    
+
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
                 if lengthY > SpeedSettings.SPEED_FASTEST:
@@ -261,7 +261,7 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                  
+
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
                 if lengthY > SpeedSettings.SPEED_FASTEST:
@@ -293,7 +293,7 @@ def main():
                 # Speed is length of hypotenuse from Pythagoras
                 overallSpeed = int(
                     math.sqrt(math.pow(lengthX, 2) + math.pow(lengthY, 2)))
-                    
+
                 if overallSpeed > SpeedSettings.SPEED_FASTEST:
                     overallSpeed = SpeedSettings.SPEED_FASTEST
                 if lengthY > SpeedSettings.SPEED_FASTEST:

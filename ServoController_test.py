@@ -25,7 +25,7 @@ def test_servocontroller(sleep_len=0):
         SERVO_CONTROLLER.set_pan_servo(0)
         MODULE_LOGGER.info("Start Position TILT")
         SERVO_CONTROLLER.set_tilt_servo(0)
-        time.sleep(2*sleep_len)       
+        time.sleep(2 * sleep_len)
 
         MODULE_LOGGER.info("PAN Tests")
         SERVO_CONTROLLER.set_pan_servo(0)
