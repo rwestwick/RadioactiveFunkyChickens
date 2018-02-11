@@ -100,7 +100,10 @@ class StreamProcessor(threading.Thread):
         # View the original image seen by the camera.
         if debug_show_input:
             cv2.imshow('Original BGR', image)
-            cv2.waitKey(1)  # For some reason image does not show without this!
+            # Capture a key press. The function waits argument in ms
+            # for any keyboard event
+            # For some reason image does not show without this!
+            key = cv2.waitKey(1) & 0xFF 
         if debug:
             e1 = cv2.getTickCount()
 
@@ -130,11 +133,12 @@ class StreamProcessor(threading.Thread):
             # for any keyboard event
             # For some reason image does not show without this!
             key = cv2.waitKey(1) & 0xFF 
-            if key == ord("c"):
-                # Loop over integers 0 to 3
-                colourArrayCntr = (colourArrayCntr + 1) % 4
-                LOGGER.info("The colour selector is now " +
-                        ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
+        
+        if key == ord("c"):
+            # Loop over integers 0 to 3
+            colourArrayCntr = (colourArrayCntr + 1) % 4
+            LOGGER.info("The colour selector is now " +
+                    ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
         FRONT_SENSOR.read_data()
         # Steer robot
@@ -357,6 +361,8 @@ LOGGER = logging.getLogger("__name__")
 SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 
 # Initialise servos
+PAN_INTIAL = 0  # Initial pan angle in degrees
+TILT_INTIAL = 20  # Initial tilt angle in degrees
 SERVO_CONTROLLER = ServoController.ServoController()
 
 # Initialise motors
@@ -394,8 +400,6 @@ SIDE_BUFFER = 10  # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
 FORWARD_TIME = 0.05  # Forward time iteration delay time in seconds
 TURN_DELAY = 0.65  # Delay when turning in seconds
-PAN_INTIAL = 20  # Initial pan angle in degrees
-TILT_INTIAL = 20  # Initial tilt angle in degrees
 
 # Set FONT for text on image/video
 FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
@@ -438,8 +442,10 @@ def main():
     LOGGER.info("Start Pan/Tilt servos")
     SERVO_CONTROLLER.start_servos()
     time.sleep(1)
-
-    # Initialize photo capture
+    
+    # Initialise pan/tilt direction
+    SERVO_CONTROLLER.set_pan_servo(PAN_INTIAL)
+    SERVO_CONTROLLER.set_tilt_servo(TILT_INTIAL)
 
     # Show commands and status
     LOGGER.info("CTRL^C to terminate program")
