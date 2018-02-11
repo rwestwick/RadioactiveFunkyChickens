@@ -36,23 +36,24 @@ import picamera.array
 # Global values and their initial values
 global camera
 global processor
+global running
 global debug  # Used for processing time
-global debug_show_input
-global debug_show_output
+global debug_show_input  # Used to show input image
+global debug_show_output  # used to show image output after processing
 global maxProcessingDelay
 global minProcessingDelay
 global colourArrayCntr
 
 running = True
 debug = True
-debug_show_input = False
+debug_show_input = True
 debug_show_output = True
 
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
 colourArrayCntr = 0
-maxProcessingDelay = 0
-minProcessingDelay = 100
+maxProcessingDelay = 0  # Initialsed for delay calculations
+minProcessingDelay = 100  # Initialsed for delay calculations
 
 
 # Image stream processing thread
@@ -66,16 +67,16 @@ class StreamProcessor(threading.Thread):
         self.stream = picamera.array.PiRGBArray(camera)
         self.event = threading.Event()
         self.terminated = False
-        self.start(
-        )  # The start() method starts a thread by calling the run method.
+        # The start() method starts a thread by calling the run method
+        self.start()
         self.begin = 0
 
     def run(self):  # The run() method is the entry point for a thread
         # This method runs in a separate thread
         while not self.terminated:
             # Wait for an image to be written to the stream
-            # The wait() method takes an argument representing the number of
-            # seconds to wait for the event before timing out.
+            # The wait() method takes an argument representing the 
+            # number of seconds to wait for the event before timing out.
             if self.event.wait(1):
                 try:
                     # Read the image and do some processing on it
@@ -124,7 +125,16 @@ class StreamProcessor(threading.Thread):
         if debug_show_output:
             cv2.imshow('Filtered image with marker contour',
                        contour_marked_image)
-            cv2.waitKey(1)  # For some reason image does not show without this!
+        
+            # Capture a key press. The function waits argument in ms
+            # for any keyboard event
+            # For some reason image does not show without this!
+            key = cv2.waitKey(1) & 0xFF 
+            if key == ord("c"):
+                # Loop over integers 0 to 3
+                colourArrayCntr = (colourArrayCntr + 1) % 4
+                LOGGER.info("The colour selector is now " +
+                        ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
 
         FRONT_SENSOR.read_data()
         # Steer robot
@@ -330,6 +340,7 @@ class ImageCapture(threading.Thread):
     # Stream delegation loop
     def TriggerStream(self):
         global running
+        
         while running:
             if processor.event.is_set():
                 time.sleep(0.01)
@@ -337,7 +348,9 @@ class ImageCapture(threading.Thread):
                 yield processor.stream
                 processor.event.set()
 
-# Initialise objects and constants
+####################################
+# Initialise objects and constants #
+####################################
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger("__name__")
@@ -416,6 +429,8 @@ def main():
     Method 1 - First choice
     Method 2 - Emergency backup
     """
+    
+    global running
 
     LOGGER.info("Somewhere Over The Rainbow")
 
@@ -438,6 +453,7 @@ def main():
 
 
 if __name__ == "__main__":
+    
     try:
         main()
     except KeyboardInterrupt:
@@ -448,7 +464,7 @@ if __name__ == "__main__":
         LOGGER.info("Image processing delays min and max " +
                     format(minProcessingDelay, '.2f') + " " +
                     format(maxProcessingDelay, '.2f') + " sec")
-        running = False
+        running = False  # What is the scope of this variable?
         captureThread.join()
         processor.terminated = True
         processor.join()

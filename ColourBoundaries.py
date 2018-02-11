@@ -7,7 +7,7 @@ LOWER_BLUE_HSV = [80, 50, 50]  # Blue = ~180deg to ~260deg
 UPPER_BLUE_HSV = [140, 255, 255]  # Blue
 LOWER_GREEN_HSV = [45, 50, 50]  # Green = ~90deg to ~150deg
 UPPER_GREEN_HSV = [75, 255, 255]  # Green
-LOWER_YELLOW_HSV = [20, 50, 50]  # Yellow = ~40deg to ~90deg
+LOWER_YELLOW_HSV = [15, 50, 50]  # Yellow = ~30deg to ~90deg
 UPPER_YELLOW_HSV = [45, 255, 255]  # Yellow
 LOWER_HSV_ARRAY = [
     LOWER_RED_HSV, LOWER_BLUE_HSV, LOWER_GREEN_HSV, LOWER_YELLOW_HSV
