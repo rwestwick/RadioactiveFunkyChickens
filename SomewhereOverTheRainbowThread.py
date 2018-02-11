@@ -142,7 +142,7 @@ class StreamProcessor(threading.Thread):
 
         FRONT_SENSOR.read_data()
         # Steer robot
-        # self.SetSpeedFromMarker(contourDetection, foundX, distanceToFrontWall)
+        # self.set_speed_from_marker(contourDetection, foundX, distanceToFrontWall)
 
     def find_HSV_colour(self, colourArrayCntr, bgr_image):
         """Find chosen colours in video image using HSV
@@ -284,7 +284,7 @@ class StreamProcessor(threading.Thread):
         return cX, cY
 
     # Set the motor speeds from the marker position
-    def SetSpeedFromMarker(self, contourDetection, foundX,
+    def set_speed_from_marker(self, contourDetection, foundX,
                            distanceToFrontWall):
         """Calulates the speed of the motors."""
 
