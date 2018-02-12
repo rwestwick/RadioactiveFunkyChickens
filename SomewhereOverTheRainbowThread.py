@@ -22,7 +22,7 @@ import math
 import threading
 import SetupConsoleLogger
 import ServoController
-import MotorController
+import DualMotorController
 import SpeedSettings
 import UltrasonicSensorThread
 import ColourBoundaries
@@ -39,7 +39,8 @@ global processor
 global running
 global debug  # Used for processing time
 global debug_show_input  # Used to show input image
-global debug_show_output  # used to show image output after processing
+global debug_show_output  # Used to show image output after processing
+global debug_show_steering  # Used to show steering outputs
 global max_processing_delay
 global min_processing_delay
 global colour_array_cntr
@@ -48,6 +49,7 @@ running = True
 debug = True
 debug_show_input = True
 debug_show_output = True
+debug_show_steering = True
 
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
@@ -140,9 +142,11 @@ class StreamProcessor(threading.Thread):
             LOGGER.info("The colour selector is now " +
                     ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
 
-        FRONT_SENSOR.read_data()
         # Steer robot
-        # self.set_speed_from_marker(contourDetection, foundX, distanceToFrontWall)
+        distance_to_front_wall = FRONT_SENSOR.read_data()
+        self.set_speed_from_marker(contourDetection, 
+                                    foundX, 
+                                    distance_to_front_wall)
 
     def find_HSV_colour(self, colour_array_cntr, bgr_image):
         """Find chosen colours in video image using HSV
@@ -294,29 +298,37 @@ class StreamProcessor(threading.Thread):
                 ROBOTMOVE.stop()
                 driveLeft = 0
                 driveRight = 0
+                speed = 0
             elif distanceToFrontWall < FRONT_BUFFER_WARN:
                 LOGGER.info('Getting closer')
                 speed = SpeedSettings.SPEED_SLOW
-                driveLeft
             else:
                 speed = SpeedSettings.SPEED_FAST
-
+            
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
-            if direction < 0.0:
-                # Turn right
+            
+            if debug_show_steering:
+                TextStringSpeed = ' Distance: ' +  str(int(distanceToFrontWall)) + \
+                                  ' Found X: ' +  str(foundX) + \
+                                  ' Direction: ' + str(direction)
+                LOGGER.info(TextStringSpeed)
+
+            if direction > 0.0:
+                # Turn to robot's right hand side
                 LOGGER.info('Steer Right')
                 driveLeft = speed
-                driveRight = speed * (1.0 + direction)
+                driveRight = speed * (1.0 - direction)
             else:
-                # Turn left
+                # Turn to robot's left hand side
                 LOGGER.info('Steer Left')
-                driveLeft = speed * (1.0 - direction)
+                driveLeft = speed * (1.0 + direction)
                 driveRight = speed
                 ROBOTMOVE.turn_forward(driveLeft, driveRight)
 
-            TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
-                ' Right speed: ' + str(driveRight)
-            LOGGER.info(TextStringSpeed)
+            if debug_show_steering:
+                TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
+                                  ' Right speed: ' + str(driveRight)
+                LOGGER.info(TextStringSpeed)
 
         else:
             LOGGER.info('No marker')
@@ -366,9 +378,17 @@ TILT_INTIAL = 20  # Initial tilt angle in degrees
 SERVO_CONTROLLER = ServoController.ServoController()
 
 # Initialise motors
-ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+    
+ROBOTMOVE.stop()
 
 # Initialise camera
 CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
