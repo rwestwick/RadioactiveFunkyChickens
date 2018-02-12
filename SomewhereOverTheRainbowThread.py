@@ -40,9 +40,9 @@ global running
 global debug  # Used for processing time
 global debug_show_input  # Used to show input image
 global debug_show_output  # used to show image output after processing
-global maxProcessingDelay
-global minProcessingDelay
-global colourArrayCntr
+global max_processing_delay
+global min_processing_delay
+global colour_array_cntr
 
 running = True
 debug = True
@@ -51,9 +51,9 @@ debug_show_output = True
 
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
-colourArrayCntr = 0
-maxProcessingDelay = 0  # Initialsed for delay calculations
-minProcessingDelay = 100  # Initialsed for delay calculations
+colour_array_cntr = 0
+max_processing_delay = 0  # Initialsed for delay calculations
+min_processing_delay = 100  # Initialsed for delay calculations
 
 
 # Image stream processing thread
@@ -81,7 +81,7 @@ class StreamProcessor(threading.Thread):
                 try:
                     # Read the image and do some processing on it
                     self.stream.seek(0)
-                    self.ProcessImage(self.stream.array)
+                    self.process_image(self.stream.array)
                 finally:
                     # Reset the stream and event
                     self.stream.seek(0)
@@ -89,10 +89,10 @@ class StreamProcessor(threading.Thread):
                     self.event.clear()
 
     # Image processing function
-    def ProcessImage(self, image):
-        global colourArrayCntr
-        global maxProcessingDelay
-        global minProcessingDelay
+    def process_image(self, image):
+        global colour_array_cntr
+        global max_processing_delay
+        global min_processing_delay
         global debug
         global debug_show_input
         global debug_show_output
@@ -103,13 +103,13 @@ class StreamProcessor(threading.Thread):
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
-            key = cv2.waitKey(1) & 0xFF 
+            key_one = cv2.waitKey(1) & 0xFF 
         if debug:
             e1 = cv2.getTickCount()
 
         # Find chosen colour in image
         colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(
-            colourArrayCntr, image)
+            colour_array_cntr, image)
 
         # Find location of contour
         contourDetection, foundX, foundY, contour_marked_image = self.find_marker_contour(
@@ -120,10 +120,10 @@ class StreamProcessor(threading.Thread):
         if debug:
             e2 = cv2.getTickCount()
             time = (e2 - e1) / cv2.getTickFrequency()
-            if time > maxProcessingDelay:
-                maxProcessingDelay = time
-            elif time < minProcessingDelay:
-                minProcessingDelay = time
+            if time > max_processing_delay:
+                max_processing_delay = time
+            elif time < min_processing_delay:
+                min_processing_delay = time
 
         if debug_show_output:
             cv2.imshow('Filtered image with marker contour',
@@ -132,22 +132,22 @@ class StreamProcessor(threading.Thread):
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
-            key = cv2.waitKey(1) & 0xFF 
+            key_two = cv2.waitKey(1) & 0xFF 
         
-        if key == ord("c"):
+        if key_one == ord("c") or key_two == ord("c") :
             # Loop over integers 0 to 3
-            colourArrayCntr = (colourArrayCntr + 1) % 4
+            colour_array_cntr = (colour_array_cntr + 1) % 4
             LOGGER.info("The colour selector is now " +
-                    ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
+                    ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
 
         FRONT_SENSOR.read_data()
         # Steer robot
         # self.set_speed_from_marker(contourDetection, foundX, distanceToFrontWall)
 
-    def find_HSV_colour(self, colourArrayCntr, bgr_image):
+    def find_HSV_colour(self, colour_array_cntr, bgr_image):
         """Find chosen colours in video image using HSV
         Inputs:
-        colourArrayCntr - Integer for selection of upper and lower colour bands
+        colour_array_cntr - Integer for selection of upper and lower colour bands
         bgrImage - BGR image from camera
         Outputs:
         Masked BGR image and its mask from colour detection
@@ -160,8 +160,8 @@ class StreamProcessor(threading.Thread):
         hsv_image = cv2.cvtColor(bgr_blur_image, cv2.COLOR_BGR2HSV)
 
         # Select HSV colour range boundaries to detect marker
-        lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colourArrayCntr]
-        upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colourArrayCntr]
+        lower_hsv = ColourBoundaries.LOWER_HSV_ARRAY[colour_array_cntr]
+        upper_hsv = ColourBoundaries.UPPER_HSV_ARRAY[colour_array_cntr]
         lower_red_lft_hsv = ColourBoundaries.LOWER_RED_LFT_HSV
         upper_red_lft_hsv = ColourBoundaries.UPPER_RED_LFT_HSV
 
@@ -173,7 +173,7 @@ class StreamProcessor(threading.Thread):
 
         # Find the colours within the specified boundaries and apply the mask
         mask_hsv = cv2.inRange(hsv_image, lower_hsv, upper_hsv)
-        if colourArrayCntr == 0:
+        if colour_array_cntr == 0:
             mask_hsv = mask_hsv + cv2.inRange(hsv_image, lower_red_lft_hsv,
                                               upper_red_lft_hsv)
 
@@ -335,14 +335,14 @@ class ImageCapture(threading.Thread):
         global processor
         LOGGER.info('Start the stream using the video port')
         camera.capture_sequence(
-            self.TriggerStream(), format='bgr', use_video_port=True)
+            self.trigger_stream(), format='bgr', use_video_port=True)
         LOGGER.info('Terminating camera processing...')
         processor.terminated = True
         processor.join()  # The join() waits for threads to terminate
         LOGGER.info('Processing terminated.')
 
     # Stream delegation loop
-    def TriggerStream(self):
+    def trigger_stream(self):
         global running
         
         while running:
@@ -391,7 +391,7 @@ processor = StreamProcessor()
 LOGGER.info('Wait ...')
 # Allow the camera time to warm-up
 time.sleep(2)  # This is the value/line used in the PiBorg example
-captureThread = ImageCapture()
+capture_thread = ImageCapture()
 
 # Set movement constant values
 FRONT_BUFFER_WARN = 35  # Shortest distance to front (cm)
@@ -449,8 +449,9 @@ def main():
 
     # Show commands and status
     LOGGER.info("CTRL^C to terminate program")
+    LOGGER.info("Press 'c' to change colour")
     LOGGER.info("The colour selector starts as " +
-                ColourBoundaries.COLOUR_NAME_ARRAY[colourArrayCntr])
+                ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
 
     # Loop indefinitely until we are no longer running
     while running:
@@ -468,10 +469,10 @@ if __name__ == "__main__":
         LOGGER.info('Read distance from front sensor ={0:0.2f} cm '.format(
             FRONT_SENSOR.read_data()))
         LOGGER.info("Image processing delays min and max " +
-                    format(minProcessingDelay, '.2f') + " " +
-                    format(maxProcessingDelay, '.2f') + " sec")
+                    format(min_processing_delay, '.2f') + " " +
+                    format(max_processing_delay, '.2f') + " sec")
         running = False  # What is the scope of this variable?
-        captureThread.join()
+        capture_thread.join()
         processor.terminated = True
         processor.join()
         del camera  # Is this needed?
