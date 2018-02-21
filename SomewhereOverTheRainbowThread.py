@@ -305,6 +305,8 @@ class StreamProcessor(threading.Thread):
             else:
                 speed = SpeedSettings.SPEED_FAST
             
+            # Calculate direction - Value between -1.0 to +1.0
+            # -1.0 is far left, +1.0 is far right, 0.0 is centre
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
             
             if debug_show_steering:
@@ -317,13 +319,18 @@ class StreamProcessor(threading.Thread):
                 # Turn to robot's right hand side
                 LOGGER.info('Steer Right')
                 driveLeft = speed
-                driveRight = speed * (1.0 - direction)
+                driveRight = int(speed * (1.0 - (direction * STEERING_RATE)))
+                driveRight = sorted([MIN_SPEED, driveRight, MAX_SPEED])[1]
             else:
                 # Turn to robot's left hand side
                 LOGGER.info('Steer Left')
-                driveLeft = speed * (1.0 + direction)
+                driveLeft = int(speed * (1.0 + (direction * STEERING_RATE)))
+                driveLeft = sorted([MIN_SPEED, driveLeft, MAX_SPEED])[1]
                 driveRight = speed
-                ROBOTMOVE.turn_forward(driveLeft, driveRight)
+            
+            # If we need faster turning we may have to change to
+            # 
+            ROBOTMOVE.turn_forward(driveLeft, driveRight)
 
             if debug_show_steering:
                 TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
@@ -378,6 +385,10 @@ TILT_INTIAL = 20  # Initial tilt angle in degrees
 SERVO_CONTROLLER = ServoController.ServoController()
 
 # Initialise motors
+STEERING_RATE = 2.0  # Changes the speed at which it turns towards ball
+MAX_SPEED = SpeedSettings.SPEED_FAST
+MIN_SPEED = 0
+
 ROBOTMOVE = DualMotorController.DualMotorController(
     GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
     GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
