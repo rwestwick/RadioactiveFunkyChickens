@@ -1,0 +1,504 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L GND #PWR01
+U 1 1 5A91CFF7
+P 5350 7200
+F 0 "#PWR01" H 5350 6950 50  0001 C CNN
+F 1 "GND" H 5350 7050 50  0000 C CNN
+F 2 "" H 5350 7200 50  0001 C CNN
+F 3 "" H 5350 7200 50  0001 C CNN
+	1    5350 7200
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR02
+U 1 1 5A91D00B
+P 5650 6950
+F 0 "#PWR02" H 5650 6800 50  0001 C CNN
+F 1 "+5V" H 5650 7090 50  0000 C CNN
+F 2 "" H 5650 6950 50  0001 C CNN
+F 3 "" H 5650 6950 50  0001 C CNN
+	1    5650 6950
+	1    0    0    -1  
+$EndComp
+$Comp
+L PWR_FLAG #FLG03
+U 1 1 5A91D01F
+P 5350 6950
+F 0 "#FLG03" H 5350 7025 50  0001 C CNN
+F 1 "PWR_FLAG" H 5350 7100 50  0000 C CNN
+F 2 "" H 5350 6950 50  0001 C CNN
+F 3 "" H 5350 6950 50  0001 C CNN
+	1    5350 6950
+	1    0    0    -1  
+$EndComp
+$Comp
+L PWR_FLAG #FLG04
+U 1 1 5A91D033
+P 5650 7200
+F 0 "#FLG04" H 5650 7275 50  0001 C CNN
+F 1 "PWR_FLAG" H 5650 7350 50  0000 C CNN
+F 2 "" H 5650 7200 50  0001 C CNN
+F 3 "" H 5650 7200 50  0001 C CNN
+	1    5650 7200
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5350 6950 5350 7200
+Wire Wire Line
+	5650 7200 5650 6950
+$Comp
+L Screw_Terminal_1x02 J10
+U 1 1 5A91D070
+P 7800 1600
+F 0 "J10" H 7800 1850 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 7650 1600 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 7800 1375 50  0001 C CNN
+F 3 "" H 7775 1600 50  0001 C CNN
+	1    7800 1600
+	0    1    1    0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J12
+U 1 1 5A91D167
+P 10000 1600
+F 0 "J12" H 10000 1850 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 9850 1600 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 10000 1375 50  0001 C CNN
+F 3 "" H 9975 1600 50  0001 C CNN
+	1    10000 1600
+	0    1    1    0   
+$EndComp
+Text Notes 9700 1350 0    60   ~ 0
+Servo
+Text Notes 2750 1300 0    60   ~ 0
+Proximity
+Text Notes 7200 1300 0    60   ~ 0
+Power
+$Comp
+L +5V #PWR05
+U 1 1 5A91D395
+P 6350 1850
+F 0 "#PWR05" H 6350 1700 50  0001 C CNN
+F 1 "+5V" H 6350 1990 50  0000 C CNN
+F 2 "" H 6350 1850 50  0001 C CNN
+F 3 "" H 6350 1850 50  0001 C CNN
+	1    6350 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR06
+U 1 1 5A91D3C2
+P 7900 2450
+F 0 "#PWR06" H 7900 2200 50  0001 C CNN
+F 1 "GND" H 7900 2300 50  0000 C CNN
+F 2 "" H 7900 2450 50  0001 C CNN
+F 3 "" H 7900 2450 50  0001 C CNN
+	1    7900 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7900 1800 7900 2450
+$Comp
+L CONN_01X03 J13
+U 1 1 5A91D4BE
+P 10650 3950
+F 0 "J13" H 10650 4150 50  0000 C CNN
+F 1 "CONN_01X03" V 10750 3950 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 10650 3950 50  0001 C CNN
+F 3 "" H 10650 3950 50  0001 C CNN
+	1    10650 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L CONN_01X03 J11
+U 1 1 5A91D61C
+P 9800 3950
+F 0 "J11" H 9800 4150 50  0000 C CNN
+F 1 "CONN_01X03" V 9900 3950 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 9800 3950 50  0001 C CNN
+F 3 "" H 9800 3950 50  0001 C CNN
+	1    9800 3950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9900 1800 9900 3750
+Wire Wire Line
+	10750 2600 10750 3750
+$Comp
+L GND #PWR07
+U 1 1 5A91D972
+P 9350 3850
+F 0 "#PWR07" H 9350 3600 50  0001 C CNN
+F 1 "GND" H 9350 3700 50  0000 C CNN
+F 2 "" H 9350 3850 50  0001 C CNN
+F 3 "" H 9350 3850 50  0001 C CNN
+	1    9350 3850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9350 3650 10550 3650
+Wire Wire Line
+	10550 3650 10550 3750
+Wire Wire Line
+	9700 3750 9700 3650
+$Comp
+L +5V #PWR08
+U 1 1 5A91DA19
+P 9350 3350
+F 0 "#PWR08" H 9350 3200 50  0001 C CNN
+F 1 "+5V" H 9350 3490 50  0000 C CNN
+F 2 "" H 9350 3350 50  0001 C CNN
+F 3 "" H 9350 3350 50  0001 C CNN
+	1    9350 3350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10650 3500 10650 3750
+Wire Wire Line
+	9800 3750 9800 3500
+Text Notes 9600 4400 0    60   ~ 0
+Horizontal\nServo
+Text Notes 10550 4400 0    60   ~ 0
+Vertical\nServo
+$Comp
+L Screw_Terminal_1x02 J2
+U 1 1 5A91E073
+P 1650 4100
+F 0 "J2" H 1650 4350 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 1500 4100 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 1650 3875 50  0001 C CNN
+F 3 "" H 1625 4100 50  0001 C CNN
+	1    1650 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J8
+U 1 1 5A91E232
+P 4350 4100
+F 0 "J8" H 4350 4350 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 4200 4100 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 4350 3875 50  0001 C CNN
+F 3 "" H 4325 4100 50  0001 C CNN
+	1    4350 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J4
+U 1 1 5A91E2CD
+P 2550 4100
+F 0 "J4" H 2550 4350 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 2400 4100 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 2550 3875 50  0001 C CNN
+F 3 "" H 2525 4100 50  0001 C CNN
+	1    2550 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J6
+U 1 1 5A91E52D
+P 3450 4100
+F 0 "J6" H 3450 4350 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 3300 4100 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 3450 3875 50  0001 C CNN
+F 3 "" H 3425 4100 50  0001 C CNN
+	1    3450 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J9
+U 1 1 5A91E5BC
+P 6900 1600
+F 0 "J9" H 6900 1850 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 6750 1600 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 6900 1375 50  0001 C CNN
+F 3 "" H 6875 1600 50  0001 C CNN
+	1    6900 1600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6350 1950 7700 1950
+Connection ~ 6800 1950
+Wire Wire Line
+	7700 1950 7700 1800
+Connection ~ 7900 2300
+Wire Wire Line
+	7000 1800 7000 2300
+Wire Wire Line
+	7000 2300 7900 2300
+Wire Wire Line
+	6350 1950 6350 1850
+Wire Wire Line
+	6800 1800 6800 1950
+Wire Wire Line
+	9350 3350 9350 3500
+Wire Wire Line
+	9350 3500 10650 3500
+Connection ~ 9800 3500
+Connection ~ 9700 3650
+Wire Wire Line
+	9350 3650 9350 3850
+Wire Wire Line
+	10100 2600 10750 2600
+Wire Wire Line
+	10100 2600 10100 1800
+$Comp
+L Screw_Terminal_1x02 J1
+U 1 1 5A91FCA2
+P 1650 1650
+F 0 "J1" H 1650 1900 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 1500 1650 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 1650 1425 50  0001 C CNN
+F 3 "" H 1625 1650 50  0001 C CNN
+	1    1650 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J3
+U 1 1 5A91FD01
+P 2550 1650
+F 0 "J3" H 2550 1900 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 2400 1650 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 2550 1425 50  0001 C CNN
+F 3 "" H 2525 1650 50  0001 C CNN
+	1    2550 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J5
+U 1 1 5A91FD6A
+P 3450 1650
+F 0 "J5" H 3450 1900 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 3300 1650 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 3450 1425 50  0001 C CNN
+F 3 "" H 3425 1650 50  0001 C CNN
+	1    3450 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J7
+U 1 1 5A91FDD1
+P 4350 1650
+F 0 "J7" H 4350 1900 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 4200 1650 50  0000 C TNN
+F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 4350 1425 50  0001 C CNN
+F 3 "" H 4325 1650 50  0001 C CNN
+	1    4350 1650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4450 1850 4450 3900
+Wire Wire Line
+	3550 1850 3550 3900
+Wire Wire Line
+	2650 1850 2650 3900
+$Comp
+L R R9
+U 1 1 5A92117B
+P 4250 2800
+F 0 "R9" V 4330 2800 50  0000 C CNN
+F 1 "1k" V 4250 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 4180 2800 50  0001 C CNN
+F 3 "" H 4250 2800 50  0001 C CNN
+	1    4250 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R7
+U 1 1 5A92122C
+P 3350 2800
+F 0 "R7" V 3430 2800 50  0000 C CNN
+F 1 "1k" V 3350 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 3280 2800 50  0001 C CNN
+F 3 "" H 3350 2800 50  0001 C CNN
+	1    3350 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R5
+U 1 1 5A921296
+P 2450 2800
+F 0 "R5" V 2530 2800 50  0000 C CNN
+F 1 "1k" V 2450 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 2380 2800 50  0001 C CNN
+F 3 "" H 2450 2800 50  0001 C CNN
+	1    2450 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4250 1850 4250 2650
+Wire Wire Line
+	4250 2950 4250 3900
+Wire Wire Line
+	3350 1850 3350 2650
+Wire Wire Line
+	3350 2950 3350 3900
+Wire Wire Line
+	2450 3900 2450 2950
+Wire Wire Line
+	2450 2650 2450 1850
+$Comp
+L R R8
+U 1 1 5A92154D
+P 4000 2800
+F 0 "R8" V 4080 2800 50  0000 C CNN
+F 1 "2k2" V 4000 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 3930 2800 50  0001 C CNN
+F 3 "" H 4000 2800 50  0001 C CNN
+	1    4000 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R6
+U 1 1 5A921623
+P 3100 2800
+F 0 "R6" V 3180 2800 50  0000 C CNN
+F 1 "2k2" V 3100 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 3030 2800 50  0001 C CNN
+F 3 "" H 3100 2800 50  0001 C CNN
+	1    3100 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R4
+U 1 1 5A921697
+P 2150 2800
+F 0 "R4" V 2230 2800 50  0000 C CNN
+F 1 "2k2" V 2150 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 2080 2800 50  0001 C CNN
+F 3 "" H 2150 2800 50  0001 C CNN
+	1    2150 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 2950 4000 3350
+Wire Wire Line
+	4000 3350 4250 3350
+Connection ~ 4250 3350
+Wire Wire Line
+	3100 2950 3100 3350
+Wire Wire Line
+	3100 3350 3350 3350
+Connection ~ 3350 3350
+Wire Wire Line
+	2150 2950 2150 3350
+Wire Wire Line
+	2150 3350 2450 3350
+Connection ~ 2450 3350
+$Comp
+L GND #PWR09
+U 1 1 5A921C6F
+P 4800 2750
+F 0 "#PWR09" H 4800 2500 50  0001 C CNN
+F 1 "GND" H 4800 2600 50  0000 C CNN
+F 2 "" H 4800 2750 50  0001 C CNN
+F 3 "" H 4800 2750 50  0001 C CNN
+	1    4800 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4800 2400 4800 2750
+Wire Wire Line
+	1350 2400 4800 2400
+Wire Wire Line
+	4000 2400 4000 2650
+Wire Wire Line
+	3100 2400 3100 2650
+Connection ~ 4000 2400
+Wire Wire Line
+	2150 2400 2150 2650
+Connection ~ 3100 2400
+$Comp
+L R R3
+U 1 1 5A922293
+P 1750 2800
+F 0 "R3" V 1830 2800 50  0000 C CNN
+F 1 "2k2" V 1750 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 1680 2800 50  0001 C CNN
+F 3 "" H 1750 2800 50  0001 C CNN
+	1    1750 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R2
+U 1 1 5A922315
+P 1550 2800
+F 0 "R2" V 1630 2800 50  0000 C CNN
+F 1 "1k" V 1550 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 1480 2800 50  0001 C CNN
+F 3 "" H 1550 2800 50  0001 C CNN
+	1    1550 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R1
+U 1 1 5A92239A
+P 1350 2800
+F 0 "R1" V 1430 2800 50  0000 C CNN
+F 1 "1k" V 1350 2800 50  0000 C CNN
+F 2 "Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal" V 1280 2800 50  0001 C CNN
+F 3 "" H 1350 2800 50  0001 C CNN
+	1    1350 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 2650 1350 2400
+Connection ~ 2150 2400
+Wire Wire Line
+	1550 1850 1550 2650
+Wire Wire Line
+	1750 1850 1750 2650
+Wire Wire Line
+	1550 2950 1550 3900
+Wire Wire Line
+	1750 2950 1750 3900
+Wire Wire Line
+	1350 3350 1750 3350
+Connection ~ 1550 3350
+Connection ~ 1750 3350
+Wire Wire Line
+	1350 2950 1350 3350
+$EndSCHEMATC
