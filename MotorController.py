@@ -17,7 +17,7 @@ class MotorController(object):
     """
     Provides ability to control the motors on the robot.
     """
-    START_FREQ = 50
+    START_FREQ = 5000
 
     def __init__(self, left_forward, left_backward, right_forward,
                  right_backward):
