@@ -142,11 +142,15 @@ class StreamProcessor(threading.Thread):
             LOGGER.info("The colour selector is now " +
                     ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
 
-        # Steer robot
-        distance_to_front_wall = FRONT_SENSOR.read_data()
-        self.set_speed_from_marker(contourDetection, 
-                                    foundX, 
-                                    distance_to_front_wall)
+        
+        if contourDetection == True:
+            # Steer robot
+            distance_to_front_wall = FRONT_SENSOR.read_data()
+            self.set_speed_from_marker(contourDetection, 
+                                        foundX, 
+                                        distance_to_front_wall)
+        else:
+            self.spin_to_find_colour()
 
     def find_HSV_colour(self, colour_array_cntr, bgr_image):
         """Find chosen colours in video image using HSV
@@ -329,7 +333,7 @@ class StreamProcessor(threading.Thread):
                 driveRight = speed
             
             # If we need faster turning we may have to change to
-            # 
+            # spin_left or spin_right
             ROBOTMOVE.turn_forward(driveLeft, driveRight)
 
             if debug_show_steering:
@@ -339,6 +343,14 @@ class StreamProcessor(threading.Thread):
 
         else:
             LOGGER.info('No marker')
+
+    def spin_to_find_colour(self):
+        """Spin right until marker found."""
+        
+        ROBOTMOVE.spin_right(SpeedSettings.SPEED_FAST)
+        LOGGER.info('Spin right to find marker')
+        time.sleep(SPIN_TIME)
+        ROBOTMOVE.stop()
 
 
 # Image capture thread
@@ -385,7 +397,7 @@ TILT_INTIAL = 20  # Initial tilt angle in degrees
 SERVO_CONTROLLER = ServoController.ServoController()
 
 # Initialise motors
-STEERING_RATE = 2.0  # Changes the speed at which it turns towards ball
+STEERING_RATE = 4.0  # Changes the speed at which it turns towards ball
 MAX_SPEED = SpeedSettings.SPEED_FAST
 MIN_SPEED = 0
 
@@ -431,6 +443,7 @@ SIDE_BUFFER = 10  # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
 FORWARD_TIME = 0.05  # Forward time iteration delay time in seconds
 TURN_DELAY = 0.65  # Delay when turning in seconds
+SPIN_TIME = 1.0  # Spin time in seconds
 
 # Set FONT for text on image/video
 FONT = cv2.FONT_HERSHEY_COMPLEX_SMALL
