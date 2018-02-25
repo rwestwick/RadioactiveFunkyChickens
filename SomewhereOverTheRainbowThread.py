@@ -41,15 +41,21 @@ global debug  # Used for processing time
 global debug_show_input  # Used to show input image
 global debug_show_output  # Used to show image output after processing
 global debug_show_steering  # Used to show steering outputs
+global debug_show_tilt  # Used to show stilt value
 global max_processing_delay
 global min_processing_delay
 global colour_array_cntr
+global pan_angle
+global tilt_angle
 
 running = True
 debug = True
 debug_show_input = True
 debug_show_output = True
 debug_show_steering = True
+debug_show_tilt = True
+pan_angle = 0  # Need to set for to be a global
+tilt_angle = 0  # Need to set for to be a global
 
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
@@ -98,6 +104,7 @@ class StreamProcessor(threading.Thread):
         global debug
         global debug_show_input
         global debug_show_output
+        global tilt_angle
 
         # View the original image seen by the camera.
         if debug_show_input:
@@ -144,6 +151,9 @@ class StreamProcessor(threading.Thread):
 
         
         if contourDetection == True:
+            # Adjust tilt of Pi Camera
+            self.set_camera_tilt_from_marker(foundY)
+            
             # Steer robot
             distance_to_front_wall = FRONT_SENSOR.read_data()
             self.set_speed_from_marker(contourDetection, 
@@ -291,12 +301,35 @@ class StreamProcessor(threading.Thread):
         # return the x and y co-ordinates of the centre of contours
         return cX, cY
 
+    # Set tilt ange of the Pi Camera
+    def set_camera_tilt_from_marker(self, foundY):
+        """Calculates the angle of the camera tilt."""
+        global tilt_angle
+        
+        # contourDetection not part of this function yet
+        
+        #  Up/down direction - Value between -1.0 to +1.0
+        # -1.0 is top, +1.0 is bottom, 0.0 is centre
+        camera_direction = (foundY - IMAGE_CENTRE_y) / IMAGE_CENTRE_y
+        
+        if camera_direction < -0.5:
+            tilt_angle = tilt_angle + TILT_CHANGE
+        elif camera_direction > 0.5:
+            tilt_angle = tilt_angle - TILT_CHANGE
+        tilt_angle = sorted([MIN_TILT, tilt_angle, MAX_TILT])[1]
+        SERVO_CONTROLLER.set_tilt_servo(tilt_angle)
+        
+        if debug_show_tilt:
+            TextStringSpeed = 'Found Y: ' +  str(foundY) + \
+                              ' Tilt angle: ' + str(tilt_angle)
+            LOGGER.info(TextStringSpeed)
+        
     # Set the motor speeds from the marker position
     def set_speed_from_marker(self, contourDetection, foundX,
                            distanceToFrontWall):
         """Calulates the speed of the motors."""
 
-        if contourDetection:
+        if contourDetection:  # This extra may not be needed now
             if distanceToFrontWall < FRONT_BUFFER_STOP:
                 LOGGER.info('Too close!')
                 ROBOTMOVE.stop()
@@ -309,12 +342,12 @@ class StreamProcessor(threading.Thread):
             else:
                 speed = SpeedSettings.SPEED_FAST
             
-            # Calculate direction - Value between -1.0 to +1.0
+            #  Left/right direction - Value between -1.0 to +1.0
             # -1.0 is far left, +1.0 is far right, 0.0 is centre
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
             
             if debug_show_steering:
-                TextStringSpeed = ' Distance: ' +  str(int(distanceToFrontWall)) + \
+                TextStringSpeed = 'Distance: ' +  str(int(distanceToFrontWall)) + \
                                   ' Found X: ' +  str(foundX) + \
                                   ' Direction: ' + str(direction)
                 LOGGER.info(TextStringSpeed)
@@ -394,6 +427,9 @@ SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 # Initialise servos
 PAN_INTIAL = 0  # Initial pan angle in degrees
 TILT_INTIAL = 20  # Initial tilt angle in degrees
+TILT_CHANGE = 2  # Change in tilt angle in degrees to keep marker centred
+MIN_TILT = -80  # Minimum tilt angle in degrees
+MAX_TILT = 80  # Maximum tilt angle in degrees
 SERVO_CONTROLLER = ServoController.ServoController()
 
 # Initialise motors
@@ -479,6 +515,8 @@ def main():
     """
     
     global running
+    global pan_angle
+    global tilt_angle
 
     LOGGER.info("Somewhere Over The Rainbow")
 
@@ -488,8 +526,10 @@ def main():
     time.sleep(1)
     
     # Initialise pan/tilt direction
-    SERVO_CONTROLLER.set_pan_servo(PAN_INTIAL)
-    SERVO_CONTROLLER.set_tilt_servo(TILT_INTIAL)
+    pan_angle = PAN_INTIAL
+    tilt_angle = TILT_INTIAL
+    SERVO_CONTROLLER.set_pan_servo(pan_angle)
+    SERVO_CONTROLLER.set_tilt_servo(tilt_angle)
 
     # Show commands and status
     LOGGER.info("CTRL^C to terminate program")
