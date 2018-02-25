@@ -12,6 +12,7 @@ import UltrasonicSensor
 import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
+import SpeedSettings
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -39,14 +40,14 @@ ROBOTMOVE = DualMotorController.DualMotorController(
 
 def turn_left(delay):
     LOGGER.info("Left Turn")
-    ROBOTMOVE.spin_left(MotorController.SPEED_MEDIUM)
+    ROBOTMOVE.spin_left(SpeedSettings.SPEED_MEDIUM)
     time.sleep(delay)
     ROBOTMOVE.stop()
 
 
 def turn_right(delay):
     LOGGER.info("Right Turn")
-    ROBOTMOVE.spin_right(MotorController.SPEED_MEDIUM)
+    ROBOTMOVE.spin_right(SpeedSettings.SPEED_MEDIUM)
     time.sleep(delay)
     ROBOTMOVE.stop()
 
@@ -59,8 +60,8 @@ def follow_wall(side_buffer, ultrasonic_sensor_left, ultrasonic_sensor_right,
 
     # Track first right wall round bend
     while True:
-        forward_speed = MotorController.SPEED_SLOW
-        turn_speed = MotorController.SPEED_FASTEST
+        forward_speed = SpeedSettings.SPEED_SLOW
+        turn_speed = SpeedSettings.SPEED_FASTEST
 
         # Take measurements
         if ultrasonic_sensor_left is not None:
@@ -86,7 +87,7 @@ def follow_wall(side_buffer, ultrasonic_sensor_left, ultrasonic_sensor_right,
 
         if distance_stop < FRONT_BUFFER_WARN:
             LOGGER.info("Slowing down")
-            forward_speed = MotorController.SPEED_VERYVERYSLOW
+            forward_speed = SpeedSettings.SPEED_VERYVERYSLOW
 
         if ultrasonic_sensor_left is not None:
             # Decide which way to steer
