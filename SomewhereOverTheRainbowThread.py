@@ -47,6 +47,7 @@ global min_processing_delay
 global colour_array_cntr
 global pan_angle
 global tilt_angle
+global reached_marker
 
 running = True
 debug = True
@@ -56,6 +57,7 @@ debug_show_steering = True
 debug_show_tilt = True
 pan_angle = 0  # Need to set for to be a global
 tilt_angle = 0  # Need to set for to be a global
+reached_marker = False
 
 # Set initial colour from COLOUR_NAME_ARRAY array position -
 # 'Red', 'Blue', 'Green', 'Yellow'
@@ -105,6 +107,7 @@ class StreamProcessor(threading.Thread):
         global debug_show_input
         global debug_show_output
         global tilt_angle
+        global reached_marker
 
         # View the original image seen by the camera.
         if debug_show_input:
@@ -156,9 +159,14 @@ class StreamProcessor(threading.Thread):
             
             # Steer robot
             distance_to_front_wall = FRONT_SENSOR.read_data()
-            self.set_speed_from_marker(contourDetection, 
-                                        foundX, 
-                                        distance_to_front_wall)
+            if reached_marker == False:
+                self.set_speed_from_marker(contourDetection, 
+                                           foundX, 
+                                           distance_to_front_wall)
+            else:
+                self.set_speed_to_centre(contourDetection, 
+                                         foundX, 
+                                         distance_to_front_wall)
         else:
             self.spin_to_find_colour()
 
@@ -327,7 +335,8 @@ class StreamProcessor(threading.Thread):
     # Set the motor speeds from the marker position
     def set_speed_from_marker(self, contourDetection, foundX,
                            distanceToFrontWall):
-        """Calulates the speed of the motors."""
+        """Calulates the speed of the motors to marker."""
+        global reached_marker
 
         if contourDetection:  # This extra may not be needed now
             if distanceToFrontWall < FRONT_BUFFER_STOP:
@@ -336,6 +345,7 @@ class StreamProcessor(threading.Thread):
                 driveLeft = 0
                 driveRight = 0
                 speed = 0
+                reached_marker = True
             elif distanceToFrontWall < FRONT_BUFFER_WARN:
                 LOGGER.info('Getting closer')
                 speed = SpeedSettings.SPEED_SLOW
@@ -376,6 +386,66 @@ class StreamProcessor(threading.Thread):
 
         else:
             LOGGER.info('No marker')
+
+    def set_speed_to_centre(self, contourDetection, foundX,
+                           distanceToFrontWall):
+        """Calulates the speed of the motors to centre."""
+        global reached_marker
+        global colour_array_cntr
+
+        if contourDetection:  # This extra may not be needed now
+            if distanceToFrontWall > CENTRE_BUFFER_STOP:
+                LOGGER.info('Stopping at centre!')
+                ROBOTMOVE.stop()
+                driveLeft = 0
+                driveRight = 0
+                speed = 0
+                reached_marker = False
+                
+                # Move to next colour
+                colour_array_cntr = (colour_array_cntr + 1) % 4
+                LOGGER.info("The colour selector is now " +
+                        ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
+            elif distanceToFrontWall > CENTRE_BUFFER_WARN:
+                speed = SpeedSettings.SPEED_SLOW
+            else:
+                speed = SpeedSettings.SPEED_FAST
+            
+            #  Left/right direction - Value between -1.0 to +1.0
+            # -1.0 is far left, +1.0 is far right, 0.0 is centre
+            direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
+            
+            if debug_show_steering:
+                TextStringSpeed = 'Distance: ' +  str(int(distanceToFrontWall)) + \
+                                  ' Found X: ' +  str(foundX) + \
+                                  ' Direction: ' + str(direction)
+                LOGGER.info(TextStringSpeed)
+
+            if direction > 0.0:
+                # Turn to robot's rear left
+                LOGGER.info('Steer reverse left')
+                driveLeft = int(speed * (1.0 - (direction * STEERING_RATE)))
+                driveLeft = sorted([MIN_SPEED, driveLeft, MAX_SPEED])[1]
+                driveRight = speed
+            else:
+                # Turn to robot's right right
+                LOGGER.info('Steer reverse right')
+                driveLeft = speed
+                driveRight = int(speed * (1.0 + (direction * STEERING_RATE)))
+                driveRight = sorted([MIN_SPEED, driveRight, MAX_SPEED])[1]
+            
+            # If we need faster turning we may have to change to
+            # spin_left or spin_right
+            ROBOTMOVE.turn_reverse(driveLeft, driveRight)
+
+            if debug_show_steering:
+                TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
+                                  ' Right speed: ' + str(driveRight)
+                LOGGER.info(TextStringSpeed)
+
+        else:
+            LOGGER.info('No marker')
+
 
     def spin_to_find_colour(self):
         """Spin right until marker found."""
@@ -473,8 +543,11 @@ time.sleep(2)  # This is the value/line used in the PiBorg example
 capture_thread = ImageCapture()
 
 # Set movement constant values
-FRONT_BUFFER_WARN = 35  # Shortest distance to front (cm)
-FRONT_BUFFER_STOP = 20  # Shortest distance to front (cm)
+FRONT_BUFFER_WARN = 35  # Distance to corner for when to slow (cm)
+FRONT_BUFFER_STOP = 20  # Shortest distance to corner (cm)
+CENTRE_BUFFER_WARN =  65 # Distance from corner for when to slow (cm) 
+CENTRE_BUFFER_STOP =  80 # Shortest distance from corner (cm)
+                         # ~86.2 cm from corner if perfect centre
 SIDE_BUFFER = 10  # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
 FORWARD_TIME = 0.05  # Forward time iteration delay time in seconds
