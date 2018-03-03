@@ -168,6 +168,9 @@ class StreamProcessor(threading.Thread):
                                          foundX, 
                                          distance_to_front_wall)
         else:
+            LOGGER.info("Spin right to find " + 
+                    ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr] +
+                    " marker.")
             self.spin_to_find_colour()
 
     def find_HSV_colour(self, colour_array_cntr, bgr_image):
@@ -337,17 +340,18 @@ class StreamProcessor(threading.Thread):
                            distanceToFrontWall):
         """Calulates the speed of the motors to marker."""
         global reached_marker
+        global colour_array_cntr
 
         if contourDetection:  # This extra may not be needed now
             if distanceToFrontWall < FRONT_BUFFER_STOP:
-                LOGGER.info('Too close!')
+                LOGGER.info('Too close to wall!')
                 ROBOTMOVE.stop()
                 driveLeft = 0
                 driveRight = 0
                 speed = 0
                 reached_marker = True
             elif distanceToFrontWall < FRONT_BUFFER_WARN:
-                LOGGER.info('Getting closer')
+                LOGGER.info('Getting closer to wall')
                 speed = SpeedSettings.SPEED_SLOW
             else:
                 speed = SpeedSettings.SPEED_FAST
@@ -357,20 +361,21 @@ class StreamProcessor(threading.Thread):
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
             
             if debug_show_steering:
-                TextStringSpeed = 'Distance: ' +  str(int(distanceToFrontWall)) + \
-                                  ' Found X: ' +  str(foundX) + \
-                                  ' Direction: ' + str(direction)
-                LOGGER.info(TextStringSpeed)
+                LOGGER.info("Distance to front wall: " +  str(int(distanceToFrontWall)))
+                LOGGER.info("Found " + 
+                            ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr] + 
+                            " marker. X: " +  str(foundX) + 
+                            " direction: " + format(direction, '.2f'))
 
             if direction > 0.0:
                 # Turn to robot's right hand side
-                LOGGER.info('Steer Right')
+                LOGGER.info('Forward steer right')
                 driveLeft = speed
                 driveRight = int(speed * (1.0 - (direction * STEERING_RATE)))
                 driveRight = sorted([MIN_SPEED, driveRight, MAX_SPEED])[1]
             else:
                 # Turn to robot's left hand side
-                LOGGER.info('Steer Left')
+                LOGGER.info('Forward steer left')
                 driveLeft = int(speed * (1.0 + (direction * STEERING_RATE)))
                 driveLeft = sorted([MIN_SPEED, driveLeft, MAX_SPEED])[1]
                 driveRight = speed
@@ -380,9 +385,8 @@ class StreamProcessor(threading.Thread):
             ROBOTMOVE.turn_forward(driveLeft, driveRight)
 
             if debug_show_steering:
-                TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
-                                  ' Right speed: ' + str(driveRight)
-                LOGGER.info(TextStringSpeed)
+                LOGGER.info('Left speed: ' + str(driveLeft) + \
+                            ' Right speed: ' + str(driveRight))
 
         else:
             LOGGER.info('No marker')
@@ -407,6 +411,7 @@ class StreamProcessor(threading.Thread):
                 LOGGER.info("The colour selector is now " +
                         ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
             elif distanceToFrontWall > CENTRE_BUFFER_WARN:
+                LOGGER.info('Getting closer to centre')
                 speed = SpeedSettings.SPEED_SLOW
             else:
                 speed = SpeedSettings.SPEED_FAST
@@ -416,10 +421,9 @@ class StreamProcessor(threading.Thread):
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
             
             if debug_show_steering:
-                TextStringSpeed = 'Distance: ' +  str(int(distanceToFrontWall)) + \
-                                  ' Found X: ' +  str(foundX) + \
-                                  ' Direction: ' + str(direction)
-                LOGGER.info(TextStringSpeed)
+                LOGGER.info('Distance: ' +  str(int(distanceToFrontWall)) + 
+                            ' Found X: ' +  str(foundX) +
+                            ' Direction: ' + str(direction))
 
             if direction > 0.0:
                 # Turn to robot's rear left
@@ -439,9 +443,8 @@ class StreamProcessor(threading.Thread):
             ROBOTMOVE.turn_reverse(driveLeft, driveRight)
 
             if debug_show_steering:
-                TextStringSpeed = 'Left speed: ' + str(driveLeft) + \
-                                  ' Right speed: ' + str(driveRight)
-                LOGGER.info(TextStringSpeed)
+                LOGGER.info('Left speed: ' + str(driveLeft) + 
+                            ' Right speed: ' + str(driveRight))
 
         else:
             LOGGER.info('No marker')
@@ -451,7 +454,6 @@ class StreamProcessor(threading.Thread):
         """Spin right until marker found."""
         
         ROBOTMOVE.spin_right(SpeedSettings.SPEED_FAST)
-        LOGGER.info('Spin right to find marker')
         time.sleep(SPIN_TIME)
         ROBOTMOVE.stop()
 
@@ -498,8 +500,8 @@ SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 PAN_INTIAL = 0  # Initial pan angle in degrees
 TILT_INTIAL = 20  # Initial tilt angle in degrees
 TILT_CHANGE = 2  # Change in tilt angle in degrees to keep marker centred
-MIN_TILT = -80  # Minimum tilt angle in degrees
-MAX_TILT = 80  # Maximum tilt angle in degrees
+MIN_TILT = -40  # Minimum tilt angle in degrees
+MAX_TILT = 40  # Maximum tilt angle in degrees
 SERVO_CONTROLLER = ServoController.ServoController()
 
 # Initialise motors
