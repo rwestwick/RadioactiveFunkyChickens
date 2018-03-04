@@ -19,6 +19,8 @@ import ServoController
 import threading
 import math
 import SpeedSettings
+import SwitchingGPIO
+
 
 # Set constants
 STICK_DELAY = 0.1  # seconds
@@ -54,6 +56,14 @@ robotmove = DualMotorController.DualMotorController(
 SERVO_CONTROLLER = ServoController.ServoController()
 SERVO_CONTROLLER.start_servos()
 
+# Laser Status
+LASER_ON = False
+LASER_TOGGLE = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER)
+
+# Motor Status
+MOTOR_ON = False
+MOTOR_TOGGLE = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR)
+
 
 def rumble(currentLogger, currentWiimote):
     """
@@ -65,6 +75,36 @@ def rumble(currentLogger, currentWiimote):
     time.sleep(RUMBLE_DELAY)
     SERVO_CONTROLLER.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
     currentWiimote.rumble = 0
+    return
+
+
+def ToggleLaser(currentLogger):
+    """
+    thread rumble function
+    """
+    if LASER_ON:
+        currentLogger.info("Laser Toggle Off")
+        LASER_TOGGLE.switch_off()
+        LASER_ON = False
+    else:
+        currentLogger.info("Laser Toggle On")
+        LASER_TOGGLE.switch_on()
+        LASER_ON = True
+    return
+
+
+def ToggleMotor(currentLogger):
+    """
+    thread rumble function
+    """
+    if MOTOR_ON:
+        currentLogger.info("Motor Toggle Off")
+        MOTOR_ON_TOGGLE.switch_off()
+        MOTOR_ON = False
+    else:
+        currentLogger.info("Motor Toggle On")
+        MOTOR_ON_TOGGLE.switch_on()
+        MOTOR_ON = True
     return
 
 
@@ -371,6 +411,24 @@ def main():
                     target=rumble, args=(
                         LOGGER,
                         wm,
+                    ))
+                t.start()
+                time.sleep(BUTTON_DELAY)
+
+            # If button C pressed Toggle the targeting laser
+            if (buttons & cwiid.BTN_C):
+                t = threading.Thread(
+                    target=ToggleLaser, args=(
+                        LOGGER,
+                    ))
+                t.start()
+                time.sleep(BUTTON_DELAY)
+
+            # If button z pressed Toggle the nerf gun fly wheels 
+            if (buttons & cwiid.BTN_Z):
+                t = threading.Thread(
+                    target=ToggleMotor, args=(
+                        LOGGER,
                     ))
                 t.start()
                 time.sleep(BUTTON_DELAY)

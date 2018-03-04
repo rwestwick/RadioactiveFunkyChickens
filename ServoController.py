@@ -28,12 +28,6 @@ class ServoController(object):
     PAN_SERVO_ID = 0
     TILT_SERVO_ID = 1
     NERF_TRIGGER_ID = 2
-    PAN_PIN = 18
-    TILT_PIN = 22
-    # Does not match up with hard coded numbers
-    # PAN_PIN = GPIOLayout.SERVO_HORIZONTAL_PIN
-    # TILT_PIN = GPIOLayout.SERVO_VERTICAL_PIN
-    NERF_TRIGGER_PIN = GPIOLayout.DUCK_SHOOT_FIRE_PIN
 
     def __init__(self):
         """
@@ -48,10 +42,10 @@ class ServoController(object):
         """
         if self.servos_active is False:
             script_path = os.path.split(os.path.realpath(__file__))[0]
-            # servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' +
-            # str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PCM
             servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + \
-                str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + ',' + str(self.NERF_TRIGGER_PIN) + \
+                str(GPIOLayout.SERVO_HORIZONTAL_PIN) + ',' + \
+                str(GPIOLayout.SERVO_VERTICAL_PIN) + ',' + \
+                str(GPIOLayout.DUCK_SHOOT_FIRE) + \
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             os.system(init_string)
@@ -99,11 +93,11 @@ class ServoController(object):
         """
         PIN_STRING = 'echo p1-'
         if pin == 0:
-            PIN_STRING = PIN_STRING + str(ServoController.PAN_PIN) + '='
+            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_HORIZONTAL_PIN) + '='
         elif pin == 1:
-            PIN_STRING = PIN_STRING + str(ServoController.TILT_PIN) + '='
+            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_VERTICAL_PIN) + '='
         else:
-            PIN_STRING = PIN_STRING + str(ServoController.NERF_TRIGGER_PIN) + '='
+            PIN_STRING = PIN_STRING + str(GPIOLayout.DUCK_SHOOT_FIRE) + '='
 
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
