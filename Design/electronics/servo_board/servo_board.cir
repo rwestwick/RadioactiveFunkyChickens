@@ -1,7 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<CircuitBoard zoom="0.07039999999999999" originX="7.9474215507507324" originY="-5.156308650970459" componentBrush="Wire" boardType="StripBoard">
+<CircuitBoard zoom="0.05" originX="4.8700900077819824" originY="-8.8799219131469727" componentBrush="Pinned" boardType="StripBoard">
   <ComponentList>
     <Pinned>
+      <vertex x="20" y="-1" />
+      <vertex x="21" y="-1" />
+      <vertex x="20" y="-1" />
+      <vertex x="21" y="-1" />
+      <vertex x="20" y="-1" />
+      <vertex x="21" y="-1" />
+      <vertex x="20" y="-1" />
+      <vertex x="21" y="-1" />
+      <vertex x="20" y="-1" />
+      <vertex x="21" y="-1" />
       <vertex x="20" y="-1" />
       <vertex x="21" y="-1" />
       <vertex x="20" y="-1" />
@@ -136,6 +146,16 @@
       </Polyline>
     </Pinned>
     <Pinned>
+      <vertex x="16" y="-1" />
+      <vertex x="17" y="-1" />
+      <vertex x="16" y="-1" />
+      <vertex x="17" y="-1" />
+      <vertex x="16" y="-1" />
+      <vertex x="17" y="-1" />
+      <vertex x="16" y="-1" />
+      <vertex x="17" y="-1" />
+      <vertex x="16" y="-1" />
+      <vertex x="17" y="-1" />
       <vertex x="16" y="-1" />
       <vertex x="17" y="-1" />
       <vertex x="16" y="-1" />
@@ -280,16 +300,296 @@
       <wireColor A="220" R="0" G="0" B="0" />
     </Wire>
     <Wire>
-      <vertex x="19" y="3" />
-      <vertex x="22" y="3" />
+      <vertex x="22" y="-2" />
+      <vertex x="22" y="-3" />
       <wireColor A="220" R="0" G="231" B="0" />
     </Wire>
+    <Wire>
+      <vertex x="18" y="-2" />
+      <vertex x="18" y="-3" />
+      <wireColor A="220" R="0" G="0" B="255" />
+    </Wire>
+    <Wire>
+      <vertex x="21" y="-2" />
+      <vertex x="21" y="-3" />
+      <wireColor A="220" R="255" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="17" y="-2" />
+      <vertex x="17" y="-3" />
+      <wireColor A="220" R="255" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="16" y="-2" />
+      <vertex x="16" y="-3" />
+      <wireColor A="220" R="0" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="20" y="-2" />
+      <vertex x="20" y="-3" />
+      <wireColor A="220" R="0" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="16" y="-2" />
+      <vertex x="16" y="-3" />
+      <wireColor A="220" R="168" G="168" B="168" />
+    </Wire>
+    <Wire>
+      <vertex x="20" y="-2" />
+      <vertex x="20" y="-3" />
+      <wireColor A="220" R="168" G="168" B="168" />
+    </Wire>
+    <Wire>
+      <vertex x="16" y="2" />
+      <vertex x="20" y="2" />
+      <wireColor A="220" R="168" G="168" B="168" />
+    </Wire>
+    <Wire>
+      <vertex x="16" y="-2" />
+      <vertex x="16" y="-3" />
+      <wireColor A="220" R="255" G="255" B="255" />
+    </Wire>
+    <Wire>
+      <vertex x="20" y="-3" />
+      <vertex x="20" y="-2" />
+      <wireColor A="220" R="255" G="255" B="255" />
+    </Wire>
+    <Wire>
+      <vertex x="16" y="2" />
+      <vertex x="20" y="2" />
+      <wireColor A="220" R="255" G="255" B="255" />
+    </Wire>
     <Pinned>
-      <vertex x="18" y="5" />
-      <vertex x="19" y="5" />
-      <vertex x="18" y="9" />
+      <vertex x="24" y="-1" />
+      <vertex x="25" y="-1" />
+      <vertex x="24" y="-1" />
+      <vertex x="25" y="-1" />
+      <vertex x="24" y="-1" />
+      <vertex x="25" y="-1" />
+      <parameters name="SIL_03" hasLabel="true" />
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="0" G="0" B="0" />
+          <stop x="1" A="200" R="0" G="0" B="0" />
+        </fillColor>
+        <points>
+          <point x="-0.5" y="0" />
+          <point x="-0.5" y="0" />
+          <point x="-0.5" y="0.499999922049609" />
+          <point x="-0.5" y="0.999999844099218" />
+          <point x="-0.5" y="1.49999976614883" />
+          <point x="-0.5" y="2.00000007795039" />
+          <point x="-0.5" y="2.5" />
+          <point x="1.16925586657324E-07" y="2.5" />
+          <point x="0.500000038975196" y="2.5" />
+          <point x="0.500000038975196" y="2.00000007795039" />
+          <point x="0.500000038975196" y="1.49999976614883" />
+          <point x="0.500000038975196" y="0.999999844099218" />
+          <point x="0.500000038975196" y="0.499999922049609" />
+          <point x="0.500000038975196" y="0" />
+          <point x="0.500000038975196" y="-0.500000116925587" />
+          <point x="1.16925586657324E-07" y="-0.500000116925587" />
+          <point x="-0.5" y="-0.500000116925587" />
+          <point x="-0.5" y="0" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="0" G="0" B="0" />
+          <stop x="1" A="200" R="0" G="0" B="0" />
+        </fillColor>
+        <points>
+          <point x="0" y="0" />
+          <point x="0" y="0" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="0" G="0" B="0" />
+          <stop x="1" A="200" R="0" G="0" B="0" />
+        </fillColor>
+        <points>
+          <point x="0" y="1" />
+          <point x="0" y="1" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="0" G="0" B="0" />
+          <stop x="1" A="200" R="0" G="0" B="0" />
+        </fillColor>
+        <points>
+          <point x="0" y="2" />
+          <point x="0" y="2" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="168" G="168" B="168" />
+          <stop x="1" A="200" R="168" G="168" B="168" />
+        </fillColor>
+        <points>
+          <point x="-0.5" y="0" />
+          <point x="3.1180156456756E-07" y="0" />
+          <point x="3.1180156456756E-07" y="0.499999922049609" />
+          <point x="-0.5" y="0.499999922049609" />
+          <point x="-0.5" y="0" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="168" G="168" B="168" />
+          <stop x="1" A="200" R="168" G="168" B="168" />
+        </fillColor>
+        <points>
+          <point x="-0.5" y="1" />
+          <point x="-0.5" y="1" />
+          <point x="1.16925586657324E-07" y="1" />
+          <point x="1.16925586657324E-07" y="1.49999992204961" />
+          <point x="-0.5" y="1.49999992204961" />
+          <point x="-0.5" y="1" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="168" G="168" B="168" />
+          <stop x="1" A="200" R="168" G="168" B="168" />
+        </fillColor>
+        <points>
+          <point x="-0.5" y="2" />
+          <point x="-0.5" y="2" />
+          <point x="1.16925586657324E-07" y="2" />
+          <point x="1.16925586657324E-07" y="2.49999992204961" />
+          <point x="-0.5" y="2.49999992204961" />
+          <point x="-0.5" y="2" />
+        </points>
+      </Polyline>
+    </Pinned>
+    <Wire>
+      <vertex x="24" y="-2" />
+      <vertex x="24" y="-3" />
+      <wireColor A="220" R="255" G="255" B="255" />
+    </Wire>
+    <Wire>
+      <vertex x="25" y="-2" />
+      <vertex x="25" y="-3" />
+      <wireColor A="220" R="255" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="26" y="-2" />
+      <vertex x="26" y="-3" />
+      <wireColor A="220" R="173" G="0" B="173" />
+    </Wire>
+    <Wire>
+      <vertex x="21" y="2" />
+      <vertex x="25" y="2" />
+      <wireColor A="220" R="255" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="19" y="4" />
+      <vertex x="22" y="4" />
+      <wireColor A="220" R="0" G="231" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="20" y="3" />
+      <vertex x="24" y="3" />
+      <wireColor A="220" R="255" G="255" B="255" />
+    </Wire>
+    <Wire>
+      <vertex x="20" y="8" />
+      <vertex x="20" y="9" />
+      <wireColor A="220" R="173" G="0" B="173" />
+    </Wire>
+    <Wire>
+      <vertex x="19" y="8" />
       <vertex x="19" y="9" />
-      <parameters name="SIL_04" hasLabel="true" />
+      <wireColor A="220" R="0" G="231" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="18" y="8" />
+      <vertex x="18" y="9" />
+      <wireColor A="220" R="0" G="0" B="255" />
+    </Wire>
+    <Wire>
+      <vertex x="17" y="8" />
+      <vertex x="17" y="9" />
+      <wireColor A="220" R="255" G="0" B="0" />
+    </Wire>
+    <Wire>
+      <vertex x="16" y="8" />
+      <vertex x="16" y="9" />
+      <wireColor A="220" R="255" G="255" B="255" />
+    </Wire>
+    <Pinned>
+      <vertex x="16" y="7" />
+      <vertex x="17" y="7" />
+      <parameters name="SIL_05" hasLabel="true" />
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="0" G="0" B="0" />
+          <stop x="0.10000000149011612" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="255" G="255" B="255" />
+          <stop x="0.15000000596046448" A="200" R="0" G="0" B="0" />
+          <stop x="1" A="200" R="0" G="0" B="0" />
+        </fillColor>
+        <points>
+          <point x="-0.5" y="-0.5" />
+          <point x="-0.5" y="-0.5" />
+          <point x="1.16925586657324E-07" y="-0.5" />
+          <point x="0.500000038975196" y="-0.5" />
+          <point x="0.500000038975196" y="1.16925586657324E-07" />
+          <point x="0.500000038975196" y="0.500000038975196" />
+          <point x="0.500000038975196" y="0.999999961024804" />
+          <point x="0.500000038975196" y="1.49999988307441" />
+          <point x="0.500000038975196" y="2.00000019487598" />
+          <point x="0.500000038975196" y="2.50000011692559" />
+          <point x="0.500000038975196" y="2.99999984409922" />
+          <point x="0.500000038975196" y="3.50000015590078" />
+          <point x="0.500000038975196" y="3.99999968819844" />
+          <point x="0.500000038975196" y="4.5" />
+          <point x="1.16925586657324E-07" y="4.5" />
+          <point x="-0.5" y="4.5" />
+          <point x="-0.5" y="3.99999968819844" />
+          <point x="-0.5" y="3.50000015590078" />
+          <point x="-0.5" y="2.99999984409922" />
+          <point x="-0.5" y="2.50000011692559" />
+          <point x="-0.5" y="2.00000019487598" />
+          <point x="-0.5" y="1.49999988307441" />
+          <point x="-0.5" y="0.999999961024804" />
+          <point x="-0.5" y="0.500000038975196" />
+          <point x="-0.5" y="1.16925586657324E-07" />
+          <point x="-0.5" y="-0.5" />
+        </points>
+      </Polyline>
       <Polyline StrokeThickness="7.8299999237060547">
         <fillColor>
           <stop x="0" A="200" R="0" G="0" B="0" />
@@ -344,40 +644,6 @@
         <points>
           <point x="0" y="3" />
           <point x="0" y="3" />
-        </points>
-      </Polyline>
-      <Polyline StrokeThickness="7.8299999237060547">
-        <fillColor>
-          <stop x="0" A="200" R="0" G="0" B="0" />
-          <stop x="0.10000000149011612" A="200" R="0" G="0" B="0" />
-          <stop x="0.10000000149011612" A="200" R="255" G="255" B="255" />
-          <stop x="0.15000000596046448" A="200" R="255" G="255" B="255" />
-          <stop x="0.15000000596046448" A="200" R="0" G="0" B="0" />
-          <stop x="1" A="200" R="0" G="0" B="0" />
-        </fillColor>
-        <points>
-          <point x="0" y="-0.5" />
-          <point x="0" y="-0.5" />
-          <point x="0.499999922049609" y="-0.5" />
-          <point x="0.499999922049609" y="1.16925586657324E-07" />
-          <point x="0.499999922049609" y="0.500000038975196" />
-          <point x="0.499999922049609" y="0.999999961024804" />
-          <point x="0.499999922049609" y="1.49999988307441" />
-          <point x="0.499999922049609" y="2.00000019487598" />
-          <point x="0.499999922049609" y="2.50000011692559" />
-          <point x="0.499999922049609" y="2.99999984409922" />
-          <point x="0.499999922049609" y="3.50000015590078" />
-          <point x="0" y="3.50000015590078" />
-          <point x="-0.500000116925587" y="3.50000015590078" />
-          <point x="-0.500000116925587" y="2.99999984409922" />
-          <point x="-0.500000116925587" y="2.50000011692559" />
-          <point x="-0.500000116925587" y="2.00000019487598" />
-          <point x="-0.500000116925587" y="1.49999988307441" />
-          <point x="-0.500000116925587" y="0.999999961024804" />
-          <point x="-0.500000116925587" y="0.500000038975196" />
-          <point x="-0.500000116925587" y="1.16925586657324E-07" />
-          <point x="-0.500000116925587" y="-0.5" />
-          <point x="0" y="-0.5" />
         </points>
       </Polyline>
       <Polyline StrokeThickness="7.8299999237060547">
@@ -451,87 +717,59 @@
           <point x="-0.5" y="3" />
         </points>
       </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="168" G="168" B="168" />
+          <stop x="1" A="200" R="168" G="168" B="168" />
+        </fillColor>
+        <points>
+          <point x="0" y="4" />
+          <point x="0" y="4" />
+          <point x="-0.500000116925587" y="4" />
+          <point x="-0.500000116925587" y="4.50000031180156" />
+          <point x="0" y="4.50000031180156" />
+          <point x="0" y="4" />
+        </points>
+      </Polyline>
+      <Polyline StrokeThickness="7.8299999237060547">
+        <fillColor>
+          <stop x="0" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="168" G="168" B="168" />
+          <stop x="0.10000000149011612" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="87" G="87" B="87" />
+          <stop x="0.15000000596046448" A="200" R="168" G="168" B="168" />
+          <stop x="1" A="200" R="168" G="168" B="168" />
+        </fillColor>
+        <points>
+          <point x="0" y="4" />
+          <point x="0" y="4" />
+        </points>
+      </Polyline>
     </Pinned>
     <Wire>
-      <vertex x="22" y="-2" />
-      <vertex x="22" y="-3" />
-      <wireColor A="220" R="0" G="231" B="0" />
+      <vertex x="20" y="5" />
+      <vertex x="26" y="5" />
+      <wireColor A="220" R="173" G="0" B="173" />
     </Wire>
-    <Wire>
-      <vertex x="18" y="-2" />
-      <vertex x="18" y="-3" />
-      <wireColor A="220" R="0" G="0" B="255" />
-    </Wire>
-    <Wire>
-      <vertex x="21" y="-2" />
-      <vertex x="21" y="-3" />
-      <wireColor A="220" R="255" G="0" B="0" />
-    </Wire>
-    <Wire>
-      <vertex x="17" y="-2" />
-      <vertex x="17" y="-3" />
-      <wireColor A="220" R="255" G="0" B="0" />
-    </Wire>
-    <Wire>
-      <vertex x="16" y="-2" />
-      <vertex x="16" y="-3" />
-      <wireColor A="220" R="0" G="0" B="0" />
-    </Wire>
-    <Wire>
-      <vertex x="20" y="-2" />
-      <vertex x="20" y="-3" />
-      <wireColor A="220" R="0" G="0" B="0" />
-    </Wire>
-    <Wire>
-      <vertex x="16" y="-2" />
-      <vertex x="16" y="-3" />
-      <wireColor A="220" R="168" G="168" B="168" />
-    </Wire>
-    <Wire>
-      <vertex x="20" y="-2" />
-      <vertex x="20" y="-3" />
-      <wireColor A="220" R="168" G="168" B="168" />
-    </Wire>
-    <Wire>
-      <vertex x="16" y="2" />
-      <vertex x="20" y="2" />
-      <wireColor A="220" R="168" G="168" B="168" />
-    </Wire>
-    <Wire>
-      <vertex x="16" y="-2" />
-      <vertex x="16" y="-3" />
-      <wireColor A="220" R="255" G="255" B="255" />
-    </Wire>
-    <Wire>
-      <vertex x="20" y="-3" />
-      <vertex x="20" y="-2" />
-      <wireColor A="220" R="255" G="255" B="255" />
-    </Wire>
-    <Wire>
-      <vertex x="16" y="2" />
-      <vertex x="20" y="2" />
-      <wireColor A="220" R="255" G="255" B="255" />
-    </Wire>
-    <Wire>
-      <vertex x="19" y="6" />
-      <vertex x="19" y="7" />
-      <wireColor A="220" R="0" G="231" B="0" />
-    </Wire>
-    <Wire>
-      <vertex x="18" y="6" />
-      <vertex x="18" y="7" />
-      <wireColor A="220" R="0" G="0" B="255" />
-    </Wire>
-    <Wire>
-      <vertex x="21" y="6" />
-      <vertex x="21" y="7" />
-      <wireColor A="220" R="255" G="0" B="0" />
-    </Wire>
-    <Wire>
-      <vertex x="20" y="6" />
-      <vertex x="20" y="7" />
-      <wireColor A="220" R="255" G="255" B="255" />
-    </Wire>
+    <Pinned>
+      <vertex x="10" y="1" />
+      <vertex x="10" y="0" />
+      <parameters name="TextLabel" hasLabel="False" />
+      <Polyline StrokeThickness="7.4">
+        <fillColor>
+          <stop x="0" A="0" R="0" G="0" B="0" />
+        </fillColor>
+        <points>
+          <point x="0" y="0" />
+        </points>
+      </Polyline>
+    </Pinned>
   </ComponentList>
-  <CutPads />
+  <CutPads>
+    <vertex x="20" y="4" />
+  </CutPads>
 </CircuitBoard>
