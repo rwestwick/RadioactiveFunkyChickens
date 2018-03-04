@@ -8,10 +8,14 @@ This code is in the public domain and may be freely copied and used
 No warranty is provided or implied
 servo_controller Functions
 Pirocon/Microcon/RoboHAT use ServoD to control servos
+Old version?
+https://github.com/richardghirst/PiBits/tree/master/ServoBlaster
+servod -help
 """
 
 import logging
 import os
+import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.ServoController")
 
@@ -23,8 +27,13 @@ class ServoController(object):
     # Define pins for Pan/Tilt
     PAN_SERVO_ID = 0
     TILT_SERVO_ID = 1
+    NERF_TRIGGER_ID = 2
     PAN_PIN = 18
     TILT_PIN = 22
+    # Does not match up with hard coded numbers
+    # PAN_PIN = GPIOLayout.SERVO_HORIZONTAL_PIN
+    # TILT_PIN = GPIOLayout.SERVO_VERTICAL_PIN
+    NERF_TRIGGER_PIN = GPIOLayout.DUCK_SHOOT_FIRE_PIN
 
     def __init__(self):
         """
@@ -42,7 +51,7 @@ class ServoController(object):
             # servod_cmd = '/servod --pcm --idle-timeout=20000 --p1pins="' +
             # str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + '"' # With PCM
             servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + \
-                str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + \
+                str(self.PAN_PIN) + ',' + str(self.TILT_PIN) + ',' + str(self.NERF_TRIGGER_PIN) + \
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             os.system(init_string)
@@ -75,6 +84,12 @@ class ServoController(object):
         Sets the tilt servo to a position
         """
         self.set_servo(self.TILT_SERVO_ID, degrees)
+        
+    def set_nerf_trigger_servo(self, degrees):
+        """
+        Sets the Nerf trigger 
+        """
+        self.set_servo(self.NERF_TRIGGER_ID, degrees)
 
     @staticmethod
     def pin_servod(pin, degrees):
@@ -85,8 +100,10 @@ class ServoController(object):
         PIN_STRING = 'echo p1-'
         if pin == 0:
             PIN_STRING = PIN_STRING + str(ServoController.PAN_PIN) + '='
-        else:
+        elif pin == 1:
             PIN_STRING = PIN_STRING + str(ServoController.TILT_PIN) + '='
+        else:
+            PIN_STRING = PIN_STRING + str(ServoController.NERF_TRIGGER_PIN) + '='
 
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
