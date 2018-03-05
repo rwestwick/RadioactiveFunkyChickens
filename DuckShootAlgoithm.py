@@ -141,9 +141,9 @@ def main():
     while True:
 
         if 'nunchuk' in wm.state:
-            # print("Success")
 
             buttons = wm.state['buttons']
+            nunchuck_buttons = wmstate['nunchuk']['buttons']
 
             # X axis: Left Max = 25, Middle = 124, Right Max = 225
             NunchukStickX = (wm.state['nunchuk']['stick'][cwiid.X])
@@ -410,13 +410,13 @@ def main():
                 time.sleep(BUTTON_DELAY)
 
             # If button C pressed Toggle the targeting laser
-            if (buttons & cwiid.BTN_C):
+            if (nunchuck_buttons & cwiid.NUNCHUK_BTN_C):
                 t = threading.Thread(target=ToggleLaser, args=(LOGGER, ))
                 t.start()
                 time.sleep(BUTTON_DELAY)
 
             # If button z pressed Toggle the nerf gun fly wheels
-            if (buttons & cwiid.BTN_Z):
+            if (nunchuck_buttons & cwiid.NUNCHUK_BTN_Z):
                 t = threading.Thread(target=ToggleMotor, args=(LOGGER, ))
                 t.start()
                 time.sleep(BUTTON_DELAY)
