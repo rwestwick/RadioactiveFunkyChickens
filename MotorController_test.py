@@ -18,6 +18,7 @@ def test_motorcontroller(sleep_len=0):
     MCONTROLLER = None
 
     try:
+        SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         MCONTROLLER = MotorController.MotorController(
             GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
             GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
