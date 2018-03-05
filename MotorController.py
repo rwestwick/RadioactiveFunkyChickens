@@ -36,7 +36,7 @@ class MotorController(object):
         MODULE_LOGGER.info(log_string)
 
         # Use physical pin numbering
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
 
         # Disable warnings
         GPIO.setwarnings(False)

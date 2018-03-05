@@ -384,9 +384,15 @@ PAN_INTIAL = 20  # Initial pan angle in degrees
 TILT_INTIAL = 20  # Initial tilt angle in degrees
 
 # Initialise motors
-ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 # Initialise servos
 SERVO_CONTROLLER = ServoController.ServoController()
@@ -481,12 +487,12 @@ def main():
     LOGGER.info("Press 'Space' in console to start.")
 
     # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
-                                                  GPIOLayout.SONAR_LEFT_TX_PIN)
+    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_GPIO,
+                                                  GPIOLayout.SONAR_LEFT_TX_GPIO)
     view_right = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
+        GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
     view_front = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_FRONT_TX_PIN)
+        GPIOLayout.SONAR_FRONT_TX_GPIO)
 
     LOGGER.info("Distance view_left at start " +
                 format(view_left.measurement(), '.2f') + " cm")

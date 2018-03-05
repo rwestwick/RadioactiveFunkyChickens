@@ -8,7 +8,7 @@ http://piwars.org/
 
 import logging
 import time
-import MotorController
+import DualMotorController
 import UltrasonicSensor
 import GPIOLayout
 import KeyboardCharacterReader
@@ -20,11 +20,15 @@ LOGGER = logging.getLogger(__name__)
 CORRECTION_TIME = 0.025  # Angle correction delay time in seconds
 
 # Initialise motors
-ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 
 def turn_right(ultrasonic_sensor_side):
@@ -51,8 +55,8 @@ def main():
 
     # Create necessary sensor objects
     view_left = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_LEFT_RX_PIN,
-        GPIOLayout.SONAR_LEFT_TX_PIN)
+        GPIOLayout.SONAR_LEFT_RX_GPIO,
+        GPIOLayout.SONAR_LEFT_TX_GPIO)
 
     while True:
         keyp = KeyboardCharacterReader.readkey()

@@ -12,7 +12,7 @@ to follow for the line follwowing challenge in PiWars 2017
 # to prevent rounding down to zero.
 from __future__ import division
 
-# Open relvant modules
+# Open relevant modules
 import logging
 import SetupConsoleLogger
 import KeyboardCharacterReader
@@ -55,9 +55,15 @@ camera.framerate = 10  # If not set then defaults to 30fps
 camera.vflip = True
 
 # Initialise motors
-ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 # http://picamera.readthedocs.io/en/release-1.10/api_array.html
 # class picamera.array.PiRGBArray(camera, size=None)[source]

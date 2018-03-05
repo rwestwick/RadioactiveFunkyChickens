@@ -34,24 +34,24 @@ correctionTime = 0.2
 
 # Initialise motors
 robotmove = DualMotorController.DualMotorController(
-    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 
 def main():
     """
     """
     # Create necessary sensor objects
-    viewLeft = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
-                                                 GPIOLayout.SONAR_LEFT_TX_PIN)
+    viewLeft = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_GPIO,
+                                                 GPIOLayout.SONAR_LEFT_TX_GPIO)
     viewRight = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
+        GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
 
     # Sanity check the distance from edge of robot to walls
     initialLeftDistance = viewLeft.measurement()

@@ -26,7 +26,7 @@ class IRSensor(object):  # pylint: disable=too-few-public-methods
         MODULE_LOGGER.info("Setting up IRSensor Module")
 
         # Use physical pin numbering
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
 
         # Disable warnings
         GPIO.setwarnings(False)

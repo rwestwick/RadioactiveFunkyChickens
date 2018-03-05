@@ -12,7 +12,7 @@ http://piwars.org/
 # Import required libraries
 import logging
 import KeyboardCharacterReader
-import MotorController
+import DualMotorController
 import SetupConsoleLogger
 import GPIOLayout
 
@@ -21,9 +21,15 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
-robotmove = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 
 def changeSpeed(currentDirection, newSpeed):
