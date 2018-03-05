@@ -144,8 +144,8 @@ def main():
     LOGGER.info("To start maze solving following press 'Space' key.")
 
     # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_GPIO,
-                                                  GPIOLayout.SONAR_LEFT_TX_GPIO)
+    view_left = UltrasonicSensor.UltrasonicSensor(
+        GPIOLayout.SONAR_LEFT_RX_GPIO, GPIOLayout.SONAR_LEFT_TX_GPIO)
     view_right = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
     view_front = UltrasonicSensor.UltrasonicSensor(

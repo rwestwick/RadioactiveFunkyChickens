@@ -21,7 +21,6 @@ import math
 import SpeedSettings
 import SwitchingGPIO
 
-
 # Set constants
 STICK_DELAY = 0.1  # seconds
 BUTTON_DELAY = 0.1  # seconds
@@ -85,11 +84,9 @@ def ToggleLaser(currentLogger):
     if LASER_ON:
         currentLogger.info("Laser Toggle Off")
         LASER_TOGGLE.switch_off()
-        LASER_ON = False
     else:
         currentLogger.info("Laser Toggle On")
         LASER_TOGGLE.switch_on()
-        LASER_ON = True
     return
 
 
@@ -100,11 +97,9 @@ def ToggleMotor(currentLogger):
     if MOTOR_ON:
         currentLogger.info("Motor Toggle Off")
         MOTOR_ON_TOGGLE.switch_off()
-        MOTOR_ON = False
     else:
         currentLogger.info("Motor Toggle On")
         MOTOR_ON_TOGGLE.switch_on()
-        MOTOR_ON = True
     return
 
 
@@ -116,7 +111,6 @@ def main():
     tVal = 0  # 0 degrees is centre
     pVal = 0  # 0 degrees is centre
     SERVO_CONTROLLER.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
-    
 
     # Connecting to the wiimote. This allows several attempts
     # as first few often fail.
@@ -417,19 +411,13 @@ def main():
 
             # If button C pressed Toggle the targeting laser
             if (buttons & cwiid.BTN_C):
-                t = threading.Thread(
-                    target=ToggleLaser, args=(
-                        LOGGER,
-                    ))
+                t = threading.Thread(target=ToggleLaser, args=(LOGGER, ))
                 t.start()
                 time.sleep(BUTTON_DELAY)
 
-            # If button z pressed Toggle the nerf gun fly wheels 
+            # If button z pressed Toggle the nerf gun fly wheels
             if (buttons & cwiid.BTN_Z):
-                t = threading.Thread(
-                    target=ToggleMotor, args=(
-                        LOGGER,
-                    ))
+                t = threading.Thread(target=ToggleMotor, args=(LOGGER, ))
                 t.start()
                 time.sleep(BUTTON_DELAY)
 

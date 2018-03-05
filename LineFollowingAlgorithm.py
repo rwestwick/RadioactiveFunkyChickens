@@ -4,7 +4,6 @@ Provides an algorithm for following a black line on a white background.
 """
 
 import logging
-import MotorController
 import LineFollowerSensor
 import SetupConsoleLogger
 import GPIOLayout
@@ -46,7 +45,7 @@ def main():
     lastturnleft = False
     lastturnright = False
     linefollower = LineFollowerSensor.LineFollowerSensor(
-        GPIOLayout.LINE_FOLLOWER_LEFT_GPIO, 
+        GPIOLayout.LINE_FOLLOWER_LEFT_GPIO,
         GPIOLayout.LINE_FOLLOWER_MIDDLE_GPIO,
         GPIOLayout.LINE_FOLLOWER_RIGHT_GPIO)
 

@@ -15,7 +15,6 @@ https://help.ubuntu.com/community/CWiiD
 # Import required libraries
 import time
 import logging
-import MotorController
 import SetupConsoleLogger
 import GPIOLayout
 import cwiid

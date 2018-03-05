@@ -20,7 +20,6 @@ import math
 import sys
 import SetupConsoleLogger
 import ServoController
-import MotorController
 import SpeedSettings
 import UltrasonicSensor
 import ColourBoundaries
@@ -487,8 +486,8 @@ def main():
     LOGGER.info("Press 'Space' in console to start.")
 
     # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_GPIO,
-                                                  GPIOLayout.SONAR_LEFT_TX_GPIO)
+    view_left = UltrasonicSensor.UltrasonicSensor(
+        GPIOLayout.SONAR_LEFT_RX_GPIO, GPIOLayout.SONAR_LEFT_TX_GPIO)
     view_right = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
     view_front = UltrasonicSensor.UltrasonicSensor(
