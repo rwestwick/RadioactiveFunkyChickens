@@ -5,7 +5,7 @@ it doesn't exist.
 """
 
 
-class OutputDevice(object):
+class Buzzer(object):
     """
     Provides a stub for the GPIODevice class defined in GPIOZero
     """
@@ -27,6 +27,11 @@ class OutputDevice(object):
         """
 
     def close(self):
+        """
+        Stub function
+        """
+
+    def is_active(self):
         """
         Stub function
         """

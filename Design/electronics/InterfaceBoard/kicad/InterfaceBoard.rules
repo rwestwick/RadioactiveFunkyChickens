@@ -11,18 +11,18 @@
     (via_costs 50)
     (plane_via_costs 1)
     (start_ripup_costs 100)
-    (start_pass_no 384)
+    (start_pass_no 1)
     (layer_rule F.Cu
       (active on)
       (preferred_direction horizontal)
       (preferred_direction_trace_costs 1.0)
-      (against_preferred_direction_trace_costs 3.1)
+      (against_preferred_direction_trace_costs 2.6)
     )
     (layer_rule B.Cu
       (active on)
       (preferred_direction vertical)
       (preferred_direction_trace_costs 1.0)
-      (against_preferred_direction_trace_costs 1.5)
+      (against_preferred_direction_trace_costs 1.6)
     )
   )
   (rule
@@ -65,6 +65,7 @@
   (class "kicad_default"
     "Net-(J1-Pad1)" "Net-(J1-Pad2)" "Net-(J2-Pad1)" "Net-(J3-Pad1)" "Net-(J3-Pad2)" "Net-(J4-Pad1)" "Net-(J5-Pad1)" "Net-(J5-Pad2)"
     "Net-(J6-Pad1)" "Net-(J7-Pad1)" "Net-(J7-Pad2)" "Net-(J8-Pad1)" GND +5V "Net-(J11-Pad1)" "Net-(J12-Pad1)"
+    "Net-(J12-Pad2)"
     (clearance_class "kicad_default")
     (via_rule kicad_default)
     (rule

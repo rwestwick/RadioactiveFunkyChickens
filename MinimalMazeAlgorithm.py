@@ -28,14 +28,14 @@ TURN_DELAY = 0.65
 
 # Initialise motors
 ROBOTMOVE = DualMotorController.DualMotorController(
-    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 
 def turn_left(delay):
@@ -144,12 +144,12 @@ def main():
     LOGGER.info("To start maze solving following press 'Space' key.")
 
     # Create necessary sensor objects
-    view_left = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_LEFT_RX_PIN,
-                                                  GPIOLayout.SONAR_LEFT_TX_PIN)
+    view_left = UltrasonicSensor.UltrasonicSensor(
+        GPIOLayout.SONAR_LEFT_RX_GPIO, GPIOLayout.SONAR_LEFT_TX_GPIO)
     view_right = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_RIGHT_RX_PIN, GPIOLayout.SONAR_RIGHT_TX_PIN)
+        GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
     view_front = UltrasonicSensor.UltrasonicSensor(
-        GPIOLayout.SONAR_FRONT_TX_PIN)
+        GPIOLayout.SONAR_FRONT_TX_GPIO)
 
     # SIDE_BUFFER = view_left.measurement()
     LEFT_SIDE_BUFFER = 9.0

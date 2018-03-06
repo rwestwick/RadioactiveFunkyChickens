@@ -27,8 +27,8 @@ def test_ultrasonicthread_poll(sleep_len=2):
     MODULE_LOGGER.critical("test_ultrasonicthread_poll")
     try:
         SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
-            GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_FRONT_TX_GPIO,
+            GPIOLayout.SONAR_FRONT_RX_GPIO, 1)
         SENSOR.start()
         time.sleep(sleep_len)
         MODULE_LOGGER.info('Read distance from thread ={0:0.2f} cm '.format(
@@ -49,7 +49,7 @@ def test_ultrasonicthread_callback(sleep_len=2):
         DISTANCE = 0.0
         SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
             1, __callback_UltrasonicSensorThread,
-            GPIOLayout.SONAR_FRONT_TX_PIN, GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+            GPIOLayout.SONAR_FRONT_TX_GPIO, GPIOLayout.SONAR_FRONT_RX_GPIO, 1)
         SENSOR.start()
         time.sleep(sleep_len)
         MODULE_LOGGER.info(
@@ -67,18 +67,18 @@ def test_ultrasonicthread_multiplesensors(sleep_len=2):
     MODULE_LOGGER.critical("test_ultrasonicthread_multiplesensors")
     try:
         FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_FRONT_TX_PIN,
-            GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_FRONT_TX_GPIO,
+            GPIOLayout.SONAR_FRONT_RX_GPIO, 1)
         FRONT_SENSOR.start()
 
         RIGHT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_RIGHT_TX_PIN,
-            GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_RIGHT_TX_GPIO,
+            GPIOLayout.SONAR_RIGHT_RX_GPIO, 1)
         RIGHT_SENSOR.start()
 
         LEFT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_LEFT_TX_PIN,
-            GPIOLayout.SONAR_LEFT_RX_PIN, 1)
+            1, None, GPIOLayout.SONAR_LEFT_TX_GPIO,
+            GPIOLayout.SONAR_LEFT_RX_GPIO, 1)
         LEFT_SENSOR.start()
         time.sleep(sleep_len)
         MODULE_LOGGER.info(

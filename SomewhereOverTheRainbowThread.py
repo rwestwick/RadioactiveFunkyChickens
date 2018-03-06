@@ -85,7 +85,7 @@ class StreamProcessor(threading.Thread):
         # This method runs in a separate thread
         while not self.terminated:
             # Wait for an image to be written to the stream
-            # The wait() method takes an argument representing the 
+            # The wait() method takes an argument representing the
             # number of seconds to wait for the event before timing out.
             if self.event.wait(1):
                 try:
@@ -115,7 +115,7 @@ class StreamProcessor(threading.Thread):
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
-            key_one = cv2.waitKey(1) & 0xFF 
+            key_one = cv2.waitKey(1) & 0xFF
         if debug:
             e1 = cv2.getTickCount()
 
@@ -140,37 +140,33 @@ class StreamProcessor(threading.Thread):
         if debug_show_output:
             cv2.imshow('Filtered image with marker contour',
                        contour_marked_image)
-        
+
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
-            key_two = cv2.waitKey(1) & 0xFF 
-        
-        if key_one == ord("c") or key_two == ord("c") :
+            key_two = cv2.waitKey(1) & 0xFF
+
+        if key_one == ord("c") or key_two == ord("c"):
             # Loop over integers 0 to 3
             colour_array_cntr = (colour_array_cntr + 1) % 4
             LOGGER.info("The colour selector is now " +
-                    ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
+                        ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
 
-        
-        if contourDetection == True:
+        if contourDetection:
             # Adjust tilt of Pi Camera
             self.set_camera_tilt_from_marker(foundY)
-            
+
             # Steer robot
             distance_to_front_wall = FRONT_SENSOR.read_data()
-            if reached_marker == False:
-                self.set_speed_from_marker(contourDetection, 
-                                           foundX, 
+            if not reached_marker:
+                self.set_speed_from_marker(contourDetection, foundX,
                                            distance_to_front_wall)
             else:
-                self.set_speed_to_centre(contourDetection, 
-                                         foundX, 
+                self.set_speed_to_centre(contourDetection, foundX,
                                          distance_to_front_wall)
         else:
-            LOGGER.info("Spin right to find " + 
-                    ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr] +
-                    " marker.")
+            LOGGER.info("Spin right to find " + ColourBoundaries.
+                        COLOUR_NAME_ARRAY[colour_array_cntr] + " marker.")
             self.spin_to_find_colour()
 
     def find_HSV_colour(self, colour_array_cntr, bgr_image):
@@ -316,28 +312,28 @@ class StreamProcessor(threading.Thread):
     def set_camera_tilt_from_marker(self, foundY):
         """Calculates the angle of the camera tilt."""
         global tilt_angle
-        
+
         # contourDetection not part of this function yet
-        
+
         #  Up/down direction - Value between -1.0 to +1.0
         # -1.0 is top, +1.0 is bottom, 0.0 is centre
         camera_direction = (foundY - IMAGE_CENTRE_y) / IMAGE_CENTRE_y
-        
+
         if camera_direction < -0.5:
             tilt_angle = tilt_angle + TILT_CHANGE
         elif camera_direction > 0.5:
             tilt_angle = tilt_angle - TILT_CHANGE
         tilt_angle = sorted([MIN_TILT, tilt_angle, MAX_TILT])[1]
         SERVO_CONTROLLER.set_tilt_servo(tilt_angle)
-        
+
         if debug_show_tilt:
-            TextStringSpeed = 'Found Y: ' +  str(foundY) + \
+            TextStringSpeed = 'Found Y: ' + str(foundY) + \
                               ' Tilt angle: ' + str(tilt_angle)
             LOGGER.info(TextStringSpeed)
-        
+
     # Set the motor speeds from the marker position
     def set_speed_from_marker(self, contourDetection, foundX,
-                           distanceToFrontWall):
+                              distanceToFrontWall):
         """Calulates the speed of the motors to marker."""
         global reached_marker
         global colour_array_cntr
@@ -355,17 +351,18 @@ class StreamProcessor(threading.Thread):
                 speed = SpeedSettings.SPEED_SLOW
             else:
                 speed = SpeedSettings.SPEED_FAST
-            
+
             #  Left/right direction - Value between -1.0 to +1.0
             # -1.0 is far left, +1.0 is far right, 0.0 is centre
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
-            
+
             if debug_show_steering:
-                LOGGER.info("Distance to front wall: " +  str(int(distanceToFrontWall)))
-                LOGGER.info("Found " + 
-                            ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr] + 
-                            " marker. X: " +  str(foundX) + 
-                            " direction: " + format(direction, '.2f'))
+                LOGGER.info(
+                    "Distance to front wall: " + str(int(distanceToFrontWall)))
+                LOGGER.info(
+                    "Found " + ColourBoundaries.
+                    COLOUR_NAME_ARRAY[colour_array_cntr] + " marker. X: " +
+                    str(foundX) + " direction: " + format(direction, '.2f'))
 
             if direction > 0.0:
                 # Turn to robot's right hand side
@@ -379,20 +376,20 @@ class StreamProcessor(threading.Thread):
                 driveLeft = int(speed * (1.0 + (direction * STEERING_RATE)))
                 driveLeft = sorted([MIN_SPEED, driveLeft, MAX_SPEED])[1]
                 driveRight = speed
-            
+
             # If we need faster turning we may have to change to
             # spin_left or spin_right
             ROBOTMOVE.turn_forward(driveLeft, driveRight)
 
             if debug_show_steering:
-                LOGGER.info('Left speed: ' + str(driveLeft) + \
+                LOGGER.info('Left speed: ' + str(driveLeft) +
                             ' Right speed: ' + str(driveRight))
 
         else:
             LOGGER.info('No marker')
 
     def set_speed_to_centre(self, contourDetection, foundX,
-                           distanceToFrontWall):
+                            distanceToFrontWall):
         """Calulates the speed of the motors to centre."""
         global reached_marker
         global colour_array_cntr
@@ -405,25 +402,25 @@ class StreamProcessor(threading.Thread):
                 driveRight = 0
                 speed = 0
                 reached_marker = False
-                
+
                 # Move to next colour
                 colour_array_cntr = (colour_array_cntr + 1) % 4
-                LOGGER.info("The colour selector is now " +
-                        ColourBoundaries.COLOUR_NAME_ARRAY[colour_array_cntr])
+                LOGGER.info("The colour selector is now " + ColourBoundaries.
+                            COLOUR_NAME_ARRAY[colour_array_cntr])
             elif distanceToFrontWall > CENTRE_BUFFER_WARN:
                 LOGGER.info('Getting closer to centre')
                 speed = SpeedSettings.SPEED_SLOW
             else:
                 speed = SpeedSettings.SPEED_FAST
-            
+
             #  Left/right direction - Value between -1.0 to +1.0
             # -1.0 is far left, +1.0 is far right, 0.0 is centre
             direction = (foundX - IMAGE_CENTRE_X) / IMAGE_CENTRE_X
-            
+
             if debug_show_steering:
-                LOGGER.info('Distance: ' +  str(int(distanceToFrontWall)) + 
-                            ' Found X: ' +  str(foundX) +
-                            ' Direction: ' + str(direction))
+                LOGGER.info(
+                    'Distance: ' + str(int(distanceToFrontWall)) + ' Found X: '
+                    + str(foundX) + ' Direction: ' + str(direction))
 
             if direction > 0.0:
                 # Turn to robot's rear left
@@ -437,22 +434,21 @@ class StreamProcessor(threading.Thread):
                 driveLeft = speed
                 driveRight = int(speed * (1.0 + (direction * STEERING_RATE)))
                 driveRight = sorted([MIN_SPEED, driveRight, MAX_SPEED])[1]
-            
+
             # If we need faster turning we may have to change to
             # spin_left or spin_right
             ROBOTMOVE.turn_reverse(driveLeft, driveRight)
 
             if debug_show_steering:
-                LOGGER.info('Left speed: ' + str(driveLeft) + 
+                LOGGER.info('Left speed: ' + str(driveLeft) +
                             ' Right speed: ' + str(driveRight))
 
         else:
             LOGGER.info('No marker')
 
-
     def spin_to_find_colour(self):
         """Spin right until marker found."""
-        
+
         ROBOTMOVE.spin_right(SpeedSettings.SPEED_FAST)
         time.sleep(SPIN_TIME)
         ROBOTMOVE.stop()
@@ -480,7 +476,7 @@ class ImageCapture(threading.Thread):
     # Stream delegation loop
     def trigger_stream(self):
         global running
-        
+
         while running:
             if processor.event.is_set():
                 time.sleep(0.01)
@@ -510,15 +506,15 @@ MAX_SPEED = SpeedSettings.SPEED_FAST
 MIN_SPEED = 0
 
 ROBOTMOVE = DualMotorController.DualMotorController(
-    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
-    
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
+
 ROBOTMOVE.stop()
 
 # Initialise camera
@@ -547,9 +543,9 @@ capture_thread = ImageCapture()
 # Set movement constant values
 FRONT_BUFFER_WARN = 35  # Distance to corner for when to slow (cm)
 FRONT_BUFFER_STOP = 20  # Shortest distance to corner (cm)
-CENTRE_BUFFER_WARN =  65 # Distance from corner for when to slow (cm) 
-CENTRE_BUFFER_STOP =  80 # Shortest distance from corner (cm)
-                         # ~86.2 cm from corner if perfect centre
+CENTRE_BUFFER_WARN = 65  # Distance from corner for when to slow (cm)
+CENTRE_BUFFER_STOP = 80  # Shortest distance from corner (cm)
+# ~86.2 cm from corner if perfect centre
 SIDE_BUFFER = 10  # Shortest distance to side (cm)
 CORRECTION_TIME = 0.15  # Angle correction delay time in seconds
 FORWARD_TIME = 0.05  # Forward time iteration delay time in seconds
@@ -570,15 +566,15 @@ MIN_MARKER_CIRCULARITY = 0.5  # Correct value to be decided
 
 # Initialise Ultrasonic Sensors
 FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-    1, None, GPIOLayout.SONAR_FRONT_TX_PIN, GPIOLayout.SONAR_FRONT_RX_PIN, 1)
+    1, None, GPIOLayout.SONAR_FRONT_TX_GPIO, GPIOLayout.SONAR_FRONT_RX_GPIO, 1)
 FRONT_SENSOR.start()
 
 RIGHT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-    1, None, GPIOLayout.SONAR_RIGHT_TX_PIN, GPIOLayout.SONAR_RIGHT_RX_PIN, 1)
+    1, None, GPIOLayout.SONAR_RIGHT_TX_GPIO, GPIOLayout.SONAR_RIGHT_RX_GPIO, 1)
 RIGHT_SENSOR.start()
 
 LEFT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-    1, None, GPIOLayout.SONAR_LEFT_TX_PIN, GPIOLayout.SONAR_LEFT_RX_PIN, 1)
+    1, None, GPIOLayout.SONAR_LEFT_TX_GPIO, GPIOLayout.SONAR_LEFT_RX_GPIO, 1)
 LEFT_SENSOR.start()
 
 
@@ -588,7 +584,7 @@ def main():
     Method 1 - First choice
     Method 2 - Emergency backup
     """
-    
+
     global running
     global pan_angle
     global tilt_angle
@@ -599,7 +595,7 @@ def main():
     LOGGER.info("Start Pan/Tilt servos")
     SERVO_CONTROLLER.start_servos()
     time.sleep(1)
-    
+
     # Initialise pan/tilt direction
     pan_angle = PAN_INTIAL
     tilt_angle = TILT_INTIAL
@@ -619,7 +615,7 @@ def main():
 
 
 if __name__ == "__main__":
-    
+
     try:
         main()
     except KeyboardInterrupt:

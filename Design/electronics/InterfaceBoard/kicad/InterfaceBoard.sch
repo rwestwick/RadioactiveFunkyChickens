@@ -28,14 +28,15 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:InterfaceBoard-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date ""
-Rev ""
+Date "2018-03-04"
+Rev "1.1"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -93,116 +94,105 @@ Wire Wire Line
 $Comp
 L Screw_Terminal_1x02 J10
 U 1 1 5A91D070
-P 7800 1600
-F 0 "J10" H 7800 1850 50  0000 C TNN
-F 1 "Screw_Terminal_1x02" V 7650 1600 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 7800 1375 50  0001 C CNN
-F 3 "" H 7775 1600 50  0001 C CNN
-	1    7800 1600
+P 7150 1600
+F 0 "J10" H 7150 1850 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 7000 1600 50  0000 C TNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 7150 1375 50  0001 C CNN
+F 3 "" H 7125 1600 50  0001 C CNN
+	1    7150 1600
 	0    1    1    0   
 $EndComp
-$Comp
-L Screw_Terminal_1x02 J12
-U 1 1 5A91D167
-P 10000 1600
-F 0 "J12" H 10000 1850 50  0000 C TNN
-F 1 "Screw_Terminal_1x02" V 9850 1600 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 10000 1375 50  0001 C CNN
-F 3 "" H 9975 1600 50  0001 C CNN
-	1    10000 1600
-	0    1    1    0   
-$EndComp
-Text Notes 9700 1350 0    60   ~ 0
+Text Notes 8600 1300 0    60   ~ 0
 Servo
 Text Notes 2750 1300 0    60   ~ 0
 Proximity
-Text Notes 7200 1300 0    60   ~ 0
+Text Notes 6550 1300 0    60   ~ 0
 Power
 $Comp
 L +5V #PWR05
 U 1 1 5A91D395
-P 6350 1850
-F 0 "#PWR05" H 6350 1700 50  0001 C CNN
-F 1 "+5V" H 6350 1990 50  0000 C CNN
-F 2 "" H 6350 1850 50  0001 C CNN
-F 3 "" H 6350 1850 50  0001 C CNN
-	1    6350 1850
+P 5700 1850
+F 0 "#PWR05" H 5700 1700 50  0001 C CNN
+F 1 "+5V" H 5700 1990 50  0000 C CNN
+F 2 "" H 5700 1850 50  0001 C CNN
+F 3 "" H 5700 1850 50  0001 C CNN
+	1    5700 1850
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR06
 U 1 1 5A91D3C2
-P 7900 2450
-F 0 "#PWR06" H 7900 2200 50  0001 C CNN
-F 1 "GND" H 7900 2300 50  0000 C CNN
-F 2 "" H 7900 2450 50  0001 C CNN
-F 3 "" H 7900 2450 50  0001 C CNN
-	1    7900 2450
+P 7250 2450
+F 0 "#PWR06" H 7250 2200 50  0001 C CNN
+F 1 "GND" H 7250 2300 50  0000 C CNN
+F 2 "" H 7250 2450 50  0001 C CNN
+F 3 "" H 7250 2450 50  0001 C CNN
+	1    7250 2450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7900 1800 7900 2450
+	7250 1800 7250 2450
 $Comp
 L CONN_01X03 J13
 U 1 1 5A91D4BE
-P 10650 3950
-F 0 "J13" H 10650 4150 50  0000 C CNN
-F 1 "CONN_01X03" V 10750 3950 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 10650 3950 50  0001 C CNN
-F 3 "" H 10650 3950 50  0001 C CNN
-	1    10650 3950
+P 9550 3950
+F 0 "J13" H 9550 4150 50  0000 C CNN
+F 1 "CONN_01X03" V 9650 3950 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 9550 3950 50  0001 C CNN
+F 3 "" H 9550 3950 50  0001 C CNN
+	1    9550 3950
 	0    1    1    0   
 $EndComp
 $Comp
 L CONN_01X03 J11
 U 1 1 5A91D61C
-P 9800 3950
-F 0 "J11" H 9800 4150 50  0000 C CNN
-F 1 "CONN_01X03" V 9900 3950 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 9800 3950 50  0001 C CNN
-F 3 "" H 9800 3950 50  0001 C CNN
-	1    9800 3950
+P 8700 3950
+F 0 "J11" H 8700 4150 50  0000 C CNN
+F 1 "CONN_01X03" V 8800 3950 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 8700 3950 50  0001 C CNN
+F 3 "" H 8700 3950 50  0001 C CNN
+	1    8700 3950
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	9900 1800 9900 3750
+	8800 1800 8800 3750
 Wire Wire Line
-	10750 2600 10750 3750
+	9650 2600 9650 3750
 $Comp
 L GND #PWR07
 U 1 1 5A91D972
-P 9350 3850
-F 0 "#PWR07" H 9350 3600 50  0001 C CNN
-F 1 "GND" H 9350 3700 50  0000 C CNN
-F 2 "" H 9350 3850 50  0001 C CNN
-F 3 "" H 9350 3850 50  0001 C CNN
-	1    9350 3850
+P 8250 3850
+F 0 "#PWR07" H 8250 3600 50  0001 C CNN
+F 1 "GND" H 8250 3700 50  0000 C CNN
+F 2 "" H 8250 3850 50  0001 C CNN
+F 3 "" H 8250 3850 50  0001 C CNN
+	1    8250 3850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9350 3650 10550 3650
+	8250 3650 10200 3650
 Wire Wire Line
-	10550 3650 10550 3750
+	9450 3650 9450 3750
 Wire Wire Line
-	9700 3750 9700 3650
+	8600 3750 8600 3650
 $Comp
 L +5V #PWR08
 U 1 1 5A91DA19
-P 9350 3350
-F 0 "#PWR08" H 9350 3200 50  0001 C CNN
-F 1 "+5V" H 9350 3490 50  0000 C CNN
-F 2 "" H 9350 3350 50  0001 C CNN
-F 3 "" H 9350 3350 50  0001 C CNN
-	1    9350 3350
+P 8250 3350
+F 0 "#PWR08" H 8250 3200 50  0001 C CNN
+F 1 "+5V" H 8250 3490 50  0000 C CNN
+F 2 "" H 8250 3350 50  0001 C CNN
+F 3 "" H 8250 3350 50  0001 C CNN
+	1    8250 3350
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10650 3500 10650 3750
+	9550 3500 9550 3750
 Wire Wire Line
-	9800 3750 9800 3500
-Text Notes 9600 4400 0    60   ~ 0
+	8700 3750 8700 3500
+Text Notes 8500 4400 0    60   ~ 0
 Horizontal\nServo
-Text Notes 10550 4400 0    60   ~ 0
+Text Notes 9450 4400 0    60   ~ 0
 Vertical\nServo
 $Comp
 L Screw_Terminal_1x02 J2
@@ -210,7 +200,7 @@ U 1 1 5A91E073
 P 1650 4100
 F 0 "J2" H 1650 4350 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 1500 4100 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 1650 3875 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 1650 3875 50  0001 C CNN
 F 3 "" H 1625 4100 50  0001 C CNN
 	1    1650 4100
 	0    -1   -1   0   
@@ -221,7 +211,7 @@ U 1 1 5A91E232
 P 4350 4100
 F 0 "J8" H 4350 4350 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 4200 4100 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 4350 3875 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 4350 3875 50  0001 C CNN
 F 3 "" H 4325 4100 50  0001 C CNN
 	1    4350 4100
 	0    -1   -1   0   
@@ -232,7 +222,7 @@ U 1 1 5A91E2CD
 P 2550 4100
 F 0 "J4" H 2550 4350 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 2400 4100 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 2550 3875 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 2550 3875 50  0001 C CNN
 F 3 "" H 2525 4100 50  0001 C CNN
 	1    2550 4100
 	0    -1   -1   0   
@@ -243,7 +233,7 @@ U 1 1 5A91E52D
 P 3450 4100
 F 0 "J6" H 3450 4350 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 3300 4100 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 3450 3875 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 3450 3875 50  0001 C CNN
 F 3 "" H 3425 4100 50  0001 C CNN
 	1    3450 4100
 	0    -1   -1   0   
@@ -251,47 +241,47 @@ $EndComp
 $Comp
 L Screw_Terminal_1x02 J9
 U 1 1 5A91E5BC
-P 6900 1600
-F 0 "J9" H 6900 1850 50  0000 C TNN
-F 1 "Screw_Terminal_1x02" V 6750 1600 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 6900 1375 50  0001 C CNN
-F 3 "" H 6875 1600 50  0001 C CNN
-	1    6900 1600
+P 6250 1600
+F 0 "J9" H 6250 1850 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 6100 1600 50  0000 C TNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 6250 1375 50  0001 C CNN
+F 3 "" H 6225 1600 50  0001 C CNN
+	1    6250 1600
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	6350 1950 7700 1950
-Connection ~ 6800 1950
+	5700 1950 7050 1950
+Connection ~ 6150 1950
 Wire Wire Line
-	7700 1950 7700 1800
-Connection ~ 7900 2300
+	7050 1950 7050 1800
+Connection ~ 7250 2300
 Wire Wire Line
-	7000 1800 7000 2300
+	6350 1800 6350 2300
 Wire Wire Line
-	7000 2300 7900 2300
+	6350 2300 7250 2300
 Wire Wire Line
-	6350 1950 6350 1850
+	5700 1950 5700 1850
 Wire Wire Line
-	6800 1800 6800 1950
+	6150 1800 6150 1950
 Wire Wire Line
-	9350 3350 9350 3500
+	8250 3350 8250 3500
 Wire Wire Line
-	9350 3500 10650 3500
-Connection ~ 9800 3500
-Connection ~ 9700 3650
+	8250 3500 10300 3500
+Connection ~ 8700 3500
+Connection ~ 8600 3650
 Wire Wire Line
-	9350 3650 9350 3850
+	8250 3650 8250 3850
 Wire Wire Line
-	10100 2600 10750 2600
+	9000 2600 9650 2600
 Wire Wire Line
-	10100 2600 10100 1800
+	9000 2600 9000 1800
 $Comp
 L Screw_Terminal_1x02 J1
 U 1 1 5A91FCA2
 P 1650 1650
 F 0 "J1" H 1650 1900 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 1500 1650 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 1650 1425 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 1650 1425 50  0001 C CNN
 F 3 "" H 1625 1650 50  0001 C CNN
 	1    1650 1650
 	0    1    1    0   
@@ -302,7 +292,7 @@ U 1 1 5A91FD01
 P 2550 1650
 F 0 "J3" H 2550 1900 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 2400 1650 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 2550 1425 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 2550 1425 50  0001 C CNN
 F 3 "" H 2525 1650 50  0001 C CNN
 	1    2550 1650
 	0    1    1    0   
@@ -313,7 +303,7 @@ U 1 1 5A91FD6A
 P 3450 1650
 F 0 "J5" H 3450 1900 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 3300 1650 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 3450 1425 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 3450 1425 50  0001 C CNN
 F 3 "" H 3425 1650 50  0001 C CNN
 	1    3450 1650
 	0    1    1    0   
@@ -324,7 +314,7 @@ U 1 1 5A91FDD1
 P 4350 1650
 F 0 "J7" H 4350 1900 50  0000 C TNN
 F 1 "Screw_Terminal_1x02" V 4200 1650 50  0000 C TNN
-F 2 "Connectors_Phoenix:PhoenixContact_MC-G_02x5.08mm_Angled" H 4350 1425 50  0001 C CNN
+F 2 "Connectors_Molex:Molex_KK-6410-02_02x2.54mm_Straight" H 4350 1425 50  0001 C CNN
 F 3 "" H 4325 1650 50  0001 C CNN
 	1    4350 1650
 	0    1    1    0   
@@ -377,7 +367,7 @@ Wire Wire Line
 Wire Wire Line
 	3350 2950 3350 3900
 Wire Wire Line
-	2450 3900 2450 2950
+	2450 2950 2450 3900
 Wire Wire Line
 	2450 2650 2450 1850
 $Comp
@@ -501,4 +491,40 @@ Connection ~ 1550 3350
 Connection ~ 1750 3350
 Wire Wire Line
 	1350 2950 1350 3350
+$Comp
+L Screw_Terminal_1x03 J12
+U 1 1 5A9C7F3A
+P 9000 1600
+F 0 "J12" H 9000 1950 50  0000 C TNN
+F 1 "Screw_Terminal_1x03" V 8850 1600 50  0000 C TNN
+F 2 "Connectors_Molex:Molex_KK-6410-03_03x2.54mm_Straight" H 9000 1275 50  0001 C CNN
+F 3 "" H 8975 1700 50  0001 C CNN
+	1    9000 1600
+	0    1    1    0   
+$EndComp
+$Comp
+L CONN_01X03 J14
+U 1 1 5A9C8B5B
+P 10300 3950
+F 0 "J14" H 10300 4150 50  0000 C CNN
+F 1 "CONN_01X03" V 10400 3950 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm" H 10300 3950 50  0001 C CNN
+F 3 "" H 10300 3950 50  0001 C CNN
+	1    10300 3950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	10400 2400 10400 3750
+Wire Wire Line
+	10200 3650 10200 3750
+Wire Wire Line
+	10300 3500 10300 3750
+Text Notes 10200 4400 0    60   ~ 0
+Duck Shoot Fire\nServo
+Connection ~ 9450 3650
+Connection ~ 9550 3500
+Wire Wire Line
+	9200 1800 9200 2400
+Wire Wire Line
+	9200 2400 10400 2400
 $EndSCHEMATC

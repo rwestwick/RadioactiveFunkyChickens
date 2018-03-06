@@ -4,7 +4,6 @@ Provides an algorithm for following a black line on a white background.
 """
 
 import logging
-import MotorController
 import LineFollowerSensor
 import SetupConsoleLogger
 import GPIOLayout
@@ -16,9 +15,15 @@ LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER)
 
 # Initialise motors
-ROBOTMOVE = MotorController.MotorController(
-    GPIOLayout.MOTOR_LEFT_FORWARD_PIN, GPIOLayout.MOTOR_LEFT_BACKWARD_PIN,
-    GPIOLayout.MOTOR_RIGHT_FORWARD_PIN, GPIOLayout.MOTOR_RIGHT_BACKWARD_PIN)
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
 
 def main():
@@ -40,8 +45,9 @@ def main():
     lastturnleft = False
     lastturnright = False
     linefollower = LineFollowerSensor.LineFollowerSensor(
-        GPIOLayout.LINE_FOLLOWER_LEFT_PIN, GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
-        GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
+        GPIOLayout.LINE_FOLLOWER_LEFT_GPIO,
+        GPIOLayout.LINE_FOLLOWER_MIDDLE_GPIO,
+        GPIOLayout.LINE_FOLLOWER_RIGHT_GPIO)
 
     while True:
         LSTATE = not linefollower.get_l_state()

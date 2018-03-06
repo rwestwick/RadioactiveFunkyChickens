@@ -45,7 +45,7 @@ class ServoController(object):
             servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + \
                 str(GPIOLayout.SERVO_HORIZONTAL_PIN) + ',' + \
                 str(GPIOLayout.SERVO_VERTICAL_PIN) + ',' + \
-                str(GPIOLayout.DUCK_SHOOT_FIRE) + \
+                str(GPIOLayout.DUCK_SHOOT_FIRE_GPIO) + \
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             MODULE_LOGGER.info(init_string)
@@ -79,10 +79,10 @@ class ServoController(object):
         Sets the tilt servo to a position
         """
         self.set_servo(self.TILT_SERVO_ID, degrees)
-        
+
     def set_nerf_trigger_servo(self, degrees):
         """
-        Sets the Nerf trigger 
+        Sets the Nerf trigger
         """
         self.set_servo(self.NERF_TRIGGER_ID, degrees)
 
@@ -94,11 +94,13 @@ class ServoController(object):
         """
         PIN_STRING = 'echo p1-'
         if pin == 0:
-            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_HORIZONTAL_PIN) + '='
+            PIN_STRING = PIN_STRING + str(
+                GPIOLayout.SERVO_HORIZONTAL_PIN) + '='
         elif pin == 1:
             PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_VERTICAL_PIN) + '='
         else:
-            PIN_STRING = PIN_STRING + str(GPIOLayout.DUCK_SHOOT_FIRE) + '='
+            PIN_STRING = PIN_STRING + str(
+                GPIOLayout.DUCK_SHOOT_FIRE_GPIO) + '='
 
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"

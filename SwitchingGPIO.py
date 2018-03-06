@@ -7,11 +7,11 @@ import logging
 import platform
 if platform.machine() == "armv6l" or platform.machine() == "armv7l":
     try:
-        from gpiozero import OutputDevice
+        from gpiozero import Buzzer
     except ImportError:
-        print "ERROR importing OutputDevice from gpiozero"
+        print "ERROR importing Buzzer from gpiozero"
 else:
-    from GPIOZeroStub import OutputDevice as OutputDevice
+    from GPIOZeroStub import Buzzer as Buzzer
 
 MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
@@ -21,13 +21,14 @@ class SwitchingGPIO(object):
     Defines the interaction with a GPIO socket
     """
 
-    def __init__(self, pcm_num):
+    def __init__(self, bcm_num):
         """
         Initialise the parameters required for the switching base class
         """
-        MODULE_LOGGER.info("GPIO Class init on socket" + str(pcm_num))
-        self.pcm_num = pcm_num
-        self.socket = OutputDevice(pcm_num)
+        MODULE_LOGGER.info("GPIO Class init on socket" + str(bcm_num))
+        self.bcm_num = bcm_num
+        self.socket = Buzzer(bcm_num)
+        self.switch_off()
 
     def __del__(self):
         """
@@ -39,12 +40,19 @@ class SwitchingGPIO(object):
         """
         Switches socket on
         """
-        MODULE_LOGGER.info("Switching on " + str(self.pcm_num))
+        MODULE_LOGGER.info("Switching on " + str(self.bcm_num))
         self.socket.on()
 
     def switch_off(self):
         """
         Switches socket off
         """
-        MODULE_LOGGER.info("Switching off " + str(self.pcm_num))
+        MODULE_LOGGER.info("Switching off " + str(self.bcm_num))
         self.socket.off()
+
+    def is_on(self):
+        """
+        Gets the state of the gpio line
+        """
+        MODULE_LOGGER.info("Getting state " + str(self.socket.is_active()))
+        return self.socket.is_active()

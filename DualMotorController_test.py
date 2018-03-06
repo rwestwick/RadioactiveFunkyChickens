@@ -19,14 +19,14 @@ def test_motorcontroller(sleep_len=0):
     try:
         SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
         DMCONTROLLER = DualMotorController.DualMotorController(
-            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_PIN,
-            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_PIN,
-            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_PIN,
-            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_PIN,
-            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_PIN)
+            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
         DMCONTROLLER.stop()
         time.sleep(sleep_len)
         MODULE_LOGGER.info("forward 50%")

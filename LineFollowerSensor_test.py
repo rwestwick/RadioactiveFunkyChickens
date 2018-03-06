@@ -17,9 +17,9 @@ def test_linefollowersensor():
 
     try:
         LINEFOLLOWER = LineFollowerSensor.LineFollowerSensor(
-            GPIOLayout.LINE_FOLLOWER_LEFT_PIN,
-            GPIOLayout.LINE_FOLLOWER_MIDDLE_PIN,
-            GPIOLayout.LINE_FOLLOWER_RIGHT_PIN)
+            GPIOLayout.LINE_FOLLOWER_LEFT_GPIO,
+            GPIOLayout.LINE_FOLLOWER_MIDDLE_GPIO,
+            GPIOLayout.LINE_FOLLOWER_RIGHT_GPIO)
 
         MODULE_LOGGER.info(
             str(LINEFOLLOWER.get_r_state()) + " - " +

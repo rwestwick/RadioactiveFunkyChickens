@@ -7,8 +7,9 @@ it doesn't exist.
 import random
 
 BOARD = 1
-OUT = 2
-IN = 3
+BCM = 2
+OUT = 3
+IN = 4
 
 
 class PWMObject(object):
