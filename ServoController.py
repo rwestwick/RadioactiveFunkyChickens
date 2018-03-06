@@ -45,7 +45,7 @@ class ServoController(object):
             servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + \
                 str(GPIOLayout.SERVO_HORIZONTAL_PIN) + ',' + \
                 str(GPIOLayout.SERVO_VERTICAL_PIN) + ',' + \
-                str(GPIOLayout.DUCK_SHOOT_FIRE_GPIO) + \
+                str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + \
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             MODULE_LOGGER.info(init_string)
