@@ -7,11 +7,11 @@ import logging
 import platform
 if platform.machine() == "armv6l" or platform.machine() == "armv7l":
     try:
-        from gpiozero import OutputDevice
+        from gpiozero import Buzzer
     except ImportError:
-        print "ERROR importing OutputDevice from gpiozero"
+        print "ERROR importing Buzzer from gpiozero"
 else:
-    from GPIOZeroStub import OutputDevice as OutputDevice
+    from GPIOZeroStub import Buzzer as Buzzer
 
 MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
@@ -27,7 +27,8 @@ class SwitchingGPIO(object):
         """
         MODULE_LOGGER.info("GPIO Class init on socket" + str(bcm_num))
         self.bcm_num = bcm_num
-        self.socket = OutputDevice(bcm_num)
+        self.socket = Buzzer(bcm_num)
+        self.switch_off()
 
     def __del__(self):
         """
@@ -48,3 +49,10 @@ class SwitchingGPIO(object):
         """
         MODULE_LOGGER.info("Switching off " + str(self.bcm_num))
         self.socket.off()
+
+    def is_on(self):
+        """
+        Gets the state of the gpio line
+        """
+        MODULE_LOGGER.info("Getting state " + str(self.socket.is_active()))
+        return self.socket.is_active()
