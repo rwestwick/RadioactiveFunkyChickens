@@ -806,8 +806,6 @@ Wire Wire Line
 Wire Wire Line
 	3200 1300 3750 1300
 Wire Wire Line
-	3200 1400 3750 1400
-Wire Wire Line
 	1900 6250 1750 6250
 Wire Wire Line
 	1750 5550 1900 5550
@@ -1093,19 +1091,18 @@ Wire Wire Line
 	8400 4550 8550 4550
 Wire Wire Line
 	8550 4650 8400 4650
-Text Label 3750 1400 0    60   ~ 0
+Text Label 3750 2900 0    60   ~ 0
 DUCK_SHOOT_MOTOR_GPIO
 NoConn ~ 9900 4250
 NoConn ~ 9900 4600
-NoConn ~ 3300 2900
 Wire Wire Line
-	3300 2900 3200 2900
+	3200 2900 3750 2900
 Text Label 3750 1300 0    60   ~ 0
 DUCK_SHOOT_LASER_GPIO
 Text Notes 3200 1300 0    60   ~ 0
 GPIO14
-Text Notes 3200 1400 0    60   ~ 0
-GPIO15
+Text Notes 3200 2900 0    60   ~ 0
+GPIO21
 Text Notes 3200 1500 0    60   ~ 0
 GPIO18
 Text Notes 3200 1800 0    60   ~ 0
@@ -1138,4 +1135,7 @@ Text Notes 2050 1500 0    60   ~ 0
 GPIO17
 Text Notes 2050 1300 0    60   ~ 0
 GPIO4
+NoConn ~ 3300 1400
+Wire Wire Line
+	3200 1400 3300 1400
 $EndSCHEMATC
