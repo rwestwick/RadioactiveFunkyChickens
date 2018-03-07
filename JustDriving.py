@@ -30,10 +30,9 @@ def main():
             None,
             None)
     try:
-        LOGGER.info("starting")
         WIIMOTE_CONTROLLER.start()
-        time.sleep(600)
-
+        while True:
+            time.sleep(1)
     except KeyboardInterrupt:
         LOGGER.info("Stopping the Wiimote Controller thread")
     finally:
