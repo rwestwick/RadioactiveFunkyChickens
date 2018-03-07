@@ -16,7 +16,6 @@ sudo apt-get install googletest -y
 sudo apt-get install samba -y
 sudo apt remove wolfram-engine -y
 
-
 sudo pip install --upgrade pip
 sudo pip install --upgrade ndg-httpsclient 
 sudo pip install --upgrade setuptools
@@ -27,7 +26,10 @@ sudo pip install pytest-cov
 sudo pip install colorlog
 sudo pip install coverage
 sudo pip install pyzmq
-
+sudo pip install autoflake
+sudo pip install pylint
+sudo pip install flake8
+sudo pip install autopep8
 
 cd ~/code
 git clone https://github.com/google/protobuf
