@@ -43,7 +43,6 @@ def test_nunchukcontroller(sleep_len=30):
     finally:
         CONTROLLER.exit_now()
         CONTROLLER.join()
-        CONTROLLER.__del__()
 
 if __name__ == "__main__":
-    test_ultrasonicthread_callback(30)
+    test_nunchukcontroller(300)

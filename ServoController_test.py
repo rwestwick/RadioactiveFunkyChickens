@@ -25,7 +25,29 @@ def test_servocontroller(sleep_len=0):
         SERVO_CONTROLLER.set_pan_servo(0)
         MODULE_LOGGER.info("Start Position TILT")
         SERVO_CONTROLLER.set_tilt_servo(0)
+        MODULE_LOGGER.info("Start Position NERF")
+        SERVO_CONTROLLER.set_nerf_trigger_servo(0)
         time.sleep(2 * sleep_len)
+
+        MODULE_LOGGER.info("NERF Tests")
+        SERVO_CONTROLLER.set_nerf_trigger_servo(0)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(45)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(90)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(45)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(0)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(-45)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(-90)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(-45)
+        time.sleep(sleep_len)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(0)
+        time.sleep(sleep_len)
 
         MODULE_LOGGER.info("PAN Tests")
         SERVO_CONTROLLER.set_pan_servo(0)
@@ -65,11 +87,13 @@ def test_servocontroller(sleep_len=0):
         SERVO_CONTROLLER.set_tilt_servo(-45)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(0)
+
     except KeyboardInterrupt:
         pass
     finally:
         SERVO_CONTROLLER.set_pan_servo(0)
         SERVO_CONTROLLER.set_tilt_servo(0)
+        SERVO_CONTROLLER.set_nerf_trigger_servo(0)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.stop_servos()
 
