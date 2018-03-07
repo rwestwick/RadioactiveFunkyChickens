@@ -14,11 +14,12 @@ import SetupConsoleLogger
 import GPIOLayout
 import ServoController
 import SwitchingGPIO
+import WiimoteNunchukControllerThread
 
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
-SetupConsoleLogger.setup_console_logger(LOGGER)
+SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 
 # Servo used to fire the darts
 servo_controller = ServoController.ServoController()
@@ -29,18 +30,18 @@ laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO)
 # Motor gpio line
 motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO)
 
+RUMBLE_DELAY = 2.0  # Time of rumble in seconds trigger has to go full length
+NERF_TRIGGER_FORWARD = 45  # Angle of servo in forward position degrees
+NERF_TRIGGER_BACK = -45  # Angle of servo in back position degrees
+
 
 def fire_cb(currentWiimote):
     """
     thread rumble function
-    """
-    RUMBLE_DELAY = 2.0  # Time of rumble in seconds trigger has to go full length
-    NERF_TRIGGER_FORWARD = 45  # Angle of servo in forward position degrees
-    NERF_TRIGGER_BACK = -45  # Angle of servo in back position degrees
-    
+    """    
     LOGGER.info("Fire!!")
-    servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_FORWARD)
     currentWiimote.rumble = 1
+    servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_FORWARD)
     time.sleep(RUMBLE_DELAY)
     servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
     currentWiimote.rumble = 0
@@ -66,7 +67,7 @@ def toggle_motor_cb(currentWiimote):
     """
     del currentWiimote
 
-    if motor_gpio.is_on()::
+    if motor_gpio.is_on():
         LOGGER.info("Motor Toggle Off")
         motor_gpio.switch_off()
     else:
@@ -77,18 +78,23 @@ def toggle_motor_cb(currentWiimote):
 def main():
     """
     """
+    LOGGER.info("Somewhere Over The Rainbow")
+    servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
+    WIIMOTE_CONTROLLER = WiimoteNunchukControllerThread.WiimoteNunchukControllerThread(
+            fire_cb,
+            toggle_laser_cb,
+            toggle_motor_cb,
+            servo_controller)
     try:
-        servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
-        WIIMOTE_CONTROLLER =
-            WiimoteNunchukControllerThread.WiimoteNunchukControllerThread(
-                fire_cb,
-                toggle_laser_cb,
-                toggle_motor_cb,
-                servo_controller)
+        LOGGER.info("starting")
         WIIMOTE_CONTROLLER.start()
+        time.sleep(600)
+
     except KeyboardInterrupt:
-        LOGGER.info("Stopping the Wiimote Controller thred")
+        LOGGER.info("Stopping the Wiimote Controller thread")
     finally:
+        laser_gpio.__del__()
+        motor_gpio.__del__()
         WIIMOTE_CONTROLLER.exit_now()
         WIIMOTE_CONTROLLER.join()
         servo_controller.stop_servos()

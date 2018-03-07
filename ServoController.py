@@ -48,7 +48,7 @@ class ServoController(object):
                 str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + \
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
-            MODULE_LOGGER.info(init_string)
+            MODULE_LOGGER.debug(init_string)
             os.system(init_string)
             self.servos_active = True
 
@@ -104,5 +104,5 @@ class ServoController(object):
 
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
-        MODULE_LOGGER.info(PIN_STRING)
+        MODULE_LOGGER.debug(PIN_STRING)
         os.system(PIN_STRING)

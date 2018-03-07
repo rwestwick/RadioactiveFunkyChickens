@@ -35,7 +35,7 @@ class MotorController(object):
             ")"
         MODULE_LOGGER.info(log_string)
 
-        # Use physical pin numbering
+        # Use board pin numbering
         GPIO.setmode(GPIO.BCM)
 
         # Disable warnings
@@ -64,7 +64,7 @@ class MotorController(object):
         Sets all motors off and sets GPIO to standard values
         """
         self.stop()
-        GPIO.cleanup()
+        #GPIO.cleanup()
         MODULE_LOGGER.info("Cleaned up MotorController")
 
     def stop(self):
