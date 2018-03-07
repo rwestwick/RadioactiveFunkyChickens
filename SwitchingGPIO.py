@@ -28,7 +28,7 @@ class SwitchingGPIO(object):
         """
         Initialise the parameters required for the switching base class
         """
-        MODULE_LOGGER.info("GPIO Class init on socket" + str(bcm_num))
+        MODULE_LOGGER.info("GPIO Class init on socket " + str(bcm_num))
         
         # Use board pin numbering
         GPIO.setmode(GPIO.BCM)
@@ -40,6 +40,7 @@ class SwitchingGPIO(object):
         """
         Destructor
         """
+        MODULE_LOGGER.info("GPIO Switch closed on socket " + str(self.bcm_num))
         self.socket.close()
 
     def switch_on(self):

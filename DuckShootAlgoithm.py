@@ -78,7 +78,7 @@ def toggle_motor_cb(currentWiimote):
 def main():
     """
     """
-    LOGGER.info("Somewhere Over The Rainbow")
+    LOGGER.info("Duck Shoot")
     servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
     WIIMOTE_CONTROLLER = WiimoteNunchukControllerThread.WiimoteNunchukControllerThread(
             fire_cb,
@@ -93,8 +93,6 @@ def main():
     except KeyboardInterrupt:
         LOGGER.info("Stopping the Wiimote Controller thread")
     finally:
-        laser_gpio.__del__()
-        motor_gpio.__del__()
         WIIMOTE_CONTROLLER.exit_now()
         WIIMOTE_CONTROLLER.join()
         servo_controller.stop_servos()

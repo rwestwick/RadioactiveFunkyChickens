@@ -55,7 +55,6 @@ class WiimoteNunchukControllerThread(threading.Thread):
         self.servo_controller = None
 
         # Initialise motors
-        MODULE_LOGGER.debug("Setting up movement")
         self.robotmove = DualMotorController.DualMotorController(
             GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
             GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
@@ -76,7 +75,6 @@ class WiimoteNunchukControllerThread(threading.Thread):
             self.servo_controller = ServoController.ServoController()
             self._servo_supplied = False
         
-        MODULE_LOGGER.debug("starting servos")
         self.servo_controller.start_servos()
         
         # Wiimote Controller
@@ -160,7 +158,7 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
-                    MODULE_LOGGER.debug("Forward at self.speed " + str(self.speed))
+                    MODULE_LOGGER.debug("Forward at speed " + str(self.speed))
                     self.robotmove.forward(self.speed)
                     time.sleep(self.STICK_DELAY)
 
@@ -176,7 +174,7 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
-                    MODULE_LOGGER.debug("Reverse at self.speed " + str(self.speed))
+                    MODULE_LOGGER.debug("Reverse at speed " + str(self.speed))
                     self.robotmove.reverse(self.speed)
                     time.sleep(self.STICK_DELAY)
 
@@ -192,7 +190,7 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
-                    MODULE_LOGGER.debug("Spin right at self.speed " + str(self.speed))
+                    MODULE_LOGGER.debug("Spin right at speed " + str(self.speed))
                     self.robotmove.spin_right(self.speed)
                     time.sleep(self.STICK_DELAY)
 
@@ -208,7 +206,7 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
-                    MODULE_LOGGER.debug("Spin left at self.speed " + str(self.speed))
+                    MODULE_LOGGER.debug("Spin left at speed " + str(self.speed))
                     self.robotmove.spin_left(self.speed)
                     time.sleep(self.STICK_DELAY)
 
@@ -238,8 +236,8 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedRightWheel = overall_speed
 
                     MODULE_LOGGER.debug(
-                        "Steer left. Left wheel at self.speed: " + str(self.speedLeftWheel) +
-                        " Right wheel at self.speed: " + str(self.speedRightWheel))
+                        "Steer left. Left wheel at speed: " + str(self.speedLeftWheel) +
+                        " Right wheel at speed: " + str(self.speedRightWheel))
                     self.robotmove.turn_forward(self.speedLeftWheel, self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
@@ -269,8 +267,8 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedRightWheel = int(lengthY)
 
                     MODULE_LOGGER.debug(
-                        "Steer right. Left wheel at self.speed: " + str(self.speedLeftWheel)
-                        + " Right wheel at self.speed: " + str(self.speedRightWheel))
+                        "Steer right. Left wheel at speed: " + str(self.speedLeftWheel)
+                        + " Right wheel at speed: " + str(self.speedRightWheel))
                     self.robotmove.turn_forward(self.speedLeftWheel, self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
@@ -300,8 +298,8 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedRightWheel = overall_speed
                     
                     MODULE_LOGGER.debug(
-                        "Reverse left. Left wheel at self.speed: " + str(self.speedLeftWheel)
-                        + " Right wheel at self.speed: " + str(self.speedRightWheel))
+                        "Reverse left. Left wheel at speed: " + str(self.speedLeftWheel)
+                        + " Right wheel at speed: " + str(self.speedRightWheel))
                     self.robotmove.turn_reverse(self.speedLeftWheel, self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
@@ -330,8 +328,8 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedLeftWheel = overall_speed
                     self.speedRightWheel = int(lengthY)
 
-                    MODULE_LOGGER.debug("Reverse right. Left wheel at self.speed: " +
-                                str(self.speedLeftWheel) + " Right wheel at self.speed: " +
+                    MODULE_LOGGER.debug("Reverse right. Left wheel at speed: " +
+                                str(self.speedLeftWheel) + " Right wheel at speed: " +
                                 str(self.speedRightWheel))
                     self.robotmove.turn_reverse(self.speedLeftWheel, self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
