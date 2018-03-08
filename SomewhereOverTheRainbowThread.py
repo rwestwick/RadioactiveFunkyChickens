@@ -85,7 +85,7 @@ class StreamProcessor(threading.Thread):
     NUM_OF_LARGEST_AREA_CONTOURS = 3
     MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 
-    
+
     def __init__(self):
         """
         Initialise the parameters required for StreamProcessor thread
@@ -96,7 +96,7 @@ class StreamProcessor(threading.Thread):
         self.max_processing_delay = 0  # Initialsed for delay calculations
         self.min_processing_delay = 100  # Initialsed for delay calculations
         self.reached_marker = False
-        
+
         self.camera = picamera.PiCamera()
         # Camera resolution defaults to the monitors resolution,
         # but needs to be lower for speed of processing
@@ -117,6 +117,8 @@ class StreamProcessor(threading.Thread):
         self.servo_controller.set_tilt_servo(self.tilt_angle)
         time.sleep(1)
         self.colour_array_cntr = 0
+        LOGGER.info("The colour selector starts as " +
+                ColourBoundaries.COLOUR_NAME_ARRAY[self.colour_array_cntr])
 
         # Initialise Ultrasonic Sensors
         self.FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
@@ -171,7 +173,7 @@ class StreamProcessor(threading.Thread):
                     self.stream.seek(0)
                     self.stream.truncate()
                     self.event.clear()
-        
+
         LOGGER.info("Finshed the Stream Processing thread")
 
     def process_image(self, image):
@@ -280,7 +282,7 @@ class StreamProcessor(threading.Thread):
         return output_hsv, mask_hsv
 
     def find_marker_contour(self, mask, input_hsv):
-        """ 
+        """
         Compute the location of the marker contour.
         """
         # Calculate contours
@@ -366,7 +368,7 @@ class StreamProcessor(threading.Thread):
         return circularityArray
 
     def contour_centre(self, cntr):
-        """ 
+        """
         Compute the centre of the contour area
         """
         M = cv2.moments(cntr)
@@ -546,7 +548,7 @@ class ImageCapture(threading.Thread):
         LOGGER.info("Starting the ImageCapture thread")
         self._stream_processor.camera.capture_sequence(
             self.trigger_stream(), format='bgr', use_video_port=True)
-            
+
         self._stream_processor.exit_now = True
         self._stream_processor.join()  # The join() waits for threads to terminate
 
@@ -576,7 +578,7 @@ def main():
     LOGGER.info("'Somewhere Over the Rainbow' Starting.")
     LOGGER.info("CTRL^C to terminate program")
     LOGGER.info("Press 'c' to change colour")
-                
+
     try:
         # Start stream process to handle images
         stream_processor = StreamProcessor()
@@ -596,7 +598,7 @@ def main():
         capture_thread.join()
         stream_processor.terminated = True
         stream_processor.join()
-    
+
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")
 
 if __name__ == "__main__":
