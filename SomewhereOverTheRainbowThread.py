@@ -24,7 +24,6 @@ import cv2
 import numpy as np
 import picamera
 import picamera.array
-import RPi.GPIO as GPIO
 import SetupConsoleLogger
 import ColourBoundaries
 import GPIOLayout
@@ -32,7 +31,6 @@ import SpeedSettings
 import ServoController
 import DualMotorController
 import UltrasonicSensorThread
-
 
 # Global values and their initial values
 global debug  # Used for processing time
@@ -75,16 +73,16 @@ class StreamProcessor(threading.Thread):
     FRONT_BUFFER_STOP = 20  # Shortest distance to corner (cm)
     CENTRE_BUFFER_WARN = 65  # Distance from corner for when to slow (cm)
     CENTRE_BUFFER_STOP = 80  # Shortest distance from corner (cm)
-                             # ~86.2 cm from corner if perfect centre
+    # ~86.2 cm from corner if perfect centre
     SPIN_TIME = 1.0  # Spin time in seconds
     # Image filtering constants
-    # Aperture size for median filter based on PiBorg numbers of 5 with 320 * 240
+    # Aperture size for median filter based on PiBorg numbers of 5 with 320 *
+    # 240
     MED_FILTER_APRTRE_SIZE = 5  # Must be odd number
     # Initial number for down selecting large contours
     # If number too small then will loose circular marker
     NUM_OF_LARGEST_AREA_CONTOURS = 3
     MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
-
 
     def __init__(self):
         """
@@ -118,11 +116,12 @@ class StreamProcessor(threading.Thread):
         time.sleep(1)
         self.colour_array_cntr = 0
         LOGGER.info("The colour selector starts as " +
-                ColourBoundaries.COLOUR_NAME_ARRAY[self.colour_array_cntr])
+                    ColourBoundaries.COLOUR_NAME_ARRAY[self.colour_array_cntr])
 
         # Initialise Ultrasonic Sensors
         self.FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
-            1, None, GPIOLayout.SONAR_FRONT_TX_GPIO, GPIOLayout.SONAR_FRONT_RX_GPIO, 1)
+            1, None, GPIOLayout.SONAR_FRONT_TX_GPIO,
+            GPIOLayout.SONAR_FRONT_RX_GPIO, 1)
         self.FRONT_SENSOR.start()
 
         self.ROBOTMOVE = DualMotorController.DualMotorController(
@@ -135,15 +134,15 @@ class StreamProcessor(threading.Thread):
             GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
             GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
-        self.start() # starts the thread by calling the run method.
+        self.start()  # starts the thread by calling the run method.
 
     def __del__(self):
         """
         Destructor
         """
         LOGGER.info("Image processing delays min and max " +
-            format(self.min_processing_delay, '.2f') + " " +
-            format(self.max_processing_delay, '.2f') + " sec")
+                    format(self.min_processing_delay, '.2f') + " " +
+                    format(self.max_processing_delay, '.2f') + " sec")
         cv2.destroyAllWindows()
         self.servo_controller.stop_servos()
         self.FRONT_SENSOR.exit_now()
@@ -195,7 +194,8 @@ class StreamProcessor(threading.Thread):
             e1 = cv2.getTickCount()
 
         # Find chosen colour in image
-        colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(image)
+        colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(
+            image)
 
         # Find location of contour
         contour_detection, found_x, found_y, contour_marked_image = self.find_marker_contour(
@@ -223,8 +223,8 @@ class StreamProcessor(threading.Thread):
         if key_one == ord("c") or key_two == ord("c"):
             # Loop over integers 0 to 3
             self.colour_array_cntr = (self.colour_array_cntr + 1) % 4
-            LOGGER.info("The colour selector is now " +
-                        ColourBoundaries.COLOUR_NAME_ARRAY[self.colour_array_cntr])
+            LOGGER.info("The colour selector is now " + ColourBoundaries.
+                        COLOUR_NAME_ARRAY[self.colour_array_cntr])
 
         if contour_detection:
             # Adjust tilt of Pi Camera
@@ -328,7 +328,7 @@ class StreamProcessor(threading.Thread):
             cntCircularity = self.contour_circularity(cntWithMinArea)
 
             # Sort contours in order of circularity
-            (cntSortedByCirc, cntCircularity) = zip(*sorted(
+            (cntSortedByCirc, cntCircularity) = zip( * sorted(
                 zip(cntWithMinArea, cntCircularity),
                 key=lambda x: x[1],
                 reverse=True))
@@ -392,13 +392,15 @@ class StreamProcessor(threading.Thread):
         """
         #  Up/down direction - Value between -1.0 to +1.0
         # -1.0 is top, +1.0 is bottom, 0.0 is centre
-        camera_direction = (found_y - self.IMAGE_CENTRE_Y) / self.IMAGE_CENTRE_Y
+        camera_direction = (
+            found_y - self.IMAGE_CENTRE_Y) / self.IMAGE_CENTRE_Y
 
         if camera_direction < -0.5:
             self.tilt_angle = self.tilt_angle + self.TILT_CHANGE
         elif camera_direction > 0.5:
             self.tilt_angle = self.tilt_angle - self.TILT_CHANGE
-        self.tilt_angle = sorted([self.MIN_TILT, self.tilt_angle, self.MAX_TILT])[1]
+        self.tilt_angle = sorted(
+            [self.MIN_TILT, self.tilt_angle, self.MAX_TILT])[1]
         self.servo_controller.set_tilt_servo(self.tilt_angle)
 
         if debug_show_tilt:
@@ -435,20 +437,24 @@ class StreamProcessor(threading.Thread):
                     "Distance to front wall: " + str(int(distanceToFrontWall)))
                 LOGGER.info(
                     "Found " + ColourBoundaries.
-                    COLOUR_NAME_ARRAY[self.colour_array_cntr] + " marker. X: " +
-                    str(found_x) + " direction: " + format(direction, '.2f'))
+                    COLOUR_NAME_ARRAY[self.colour_array_cntr] + " marker. X: "
+                    + str(found_x) + " direction: " + format(direction, '.2f'))
 
             if direction > 0.0:
                 # Turn to robot's right hand side
                 LOGGER.info('Forward steer right')
                 driveLeft = speed
-                driveRight = int(speed * (1.0 - (direction * self.STEERING_RATE)))
-                driveRight = sorted([self.MIN_SPEED, driveRight, self.MAX_SPEED])[1]
+                driveRight = int(speed * (1.0 -
+                                          (direction * self.STEERING_RATE)))
+                driveRight = sorted(
+                    [self.MIN_SPEED, driveRight, self.MAX_SPEED])[1]
             else:
                 # Turn to robot's left hand side
                 LOGGER.info('Forward steer left')
-                driveLeft = int(speed * (1.0 + (direction * self.STEERING_RATE)))
-                driveLeft = sorted([self.MIN_SPEED, driveLeft, self.MAX_SPEED])[1]
+                driveLeft = int(speed * (1.0 +
+                                         (direction * self.STEERING_RATE)))
+                driveLeft = sorted([self.MIN_SPEED, driveLeft,
+                                    self.MAX_SPEED])[1]
                 driveRight = speed
 
             # If we need faster turning we may have to change to
@@ -498,15 +504,19 @@ class StreamProcessor(threading.Thread):
             if direction > 0.0:
                 # Turn to robot's rear left
                 LOGGER.info('Steer reverse left')
-                driveLeft = int(speed * (1.0 - (direction * self.STEERING_RATE)))
-                driveLeft = sorted([self.MIN_SPEED, driveLeft, self.MAX_SPEED])[1]
+                driveLeft = int(speed * (1.0 -
+                                         (direction * self.STEERING_RATE)))
+                driveLeft = sorted([self.MIN_SPEED, driveLeft,
+                                    self.MAX_SPEED])[1]
                 driveRight = speed
             else:
                 # Turn to robot's right right
                 LOGGER.info('Steer reverse right')
                 driveLeft = speed
-                driveRight = int(speed * (1.0 + (direction * self.STEERING_RATE)))
-                driveRight = sorted([self.MIN_SPEED, driveRight, self.MAX_SPEED])[1]
+                driveRight = int(speed * (1.0 +
+                                          (direction * self.STEERING_RATE)))
+                driveRight = sorted(
+                    [self.MIN_SPEED, driveRight, self.MAX_SPEED])[1]
 
             # If we need faster turning we may have to change to
             # spin_left or spin_right
@@ -530,7 +540,6 @@ class StreamProcessor(threading.Thread):
 
 # Image capture thread
 class ImageCapture(threading.Thread):
-
     def __init__(self, stream_processor):
         """
         Initialise the parameters required for the Image Capture thread
@@ -538,7 +547,7 @@ class ImageCapture(threading.Thread):
         super(ImageCapture, self).__init__()
         self._stream_processor = stream_processor
         self._exit_now = False
-        self.start() # starts the thread by calling the run method.
+        self.start()  # starts the thread by calling the run method.
 
     def run(self):
         """
@@ -550,7 +559,8 @@ class ImageCapture(threading.Thread):
             self.trigger_stream(), format='bgr', use_video_port=True)
 
         self._stream_processor.exit_now = True
-        self._stream_processor.join()  # The join() waits for threads to terminate
+        self._stream_processor.join(
+        )  # The join() waits for threads to terminate
 
         LOGGER.info("Finshed the ImageCapture thread")
 
@@ -600,6 +610,7 @@ def main():
         stream_processor.join()
 
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")
+
 
 if __name__ == "__main__":
     main()

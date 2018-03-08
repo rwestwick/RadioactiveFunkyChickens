@@ -8,12 +8,8 @@ http://piwars.org/
 # Import required libraries
 import time
 import logging
-import math
-import cwiid
 import SetupConsoleLogger
-import GPIOLayout
 import WiimoteNunchukControllerThread
-
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -25,10 +21,7 @@ def main():
     """
     LOGGER.info("Just Drive")
     WIIMOTE_CONTROLLER = WiimoteNunchukControllerThread.WiimoteNunchukControllerThread(
-            None,
-            None,
-            None,
-            None)
+        None, None, None, None)
     try:
         WIIMOTE_CONTROLLER.start()
         while True:

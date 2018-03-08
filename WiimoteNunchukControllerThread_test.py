@@ -7,22 +7,24 @@ import logging
 import time
 import SetupConsoleLogger
 import WiimoteNunchukControllerThread
-import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__")
 SetupConsoleLogger.setup_console_logger(MODULE_LOGGER, logging.DEBUG)
+
 
 def __callback_button_b(currentWiimote):
     MODULE_LOGGER.info("__callback_button_b")
     currentWiimote.rumble = 1
     time.sleep(1)
     currentWiimote.rumble = 0
-    
+
+
 def __callback_button_c(currentWiimote):
     MODULE_LOGGER.info("__callback_button_c")
     currentWiimote.rumble = 1
     time.sleep(1)
     currentWiimote.rumble = 0
+
 
 def __callback_button_z(currentWiimote):
     MODULE_LOGGER.info("__callback_button_z")
@@ -43,6 +45,7 @@ def test_nunchukcontroller(sleep_len=30):
     finally:
         CONTROLLER.exit_now()
         CONTROLLER.join()
+
 
 if __name__ == "__main__":
     test_nunchukcontroller(300)

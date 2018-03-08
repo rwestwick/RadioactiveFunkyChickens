@@ -4,7 +4,6 @@ import GPIOLayout
 from gpiozero import AngularServo
 from time import sleep
 
-
 #servo = AngularServo(27, min_angle=-90, max_angle=90, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000, frame_width=5/1000)
 servo = AngularServo(27, min_angle=-90, max_angle=90)
 #servo = AngularServo(27)
@@ -45,7 +44,7 @@ sleep(2)
 
 exit()
 
-servo1 = Servo(27, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000, frame_width=20/1000)
+servo1 = Servo(27, min_pulse_width=0.5 / 1000, max_pulse_width=2.5 / 1000, frame_width=20 / 1000)
 servo1.min()
 print servo.value
 sleep(2)

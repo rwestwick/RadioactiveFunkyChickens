@@ -8,14 +8,11 @@ http://piwars.org/
 # Import required libraries
 import time
 import logging
-import math
-import cwiid
 import SetupConsoleLogger
 import GPIOLayout
 import ServoController
 import SwitchingGPIO
 import WiimoteNunchukControllerThread
-
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -38,7 +35,7 @@ NERF_TRIGGER_BACK = -45  # Angle of servo in back position degrees
 def fire_cb(currentWiimote):
     """
     thread rumble function
-    """    
+    """
     LOGGER.info("Fire!!")
     currentWiimote.rumble = 1
     servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_FORWARD)
@@ -81,10 +78,7 @@ def main():
     LOGGER.info("Duck Shoot")
     servo_controller.set_nerf_trigger_servo(NERF_TRIGGER_BACK)
     WIIMOTE_CONTROLLER = WiimoteNunchukControllerThread.WiimoteNunchukControllerThread(
-            fire_cb,
-            toggle_laser_cb,
-            toggle_motor_cb,
-            servo_controller)
+        fire_cb, toggle_laser_cb, toggle_motor_cb, servo_controller)
     try:
         WIIMOTE_CONTROLLER.start()
         while True:

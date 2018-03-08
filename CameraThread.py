@@ -18,16 +18,11 @@ from __future__ import division
 # Import needed libraries such as picamera OpenCV and NumPy
 import logging
 import time
-import math
 import threading
 import cv2
-import numpy as np
 import picamera
 import picamera.array
-import RPi.GPIO as GPIO
 import SetupConsoleLogger
-import ColourBoundaries
-
 
 # Global values and their initial values
 global debug  # Used for processing time
@@ -57,14 +52,14 @@ class StreamProcessor(threading.Thread):
     CAMERA_HEIGHT = 240
     IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
     IMAGE_CENTRE_Y = CAMERA_HEIGHT / 2.0
-    # Aperture size for median filter based on PiBorg numbers of 5 with 320 * 240
+    # Aperture size for median filter based on PiBorg numbers of 5 with 320 *
+    # 240
     MED_FILTER_APRTRE_SIZE = 5  # Must be odd number
     # Initial number for down selecting large contours
     # If number too small then will loose circular marker
     NUM_OF_LARGEST_AREA_CONTOURS = 3
     MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 
-    
     def __init__(self):
         """
         Initialise the parameters required for StreamProcessor thread
@@ -75,7 +70,7 @@ class StreamProcessor(threading.Thread):
         self.max_processing_delay = 0  # Initialsed for delay calculations
         self.min_processing_delay = 100  # Initialsed for delay calculations
         self.reached_marker = False
-   
+
         self.camera = picamera.PiCamera()
         # Camera resolution defaults to the monitors resolution,
         # but needs to be lower for speed of processing
@@ -88,18 +83,18 @@ class StreamProcessor(threading.Thread):
         time.sleep(2)  # This is the value/line used in the PiBorg example
         self.stream = picamera.array.PiRGBArray(self.camera)
 
-        self.start() # starts the thread by calling the run method.
+        self.start()  # starts the thread by calling the run method.
 
     def __del__(self):
         """
         Destructor
         """
         LOGGER.info("Image processing delays min and max " +
-            format(self.min_processing_delay, '.2f') + " " +
-            format(self.max_processing_delay, '.2f') + " sec")
+                    format(self.min_processing_delay, '.2f') + " " +
+                    format(self.max_processing_delay, '.2f') + " sec")
         cv2.destroyAllWindows()
         del self.camera  # Is this needed?
-        
+
     def run(self):
         """
         The run() method is the entry point for a thread
@@ -121,7 +116,7 @@ class StreamProcessor(threading.Thread):
                     self.stream.seek(0)
                     self.stream.truncate()
                     self.event.clear()
-        
+
         LOGGER.info("Finshed the Stream Processing thread")
 
     def process_image(self, image):
@@ -138,14 +133,13 @@ class StreamProcessor(threading.Thread):
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
-            key_one = cv2.waitKey(1) & 0xFF
+            cv2.waitKey(1) & 0xFF
         if debug:
-            e1 = cv2.getTickCount()
+            cv2.getTickCount()
 
 
 # Image capture thread
 class ImageCapture(threading.Thread):
-
     def __init__(self, stream_processor):
         """
         Initialise the parameters required for the Image Capture thread
@@ -153,7 +147,7 @@ class ImageCapture(threading.Thread):
         super(ImageCapture, self).__init__()
         self._stream_processor = stream_processor
         self._exit_now = False
-        self.start() # starts the thread by calling the run method.
+        self.start()  # starts the thread by calling the run method.
 
     def run(self):
         """
@@ -161,12 +155,13 @@ class ImageCapture(threading.Thread):
         This method runs in a separate thread
         """
         LOGGER.info("Starting the ImageCapture thread")
-        
+
         self._stream_processor.camera.capture_sequence(
             self.trigger_stream(), format='bgr', use_video_port=True)
-            
+
         self._stream_processor.exit_now = True
-        self._stream_processor.join()  # The join() waits for threads to terminate
+        self._stream_processor.join(
+        )  # The join() waits for threads to terminate
 
         LOGGER.info("Finshed the ImageCapture thread")
 
@@ -194,7 +189,7 @@ def main():
     LOGGER.info("'Somewhere Over the Rainbow' Starting.")
     LOGGER.info("CTRL^C to terminate program")
     LOGGER.info("Press 'c' to change colour")
-                
+
     try:
         # Start stream process to handle images
         stream_processor = StreamProcessor()
@@ -214,8 +209,9 @@ def main():
         capture_thread.join()
         stream_processor.terminated = True
         stream_processor.join()
-    
+
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")
+
 
 if __name__ == "__main__":
     main()

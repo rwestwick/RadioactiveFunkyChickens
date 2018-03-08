@@ -99,8 +99,7 @@ class ServoController(object):
         elif pin == 1:
             PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_VERTICAL_PIN) + '='
         else:
-            PIN_STRING = PIN_STRING + str(
-                GPIOLayout.DUCK_SHOOT_FIRE_PIN) + '='
+            PIN_STRING = PIN_STRING + str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + '='
 
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"

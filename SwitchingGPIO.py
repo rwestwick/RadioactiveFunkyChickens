@@ -14,8 +14,7 @@ if platform.machine() == "armv6l" or platform.machine() == "armv7l":
 else:
     from GPIOZeroStub import OutputDevice as OutputDevice
     import GPIOStub as GPIO
-    
-    
+
 MODULE_LOGGER = logging.getLogger("__main__.SwitchingGPIO")
 
 
@@ -29,7 +28,7 @@ class SwitchingGPIO(object):
         Initialise the parameters required for the switching base class
         """
         MODULE_LOGGER.info("GPIO Class init on socket " + str(bcm_num))
-        
+
         # Use board pin numbering
         GPIO.setmode(GPIO.BCM)
 

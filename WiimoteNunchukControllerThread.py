@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Class defines how to interact with a Wiimote and Nunchuk 
+Class defines how to interact with a Wiimote and Nunchuk
 Controller via a thread
 
 Need to install correct python modules, see
@@ -12,7 +12,6 @@ import logging
 import threading
 import math
 import cwiid
-import SetupConsoleLogger
 import ServoController
 import DualMotorController
 import GPIOLayout
@@ -35,8 +34,11 @@ class WiimoteNunchukControllerThread(threading.Thread):
     NUNCHUK_MIN = 32.0
     NUNCHUK_BUFFER = 25.0
 
-    def __init__(self, callback_b, callback_c, callback_z, 
-                 servo_controller = None):
+    def __init__(self,
+                 callback_b,
+                 callback_c,
+                 callback_z,
+                 servo_controller=None):
         """
         Initialise the parameters required for WiimoteNunchukControllerThread
         """
@@ -74,9 +76,9 @@ class WiimoteNunchukControllerThread(threading.Thread):
             MODULE_LOGGER.debug("Creating servo controller")
             self.servo_controller = ServoController.ServoController()
             self._servo_supplied = False
-        
+
         self.servo_controller.start_servos()
-        
+
         # Wiimote Controller
         self.wm = None
 
@@ -91,7 +93,7 @@ class WiimoteNunchukControllerThread(threading.Thread):
 
         if not self._servo_supplied and self.servo_controller is not None:
             self.servo_controller.stop_servos()
-            
+
         self.robotmove.cleanup()
         MODULE_LOGGER.info("Wiimote Controller Finished")
 
@@ -109,12 +111,13 @@ class WiimoteNunchukControllerThread(threading.Thread):
                 if (i > 5):
                     MODULE_LOGGER.error("Cannot create Wiimote connection.")
                     self.exit_now()
-                MODULE_LOGGER.warning("Error opening wiimote connection, attempt " + str(i))
+                MODULE_LOGGER.warning(
+                    "Error opening wiimote connection, attempt " + str(i))
                 i += 1
-        
+
         if not self._exit_now:
             MODULE_LOGGER.info("Wiimote connected.")
-        
+
             # Set wiimote to report button presses
             self.wm.rpt_mode = cwiid.RPT_BTN | cwiid.RPT_ACC | cwiid.RPT_EXT
 
@@ -126,14 +129,14 @@ class WiimoteNunchukControllerThread(threading.Thread):
         Request the thread to exit
         """
         MODULE_LOGGER.info("Request to exit")
-        self._exit_now = True    
+        self._exit_now = True
 
     def run(self):
         """
         Performs the loop within the thread
         """
         self.__wiimote_connection()
-        
+
         MODULE_LOGGER.debug("Starting loop thread")
         while not self._exit_now:
             if 'nunchuk' in self.wm.state:
@@ -149,12 +152,14 @@ class WiimoteNunchukControllerThread(threading.Thread):
                 # Go forward if joystick pushed forward beyond buffer in central
                 # channel
                 if (NunchukStickY > (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                        and NunchukStickX < (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                        and NunchukStickX > (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
+                        and NunchukStickX <
+                    (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
+                        and NunchukStickX >
+                        (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
 
                     self.speed = int(SpeedSettings.SPEED_FASTEST *
-                                (NunchukStickY - self.NUNCHUK_MID) /
-                                (self.NUNCHUK_MAX - self.NUNCHUK_MID))
+                                     (NunchukStickY - self.NUNCHUK_MID) /
+                                     (self.NUNCHUK_MAX - self.NUNCHUK_MID))
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
@@ -165,12 +170,14 @@ class WiimoteNunchukControllerThread(threading.Thread):
                 # Go backwards if joystick pulled back beyond buffer in central
                 # channel
                 elif (NunchukStickY < (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)
-                      and NunchukStickX < (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                      and NunchukStickX > (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
+                      and NunchukStickX <
+                      (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
+                      and NunchukStickX >
+                      (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
 
                     self.speed = int(SpeedSettings.SPEED_FASTEST *
-                                (self.NUNCHUK_MID - NunchukStickY) /
-                                (self.NUNCHUK_MID - self.NUNCHUK_MIN))
+                                     (self.NUNCHUK_MID - NunchukStickY) /
+                                     (self.NUNCHUK_MID - self.NUNCHUK_MIN))
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
@@ -181,39 +188,46 @@ class WiimoteNunchukControllerThread(threading.Thread):
                 # Spin right right joystick pushed right beyond buffer in central
                 # channel
                 elif (NunchukStickX > (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                      and NunchukStickY < (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                      and NunchukStickY > (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
+                      and NunchukStickY <
+                      (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
+                      and NunchukStickY >
+                      (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
 
                     self.speed = int(SpeedSettings.SPEED_FASTEST *
-                                (NunchukStickX - self.NUNCHUK_MID) /
-                                (self.NUNCHUK_MAX - self.NUNCHUK_MID))
+                                     (NunchukStickX - self.NUNCHUK_MID) /
+                                     (self.NUNCHUK_MAX - self.NUNCHUK_MID))
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
-                    MODULE_LOGGER.debug("Spin right at speed " + str(self.speed))
+                    MODULE_LOGGER.debug(
+                        "Spin right at speed " + str(self.speed))
                     self.robotmove.spin_right(self.speed)
                     time.sleep(self.STICK_DELAY)
 
                 # Spin left if joystick pushed left beyond buffer in central
                 # channel
                 elif (NunchukStickX < (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)
-                      and NunchukStickY < (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                      and NunchukStickY > (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
+                      and NunchukStickY <
+                      (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
+                      and NunchukStickY >
+                      (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
 
                     self.speed = int(SpeedSettings.SPEED_FASTEST *
-                                (self.NUNCHUK_MID - NunchukStickX) /
-                                (self.NUNCHUK_MID - self.NUNCHUK_MIN))
+                                     (self.NUNCHUK_MID - NunchukStickX) /
+                                     (self.NUNCHUK_MID - self.NUNCHUK_MIN))
                     if self.speed > SpeedSettings.SPEED_FASTEST:
                         self.speed = SpeedSettings.SPEED_FASTEST
 
-                    MODULE_LOGGER.debug("Spin left at speed " + str(self.speed))
+                    MODULE_LOGGER.debug(
+                        "Spin left at speed " + str(self.speed))
                     self.robotmove.spin_left(self.speed)
                     time.sleep(self.STICK_DELAY)
 
                 # Turn forward left if joystick pushed top left outside central
                 # channels
                 elif (NunchukStickX < (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)
-                      and NunchukStickY > (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)):
+                      and NunchukStickY >
+                      (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)):
 
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
@@ -236,15 +250,18 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedRightWheel = overall_speed
 
                     MODULE_LOGGER.debug(
-                        "Steer left. Left wheel at speed: " + str(self.speedLeftWheel) +
-                        " Right wheel at speed: " + str(self.speedRightWheel))
-                    self.robotmove.turn_forward(self.speedLeftWheel, self.speedRightWheel)
+                        "Steer left. Left wheel at speed: " +
+                        str(self.speedLeftWheel) + " Right wheel at speed: " +
+                        str(self.speedRightWheel))
+                    self.robotmove.turn_forward(self.speedLeftWheel,
+                                                self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
                 # Turn forward right if joystick pushed top right outside central
                 # channels
                 elif (NunchukStickX > (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                      and NunchukStickY > (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)):
+                      and NunchukStickY >
+                      (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)):
 
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
@@ -267,15 +284,18 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedRightWheel = int(lengthY)
 
                     MODULE_LOGGER.debug(
-                        "Steer right. Left wheel at speed: " + str(self.speedLeftWheel)
-                        + " Right wheel at speed: " + str(self.speedRightWheel))
-                    self.robotmove.turn_forward(self.speedLeftWheel, self.speedRightWheel)
+                        "Steer right. Left wheel at speed: " +
+                        str(self.speedLeftWheel) + " Right wheel at speed: " +
+                        str(self.speedRightWheel))
+                    self.robotmove.turn_forward(self.speedLeftWheel,
+                                                self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
                 # Turn reverse left if joystick pushed bottom left outside central
                 # channels
                 elif (NunchukStickX < (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)
-                      and NunchukStickY < (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
+                      and NunchukStickY <
+                      (self.NUNCHUK_MID - self.NUNCHUK_BUFFER)):
 
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
@@ -296,17 +316,20 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     # Calculate wheel self.speeds
                     self.speedLeftWheel = int(lengthY)
                     self.speedRightWheel = overall_speed
-                    
+
                     MODULE_LOGGER.debug(
-                        "Reverse left. Left wheel at speed: " + str(self.speedLeftWheel)
-                        + " Right wheel at speed: " + str(self.speedRightWheel))
-                    self.robotmove.turn_reverse(self.speedLeftWheel, self.speedRightWheel)
+                        "Reverse left. Left wheel at speed: " +
+                        str(self.speedLeftWheel) + " Right wheel at speed: " +
+                        str(self.speedRightWheel))
+                    self.robotmove.turn_reverse(self.speedLeftWheel,
+                                                self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
                 # Turn reverse right if joystick pushed top right outside central
                 # channels
                 elif (NunchukStickX > (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
-                      and NunchukStickY < (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)):
+                      and NunchukStickY <
+                      (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)):
 
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
@@ -328,10 +351,12 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     self.speedLeftWheel = overall_speed
                     self.speedRightWheel = int(lengthY)
 
-                    MODULE_LOGGER.debug("Reverse right. Left wheel at speed: " +
-                                str(self.speedLeftWheel) + " Right wheel at speed: " +
-                                str(self.speedRightWheel))
-                    self.robotmove.turn_reverse(self.speedLeftWheel, self.speedRightWheel)
+                    MODULE_LOGGER.debug(
+                        "Reverse right. Left wheel at speed: " +
+                        str(self.speedLeftWheel) + " Right wheel at speed: " +
+                        str(self.speedRightWheel))
+                    self.robotmove.turn_reverse(self.speedLeftWheel,
+                                                self.speedRightWheel)
                     time.sleep(self.STICK_DELAY)
 
                 # else stop
@@ -383,34 +408,35 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     MODULE_LOGGER.debug("Centre!")
                     time.sleep(self.BUTTON_DELAY)
 
-                # If button B pressed rumble Wiimote, but don't block other actions
+                # If button B pressed rumble Wiimote, but don't block other
+                # actions
                 if (buttons & cwiid.BTN_B):
-                    if self._button_b_callback is not None:              
-                        self._button_b_callback(self.wm)                
-                        #t = threading.Thread(
-                        #    target=self._button_b_callback, 
+                    if self._button_b_callback is not None:
+                        self._button_b_callback(self.wm)
+                        # t = threading.Thread(
+                        #    target=self._button_b_callback,
                         #    args=(self.wm, ))
-                        #t.start()
+                        # t.start()
                         time.sleep(self.BUTTON_DELAY)
 
                 # If button C pressed Toggle the targeting laser
                 if (nunchuck_buttons & cwiid.NUNCHUK_BTN_C):
-                    if self._button_c_callback is not None:              
-                        self._button_c_callback(self.wm)                
-                        #t = threading.Thread(
-                        #    target=self._button_c_callback, 
+                    if self._button_c_callback is not None:
+                        self._button_c_callback(self.wm)
+                        # t = threading.Thread(
+                        #    target=self._button_c_callback,
                         #    args=(self.wm, ))
-                        #t.start()
+                        # t.start()
                         time.sleep(self.BUTTON_DELAY)
 
                 # If button z pressed Toggle the nerf gun fly wheels
                 if (nunchuck_buttons & cwiid.NUNCHUK_BTN_Z):
                     if self._button_z_callback is not None:
-                        self._button_z_callback(self.wm)                
-                        #t = threading.Thread(
-                        #    target=self._button_z_callback, 
+                        self._button_z_callback(self.wm)
+                        # t = threading.Thread(
+                        #    target=self._button_z_callback,
                         #    args=(self.wm, ))
-                        #t.start()
+                        # t.start()
                         time.sleep(self.BUTTON_DELAY)
 
         MODULE_LOGGER.debug("Finished thread")
