@@ -477,9 +477,9 @@ class StreamProcessor(threading.Thread):
                 self.reached_marker = False
 
                 # Move to next colour
-                colour_array_cntr = (colour_array_cntr + 1) % 4
+                self.colour_array_cntr = (self.colour_array_cntr + 1) % 4
                 LOGGER.info("The colour selector is now " + ColourBoundaries.
-                            COLOUR_NAME_ARRAY[colour_array_cntr])
+                            COLOUR_NAME_ARRAY[self.colour_array_cntr])
             elif distanceToFrontWall > self.CENTRE_BUFFER_WARN:
                 LOGGER.info('Getting closer to centre')
                 speed = SpeedSettings.SPEED_SLOW
