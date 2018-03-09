@@ -43,8 +43,8 @@ class ServoController(object):
         if self.servos_active is False:
             script_path = os.path.split(os.path.realpath(__file__))[0]
             servod_cmd = '/servod --idle-timeout=20000 --p1pins="' + \
-                str(GPIOLayout.SERVO_HORIZONTAL_PIN) + ',' + \
-                str(GPIOLayout.SERVO_VERTICAL_PIN) + ',' + \
+                str(GPIOLayout.SERVO_PAN_PIN) + ',' + \
+                str(GPIOLayout.SERVO_TILT_PIN) + ',' + \
                 str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + \
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
@@ -72,32 +72,36 @@ class ServoController(object):
         """
         Sets the pan servo to a position
         """
+        MODULE_LOGGER.debug("pan: " + str(degrees))
         self.set_servo(self.PAN_SERVO_ID, degrees)
 
     def set_tilt_servo(self, degrees):
         """
         Sets the tilt servo to a position
         """
+        MODULE_LOGGER.debug("tilt: " + str(degrees))
         self.set_servo(self.TILT_SERVO_ID, degrees)
 
     def set_nerf_trigger_servo(self, degrees):
         """
         Sets the Nerf trigger
         """
+        MODULE_LOGGER.debug("fire: " + str(degrees))
         self.set_servo(self.NERF_TRIGGER_ID, degrees)
 
-    @staticmethod
-    def pin_servod(pin, degrees):
+    def pin_servod(self, pin, degrees):
         """
         Uses the servoblaster device to set the required angle
         eg  echo p1-18=120 > /dev/servoblaster
         """
         PIN_STRING = 'echo p1-'
-        if pin == 0:
+        if pin == self.PAN_SERVO_ID:
             PIN_STRING = PIN_STRING + str(
-                GPIOLayout.SERVO_HORIZONTAL_PIN) + '='
-        elif pin == 1:
-            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_VERTICAL_PIN) + '='
+                GPIOLayout.SERVO_PAN_PIN) + '='
+
+        elif pin == self.TILT_SERVO_ID:
+            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_TILT_PIN) + '='
+
         else:
             PIN_STRING = PIN_STRING + str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + '='
 

@@ -368,38 +368,34 @@ class WiimoteNunchukControllerThread(threading.Thread):
 
                     # If button up pressed move servo up
                 if (buttons & cwiid.BTN_UP):
-                    self.p_val = self.p_val + self.PAN_STEP
-                    if self.p_val > 90:
-                        self.p_val = 90
-                    MODULE_LOGGER.debug("Servo Up to: " + str(self.p_val))
-                    self.servo_controller.set_pan_servo(self.p_val)
+                    self.t_val = self.t_val + self.TILT_STEP
+                    if self.t_val > 90:
+                        self.t_val = 90
+                    self.servo_controller.set_tilt_servo(self.t_val)
                     time.sleep(self.BUTTON_DELAY)
 
                 # If button down pressed move servo down
                 elif (buttons & cwiid.BTN_DOWN):
-                    self.p_val = self.p_val - self.PAN_STEP
-                    if self.p_val < -90:
-                        self.p_val = -90
-                    MODULE_LOGGER.debug("Servo Down to: " + str(self.p_val))
-                    self.servo_controller.set_pan_servo(self.p_val)
+                    self.t_val = self.t_val - self.TILT_STEP
+                    if self.t_val < -90:
+                        self.t_val = -90
+                    self.servo_controller.set_tilt_servo(self.t_val)
                     time.sleep(self.BUTTON_DELAY)
 
                 # If button right pressed move servo right
                 elif (buttons & cwiid.BTN_RIGHT):
-                    self.t_val = self.t_val + self.TILT_STEP
-                    if self.t_val > 90:
-                        self.t_val = 90
-                    MODULE_LOGGER.debug("Servo Right to: " + str(self.t_val))
-                    self.servo_controller.set_tilt_servo(self.t_val)
+                    self.p_val = self.p_val + self.PAN_STEP
+                    if self.p_val > 90:
+                        self.p_val = 90
+                    self.servo_controller.set_pan_servo(self.p_val)
                     time.sleep(self.BUTTON_DELAY)
 
                 # If button left pressed move servo left
                 elif (buttons & cwiid.BTN_LEFT):
-                    self.t_val = self.t_val - self.TILT_STEP
-                    if self.t_val < -90:
-                        self.t_val = -90
-                    MODULE_LOGGER.debug("Servo Left to: " + str(self.t_val))
-                    self.servo_controller.set_tilt_servo(self.t_val)
+                    self.p_val = self.p_val - self.PAN_STEP
+                    if self.p_val < -90:
+                        self.p_val = -90
+                    self.servo_controller.set_pan_servo(self.p_val)
                     time.sleep(self.BUTTON_DELAY)
 
                 # If button A pressed centre Servo
@@ -416,30 +412,18 @@ class WiimoteNunchukControllerThread(threading.Thread):
                 if (buttons & cwiid.BTN_B):
                     if self._button_b_callback is not None:
                         self._button_b_callback(self.wm)
-                        # t = threading.Thread(
-                        #    target=self._button_b_callback,
-                        #    args=(self.wm, ))
-                        # t.start()
                         time.sleep(self.BUTTON_DELAY)
 
                 # If button C pressed Toggle the targeting laser
                 if (nunchuck_buttons & cwiid.NUNCHUK_BTN_C):
                     if self._button_c_callback is not None:
                         self._button_c_callback(self.wm)
-                        # t = threading.Thread(
-                        #    target=self._button_c_callback,
-                        #    args=(self.wm, ))
-                        # t.start()
                         time.sleep(self.BUTTON_DELAY)
 
                 # If button z pressed Toggle the nerf gun fly wheels
                 if (nunchuck_buttons & cwiid.NUNCHUK_BTN_Z):
                     if self._button_z_callback is not None:
                         self._button_z_callback(self.wm)
-                        # t = threading.Thread(
-                        #    target=self._button_z_callback,
-                        #    args=(self.wm, ))
-                        # t.start()
                         time.sleep(self.BUTTON_DELAY)
 
         MODULE_LOGGER.debug("Finished thread")
