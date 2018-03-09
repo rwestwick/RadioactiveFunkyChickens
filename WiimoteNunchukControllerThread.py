@@ -123,6 +123,9 @@ class WiimoteNunchukControllerThread(threading.Thread):
 
             # Turn on led to show connected
             self.wm.led = 1
+            
+            # Add a delay to allow the wiimote to come up correctly
+            time.sleep(1)
 
     def exit_now(self):
         """
