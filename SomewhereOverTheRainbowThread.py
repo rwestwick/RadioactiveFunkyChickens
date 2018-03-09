@@ -50,21 +50,90 @@ debug_show_steering = True
 debug_show_tilt = True
 
 
+# Image capture thread
+class ImageCapture(threading.Thread):
+    """
+    """
+
+    def __init__(self, width, height, stream_processor):
+        """
+        Initialise the parameters required for the Image Capture thread
+        """
+        super(ImageCapture, self).__init__()
+        LOGGER.debug("ImageCapture constructor called")
+
+        self._stream_processor = stream_processor
+        self._exit_now = False
+
+        self.camera = picamera.PiCamera()
+        # Camera resolution defaults to the monitors resolution,
+        # but needs to be lower for speed of processing
+        self.camera.resolution = (width, height)
+        self.camera.framerate = 10  # If not set then defaults to 30fps
+        self.camera.vflip = True  # Needed for mounting of camera on pan/tilt
+        self.camera.hflip = True  # Needed for mounting of camera on pan/tilt
+        LOGGER.info('Waiting for the camera to wake up ...')
+        # Allow the camera time to warm-up
+        time.sleep(2)  # This is the value/line used in the PiBorg example
+
+        self.start()  # starts the thread by calling the run method.
+
+    def __del__(self):
+        """
+        Destructor
+        """
+        LOGGER.debug("ImageCapture destructor called")
+        del self.camera  # Is this needed?
+
+    def run(self):
+        """
+        The run() method is the entry point for a thread
+        This method runs in a separate thread
+        """
+        LOGGER.info("Starting the ImageCapture thread")
+
+        self.camera.capture_sequence(
+            self.trigger_stream(), format='bgr', use_video_port=True)
+
+        LOGGER.info("Finshed the ImageCapture thread")
+
+    def exit_now(self):
+        """
+        Request the thread to exit
+        """
+        LOGGER.info("Request to stop Image Capture thread")
+        self._exit_now = True
+
+    def trigger_stream(self):
+        """
+        Stream delegation loop
+        """
+
+        while not self._exit_now:
+            if self._stream_processor.event.is_set():
+                time.sleep(0.01)
+            else:
+                yield self._stream_processor.stream
+                self._stream_processor.event.set()
+
+
 # Image stream processing thread
 # For threading tutourials see
 # https://www.tutorialspoint.com/python/python_multithreading.htm
 # http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
 class StreamProcessor(threading.Thread):
+    """
+    """
 
+    CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
+    CAMERA_HEIGHT = 240
+    IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
+    IMAGE_CENTRE_Y = CAMERA_HEIGHT / 2.0
     PAN_INTIAL = 0  # Initial pan angle in degrees
     TILT_INTIAL = 20  # Initial tilt angle in degrees
     TILT_CHANGE = 2  # Change in tilt angle in degrees to keep marker centred
     MIN_TILT = -40  # Minimum tilt angle in degrees
     MAX_TILT = 40  # Maximum tilt angle in degrees
-    CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
-    CAMERA_HEIGHT = 240
-    IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
-    IMAGE_CENTRE_Y = CAMERA_HEIGHT / 2.0
     STEERING_RATE = 4.0  # Changes the speed at which it turns towards ball
     MAX_SPEED = SpeedSettings.SPEED_FAST
     MIN_SPEED = 0
@@ -89,23 +158,17 @@ class StreamProcessor(threading.Thread):
         Initialise the parameters required for StreamProcessor thread
         """
         super(StreamProcessor, self).__init__()
+        LOGGER.debug("StreamProcessor constructor called")
+
         self.event = threading.Event()
-        self.exit_now = False
+        self._exit_now = False
         self.max_processing_delay = 0  # Initialsed for delay calculations
         self.min_processing_delay = 100  # Initialsed for delay calculations
         self.reached_marker = False
 
-        self.camera = picamera.PiCamera()
-        # Camera resolution defaults to the monitors resolution,
-        # but needs to be lower for speed of processing
-        self.camera.resolution = (self.CAMERA_WIDTH, self.CAMERA_HEIGHT)
-        self.camera.framerate = 10  # If not set then defaults to 30fps
-        self.camera.vflip = True  # Needed for mounting of camera on pan/tilt
-        self.camera.hflip = True  # Needed for mounting of camera on pan/tilt
-        LOGGER.info('Waiting for the camera to wake up ...')
-        # Allow the camera time to warm-up
-        time.sleep(2)  # This is the value/line used in the PiBorg example
-        self.stream = picamera.array.PiRGBArray(self.camera)
+        # Start the capture thread to generate images
+        self.capture_thread = ImageCapture(self.CAMERA_WIDTH, self.CAMERA_HEIGHT, self)
+        self.stream = picamera.array.PiRGBArray(self.capture_thread.camera)
 
         self.servo_controller = ServoController.ServoController()
         self.servo_controller.start_servos()
@@ -144,12 +207,21 @@ class StreamProcessor(threading.Thread):
                     format(self.min_processing_delay, '.2f') + " " +
                     format(self.max_processing_delay, '.2f') + " sec")
         cv2.destroyAllWindows()
+
+    def exit_now(self):
+        """
+        Request the thread to exit, by calling the subthread and when this is complete
+        close down this stream processor
+        """
+        LOGGER.info("Request to stop Stream Processor thread")
+        self.capture_thread.exit_now()
+        self.capture_thread.join()
+        self._exit_now = True
         self.servo_controller.stop_servos()
         self.FRONT_SENSOR.exit_now()
         self.FRONT_SENSOR.join()
         self.ROBOTMOVE.stop()
         self.ROBOTMOVE.cleanup()
-        del self.camera  # Is this needed?
 
     def run(self):
         """
@@ -158,7 +230,7 @@ class StreamProcessor(threading.Thread):
         """
         LOGGER.info("Starting the Stream Processing thread")
 
-        while not self.exit_now:
+        while not self._exit_now:
             # Wait for an image to be written to the stream
             # The wait() method takes an argument representing the
             # number of seconds to wait for the event before timing out.
@@ -385,10 +457,9 @@ class StreamProcessor(threading.Thread):
         # return the x and y co-ordinates of the centre of contours
         return cX, cY
 
-    # Set tilt ange of the Pi Camera
     def set_camera_tilt_from_marker(self, found_y):
         """
-        Calculates the angle of the camera tilt.
+        Set tilt ange of the Pi Camera.
         """
         #  Up/down direction - Value between -1.0 to +1.0
         # -1.0 is top, +1.0 is bottom, 0.0 is centre
@@ -408,11 +479,10 @@ class StreamProcessor(threading.Thread):
                               ' Tilt angle: ' + str(self.tilt_angle)
             LOGGER.info(TextStringSpeed)
 
-    # Set the motor speeds from the marker position
     def set_speed_from_marker(self, contourDetection, found_x,
                               distanceToFrontWall):
         """
-        Calulates the speed of the motors to marker.
+        Set the motor speeds from the marker position
         """
         if contourDetection:  # This extra may not be needed now
             if distanceToFrontWall < self.FRONT_BUFFER_STOP:
@@ -538,49 +608,6 @@ class StreamProcessor(threading.Thread):
         self.ROBOTMOVE.stop()
 
 
-# Image capture thread
-class ImageCapture(threading.Thread):
-    def __init__(self, stream_processor):
-        """
-        Initialise the parameters required for the Image Capture thread
-        """
-        super(ImageCapture, self).__init__()
-        self._stream_processor = stream_processor
-        self._exit_now = False
-        self.start()  # starts the thread by calling the run method.
-
-    def run(self):
-        """
-        The run() method is the entry point for a thread
-        This method runs in a separate thread
-        """
-        LOGGER.info("Starting the ImageCapture thread")
-        self._stream_processor.camera.capture_sequence(
-            self.trigger_stream(), format='bgr', use_video_port=True)
-
-        self._stream_processor.exit_now = True
-        self._stream_processor.join(
-        )  # The join() waits for threads to terminate
-
-        LOGGER.info("Finshed the ImageCapture thread")
-
-    def exit_now(self):
-        """
-        Request the thread to exit
-        """
-        self._exit_now = True
-
-    # Stream delegation loop
-    def trigger_stream(self):
-
-        while not self._exit_now:
-            if self._stream_processor.event.is_set():
-                time.sleep(0.01)
-            else:
-                yield self._stream_processor.stream
-                self._stream_processor.event.set()
-
-
 def main():
     """
     Performs the "Somewhere Over the Rainbow" algorithm
@@ -593,9 +620,6 @@ def main():
         # Start stream process to handle images
         stream_processor = StreamProcessor()
 
-        # Start the thread to generate images
-        capture_thread = ImageCapture(stream_processor)
-
         # Loop indefinitely until we are no longer running
         while True:
             # Wait for the interval period
@@ -603,10 +627,9 @@ def main():
 
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
-        
+
     finally:
-        capture_thread.exit_now()
-        capture_thread.join()
+        stream_processor.exit_now()
         stream_processor.join()
 
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")

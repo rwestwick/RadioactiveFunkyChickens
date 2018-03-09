@@ -42,15 +42,12 @@ debug_show_steering = True
 debug_show_tilt = True
 
 
-
 # Image capture thread
 class ImageCapture(threading.Thread):
     """
     """
-    CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
-    CAMERA_HEIGHT = 240
 
-    def __init__(self, stream_processor):
+    def __init__(self, width, height, stream_processor):
         """
         Initialise the parameters required for the Image Capture thread
         """
@@ -59,18 +56,18 @@ class ImageCapture(threading.Thread):
 
         self._stream_processor = stream_processor
         self._exit_now = False
-        
+
         self.camera = picamera.PiCamera()
         # Camera resolution defaults to the monitors resolution,
         # but needs to be lower for speed of processing
-        self.camera.resolution = (self.CAMERA_WIDTH, self.CAMERA_HEIGHT)
+        self.camera.resolution = (width, height)
         self.camera.framerate = 10  # If not set then defaults to 30fps
         self.camera.vflip = True  # Needed for mounting of camera on pan/tilt
         self.camera.hflip = True  # Needed for mounting of camera on pan/tilt
         LOGGER.info('Waiting for the camera to wake up ...')
         # Allow the camera time to warm-up
         time.sleep(2)  # This is the value/line used in the PiBorg example
-        
+
         self.start()  # starts the thread by calling the run method.
 
     def __del__(self):
@@ -99,8 +96,10 @@ class ImageCapture(threading.Thread):
         LOGGER.info("Request to stop Image Capture thread")
         self._exit_now = True
 
-    # Stream delegation loop
     def trigger_stream(self):
+        """
+        Stream delegation loop
+        """
 
         while not self._exit_now:
             if self._stream_processor.event.is_set():
@@ -109,8 +108,7 @@ class ImageCapture(threading.Thread):
                 yield self._stream_processor.stream
                 self._stream_processor.event.set()
 
-                
-                
+
 # Image stream processing thread
 # For threading tutourials see
 # https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -119,23 +117,26 @@ class StreamProcessor(threading.Thread):
     """
     """
 
+    CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
+    CAMERA_HEIGHT = 240
+
     def __init__(self):
         """
         Initialise the parameters required for StreamProcessor thread
         """
         super(StreamProcessor, self).__init__()
-        LOGGER.debug("ImageCapture constructor called")
+        LOGGER.debug("StreamProcessor constructor called")
 
         self.event = threading.Event()
         self._exit_now = False
         self.max_processing_delay = 0  # Initialsed for delay calculations
         self.min_processing_delay = 100  # Initialsed for delay calculations
         self.reached_marker = False
-        
+
         # Start the capture thread to generate images
-        self.capture_thread = ImageCapture(self)
+        self.capture_thread = ImageCapture(self.CAMERA_WIDTH, self.CAMERA_HEIGHT, self)
         self.stream = picamera.array.PiRGBArray(self.capture_thread.camera)
-        
+
         self.start()  # starts the thread by calling the run method.
 
     def __del__(self):
@@ -149,7 +150,7 @@ class StreamProcessor(threading.Thread):
 
     def exit_now(self):
         """
-        Request the thread to exit, by calling the subthread and when this is complete 
+        Request the thread to exit, by calling the subthread and when this is complete
         close down this stream processor
         """
         LOGGER.info("Request to stop Stream Processor thread")
@@ -196,7 +197,7 @@ class StreamProcessor(threading.Thread):
             # for any keyboard event
             # For some reason image does not show without this!
             cv2.waitKey(1) & 0xFF
-            
+
         if debug:
             cv2.getTickCount()
 
@@ -208,10 +209,10 @@ def main():
     LOGGER.info("'Camera Capture and stream mechanism' Starting.")
     LOGGER.info("CTRL^C to terminate program")
     LOGGER.info("Press 'c' to change colour")
-    stream_processor = StreamProcessor()
 
     try:
         # Start stream process to handle images
+        stream_processor = StreamProcessor()
 
         # Loop indefinitely until we are no longer running
         while True:
