@@ -42,35 +42,24 @@ debug_show_steering = True
 debug_show_tilt = True
 
 
-# Image stream processing thread
-# For threading tutourials see
-# https://www.tutorialspoint.com/python/python_multithreading.htm
-# http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
-class StreamProcessor(threading.Thread):
 
+# Image capture thread
+class ImageCapture(threading.Thread):
+    """
+    """
     CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
     CAMERA_HEIGHT = 240
-    IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
-    IMAGE_CENTRE_Y = CAMERA_HEIGHT / 2.0
-    # Aperture size for median filter based on PiBorg numbers of 5 with 320 *
-    # 240
-    MED_FILTER_APRTRE_SIZE = 5  # Must be odd number
-    # Initial number for down selecting large contours
-    # If number too small then will loose circular marker
-    NUM_OF_LARGEST_AREA_CONTOURS = 3
-    MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 
-    def __init__(self):
+    def __init__(self, stream_processor):
         """
-        Initialise the parameters required for StreamProcessor thread
+        Initialise the parameters required for the Image Capture thread
         """
-        super(StreamProcessor, self).__init__()
-        self.event = threading.Event()
-        self.exit_now = False
-        self.max_processing_delay = 0  # Initialsed for delay calculations
-        self.min_processing_delay = 100  # Initialsed for delay calculations
-        self.reached_marker = False
+        super(ImageCapture, self).__init__()
+        LOGGER.debug("ImageCapture constructor called")
 
+        self._stream_processor = stream_processor
+        self._exit_now = False
+        
         self.camera = picamera.PiCamera()
         # Camera resolution defaults to the monitors resolution,
         # but needs to be lower for speed of processing
@@ -81,8 +70,72 @@ class StreamProcessor(threading.Thread):
         LOGGER.info('Waiting for the camera to wake up ...')
         # Allow the camera time to warm-up
         time.sleep(2)  # This is the value/line used in the PiBorg example
-        self.stream = picamera.array.PiRGBArray(self.camera)
+        
+        self.start()  # starts the thread by calling the run method.
 
+    def __del__(self):
+        """
+        Destructor
+        """
+        LOGGER.debug("ImageCapture destructor called")
+        del self.camera  # Is this needed?
+
+    def run(self):
+        """
+        The run() method is the entry point for a thread
+        This method runs in a separate thread
+        """
+        LOGGER.info("Starting the ImageCapture thread")
+
+        self.camera.capture_sequence(
+            self.trigger_stream(), format='bgr', use_video_port=True)
+
+        LOGGER.info("Finshed the ImageCapture thread")
+
+    def exit_now(self):
+        """
+        Request the thread to exit
+        """
+        LOGGER.info("Request to stop Image Capture thread")
+        self._exit_now = True
+
+    # Stream delegation loop
+    def trigger_stream(self):
+
+        while not self._exit_now:
+            if self._stream_processor.event.is_set():
+                time.sleep(0.01)
+            else:
+                yield self._stream_processor.stream
+                self._stream_processor.event.set()
+
+                
+                
+# Image stream processing thread
+# For threading tutourials see
+# https://www.tutorialspoint.com/python/python_multithreading.htm
+# http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
+class StreamProcessor(threading.Thread):
+    """
+    """
+
+    def __init__(self):
+        """
+        Initialise the parameters required for StreamProcessor thread
+        """
+        super(StreamProcessor, self).__init__()
+        LOGGER.debug("ImageCapture constructor called")
+
+        self.event = threading.Event()
+        self._exit_now = False
+        self.max_processing_delay = 0  # Initialsed for delay calculations
+        self.min_processing_delay = 100  # Initialsed for delay calculations
+        self.reached_marker = False
+        
+        # Start the capture thread to generate images
+        self.capture_thread = ImageCapture(self)
+        self.stream = picamera.array.PiRGBArray(self.capture_thread.camera)
+        
         self.start()  # starts the thread by calling the run method.
 
     def __del__(self):
@@ -93,7 +146,16 @@ class StreamProcessor(threading.Thread):
                     format(self.min_processing_delay, '.2f') + " " +
                     format(self.max_processing_delay, '.2f') + " sec")
         cv2.destroyAllWindows()
-        del self.camera  # Is this needed?
+
+    def exit_now(self):
+        """
+        Request the thread to exit, by calling the subthread and when this is complete 
+        close down this stream processor
+        """
+        LOGGER.info("Request to stop Stream Processor thread")
+        self.capture_thread.exit_now()
+        self.capture_thread.join()
+        self._exit_now = True
 
     def run(self):
         """
@@ -102,7 +164,7 @@ class StreamProcessor(threading.Thread):
         """
         LOGGER.info("Starting the Stream Processing thread")
 
-        while not self.exit_now:
+        while not self._exit_now:
             # Wait for an image to be written to the stream
             # The wait() method takes an argument representing the
             # number of seconds to wait for the event before timing out.
@@ -134,68 +196,22 @@ class StreamProcessor(threading.Thread):
             # for any keyboard event
             # For some reason image does not show without this!
             cv2.waitKey(1) & 0xFF
+            
         if debug:
             cv2.getTickCount()
 
 
-# Image capture thread
-class ImageCapture(threading.Thread):
-    def __init__(self, stream_processor):
-        """
-        Initialise the parameters required for the Image Capture thread
-        """
-        super(ImageCapture, self).__init__()
-        self._stream_processor = stream_processor
-        self._exit_now = False
-        self.start()  # starts the thread by calling the run method.
-
-    def run(self):
-        """
-        The run() method is the entry point for a thread
-        This method runs in a separate thread
-        """
-        LOGGER.info("Starting the ImageCapture thread")
-
-        self._stream_processor.camera.capture_sequence(
-            self.trigger_stream(), format='bgr', use_video_port=True)
-
-        self._stream_processor.exit_now = True
-        self._stream_processor.join(
-        )  # The join() waits for threads to terminate
-
-        LOGGER.info("Finshed the ImageCapture thread")
-
-    def exit_now(self):
-        """
-        Request the thread to exit
-        """
-        self._exit_now = True
-
-    # Stream delegation loop
-    def trigger_stream(self):
-
-        while not self._exit_now:
-            if self._stream_processor.event.is_set():
-                time.sleep(0.01)
-            else:
-                yield self._stream_processor.stream
-                self._stream_processor.event.set()
-
-
 def main():
     """
-    Performs the "Somewhere Over the Rainbow" algorithm
+    Performs the "Camera Capture and stream mechanism" test
     """
-    LOGGER.info("'Somewhere Over the Rainbow' Starting.")
+    LOGGER.info("'Camera Capture and stream mechanism' Starting.")
     LOGGER.info("CTRL^C to terminate program")
     LOGGER.info("Press 'c' to change colour")
+    stream_processor = StreamProcessor()
 
     try:
         # Start stream process to handle images
-        stream_processor = StreamProcessor()
-
-        # Start the thread to generate images
-        capture_thread = ImageCapture(stream_processor)
 
         # Loop indefinitely until we are no longer running
         while True:
@@ -203,14 +219,12 @@ def main():
             time.sleep(1)
 
     except KeyboardInterrupt:
-        LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
+        LOGGER.info("Stopping 'Camera Capture and stream mechanism'.")
     finally:
-        capture_thread.exit_now()
-        capture_thread.join()
-        stream_processor.terminated = True
+        stream_processor.exit_now()
         stream_processor.join()
 
-    LOGGER.info("'Somewhere Over the Rainbow' Finished.")
+    LOGGER.info("'Camera Capture and stream mechanism' Finished.")
 
 
 if __name__ == "__main__":

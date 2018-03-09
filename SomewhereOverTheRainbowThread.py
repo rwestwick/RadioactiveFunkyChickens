@@ -603,10 +603,10 @@ def main():
 
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
+        
     finally:
         capture_thread.exit_now()
         capture_thread.join()
-        stream_processor.terminated = True
         stream_processor.join()
 
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")
