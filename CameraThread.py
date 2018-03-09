@@ -14,8 +14,6 @@ challenge.
 # This is needed for the row and column calculations for rectangle arrays to
 # prevent rounding down to zero.
 from __future__ import division
-
-# Import needed libraries such as picamera OpenCV and NumPy
 import logging
 import time
 import threading
@@ -134,7 +132,8 @@ class StreamProcessor(threading.Thread):
         self.reached_marker = False
 
         # Start the capture thread to generate images
-        self.capture_thread = ImageCapture(self.CAMERA_WIDTH, self.CAMERA_HEIGHT, self)
+        self.capture_thread = ImageCapture(self.CAMERA_WIDTH,
+                                           self.CAMERA_HEIGHT, self)
         self.stream = picamera.array.PiRGBArray(self.capture_thread.camera)
 
         self.start()  # starts the thread by calling the run method.
