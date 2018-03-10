@@ -4,8 +4,8 @@
 #  SomewhereOverTheRainbowThread.py
 # http://piwars.org/2018-competition/challenges/somewhere-over-the-rainbow/
 """
-This algorithm is designed to solve the Somewhere Over the Rainbow Pi Wars 4.0
-challenge.
+Sets up and generates images from a camera within two threads. 
+These images are passed to the callback configured during initialisation
 """
 
 # https://www.python.org/dev/peps/pep-0238/
