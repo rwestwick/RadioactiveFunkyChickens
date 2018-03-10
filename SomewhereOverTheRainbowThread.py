@@ -488,10 +488,11 @@ def main():
             320, 240, image_processor.image_process_entry, True)
 
         # Loop indefinitely until we are no longer running
-        while True:
-            # Wait for the interval period
-            time.sleep(1)
-
+        #while True:
+        #    # Wait for the interval period
+        #    time.sleep(1)
+        time.sleep(20)
+        
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
 

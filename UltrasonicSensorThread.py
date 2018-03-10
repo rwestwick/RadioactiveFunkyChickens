@@ -87,11 +87,11 @@ class UltrasonicSensorThread(threading.Thread):
         """
         Performs the sensor reading from within the thread
         """
-        MODULE_LOGGER.debug("Starting sensor reading thread")
+        MODULE_LOGGER.info("Starting sensor reading thread")
         while not self._exit_now:
             MODULE_LOGGER.debug("timer fired")
             self.__store_data(self.__get_distance())
             time.sleep(self._delay)
 
         self._sensor.cleanup()
-        MODULE_LOGGER.debug("Finished thread")
+        MODULE_LOGGER.info("Finished thread")

@@ -127,5 +127,4 @@ class UltrasonicSensor(object):
         """
         clears down the GPIO
         """
-        GPIO.cleanup()
         MODULE_LOGGER.info("Cleaned up UltrasonicSensor")
