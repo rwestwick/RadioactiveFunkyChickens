@@ -17,11 +17,8 @@ from __future__ import division
 import logging
 import time
 import math
-import threading
 import cv2
 import numpy as np
-import picamera
-import picamera.array
 import SetupConsoleLogger
 import ColourBoundaries
 import GPIOLayout
@@ -47,7 +44,6 @@ debug_show_input = True
 debug_show_output = True
 debug_show_steering = True
 debug_show_tilt = True
-
 
 
 # Image stream processing thread
@@ -84,7 +80,7 @@ class Processor(object):
 
     def __init__(self, width, height):
         """
-        Initialise the parameters required for StreamProcessor thread
+        Constructor
         """
         LOGGER.debug("StreamProcessor constructor called")
 
@@ -138,7 +134,7 @@ class Processor(object):
         global debug
         global debug_show_input
         global debug_show_output
-        
+
         key_one = cv2.waitKey(1) & 0xFF
 
         # Find chosen colour in image

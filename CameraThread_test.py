@@ -9,7 +9,7 @@ import cv2
 import SetupConsoleLogger
 import CameraThread
 
-LOGGER = logging.getLogger("__main__")
+LOGGER = logging.getLogger(__name__)
 SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 
 
@@ -17,9 +17,24 @@ class Processor(object):
     """
     """
 
-    def __init__(self):
+    def __init__(self, width, height):
         """
         Constructor
+        """
+        LOGGER.debug("Processor constructor called")
+
+        self.width = width
+        self.height = height
+
+    def __del__(self):
+        """
+        Destructor
+        """
+        self.cleanup()
+
+    def cleanup(self):
+        """
+        Cleanup
         """
 
     def image_process_entry(self, bgr_image):
@@ -51,7 +66,7 @@ def main():
     try:
         # Create the object that will process the images
         # passed in to the image_process_entry function
-        image_processor = Processor()
+        image_processor = Processor(320, 240)
 
         # Start stream process to handle images and
         # pass then to the callback function
@@ -67,6 +82,7 @@ def main():
     finally:
         stream_processor.exit_now()
         stream_processor.join()
+        image_processor.cleanup()
         cv2.destroyAllWindows()
 
     LOGGER.info("'Camera Capture and stream mechanism' Finished.")

@@ -92,6 +92,6 @@ class UltrasonicSensorThread(threading.Thread):
             MODULE_LOGGER.debug("timer fired")
             self.__store_data(self.__get_distance())
             time.sleep(self._delay)
-            
+
         self._sensor.cleanup()
         MODULE_LOGGER.debug("Finished thread")

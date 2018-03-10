@@ -4,7 +4,7 @@
 #  SomewhereOverTheRainbowThread.py
 # http://piwars.org/2018-competition/challenges/somewhere-over-the-rainbow/
 """
-Sets up and generates images from a camera within two threads. 
+Sets up and generates images from a camera within two threads.
 These images are passed to the callback configured during initialisation
 """
 
@@ -145,7 +145,7 @@ class StreamProcessor(threading.Thread):
             self.max_processing_delay * 1000, '.2f') + "ms")
         MODULE_LOGGER.info(
             "Frames processed: " + format(self._frames_processed, '.2f'))
-            
+
     def run(self):
         """
         The run() method is the entry point for a thread
