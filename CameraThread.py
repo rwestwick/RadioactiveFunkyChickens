@@ -128,7 +128,6 @@ class StreamProcessor(threading.Thread):
         """
         Destructor
         """
-        cv2.destroyAllWindows()
 
     def exit_now(self):
         """
@@ -140,14 +139,13 @@ class StreamProcessor(threading.Thread):
         self.capture_thread.exit_now()
         self.capture_thread.join()
         self._exit_now = True
-        self.join()
         MODULE_LOGGER.info("Image processing delays min: " + format(
             self.min_processing_delay * 1000, '.2f') + "ms"
             " and max: " + format(
             self.max_processing_delay * 1000, '.2f') + "ms")
         MODULE_LOGGER.info(
             "Frames processed: " + format(self._frames_processed, '.2f'))
-
+            
     def run(self):
         """
         The run() method is the entry point for a thread

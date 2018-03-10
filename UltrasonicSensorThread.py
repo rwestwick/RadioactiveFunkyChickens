@@ -67,7 +67,6 @@ class UltrasonicSensorThread(threading.Thread):
         """
         Retrieves the data via a mutex from the class variable
         """
-        MODULE_LOGGER.debug("Reading data")
         distance = 0
         self._mutex.acquire()
         try:
@@ -93,4 +92,6 @@ class UltrasonicSensorThread(threading.Thread):
             MODULE_LOGGER.debug("timer fired")
             self.__store_data(self.__get_distance())
             time.sleep(self._delay)
+            
+        self._sensor.cleanup()
         MODULE_LOGGER.debug("Finished thread")

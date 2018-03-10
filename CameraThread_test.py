@@ -9,12 +9,11 @@ import cv2
 import SetupConsoleLogger
 import CameraThread
 
-MODULE_LOGGER = logging.getLogger("__main__")
-SetupConsoleLogger.setup_console_logger(MODULE_LOGGER, logging.DEBUG)
+LOGGER = logging.getLogger("__main__")
+SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 
 
-# Image capture thread
-class ImageProcessor(object):
+class Processor(object):
     """
     """
 
@@ -46,13 +45,13 @@ def main():
     """
     Performs the "Camera Capture and stream mechanism" test
     """
-    MODULE_LOGGER.info("'Camera Capture and stream mechanism' Starting.")
-    MODULE_LOGGER.info("CTRL^C to terminate program")
+    LOGGER.info("'Camera Capture and stream mechanism' Starting.")
+    LOGGER.info("CTRL^C to terminate program")
 
     try:
         # Create the object that will process the images
         # passed in to the image_process_entry function
-        image_processor = ImageProcessor()
+        image_processor = Processor()
 
         # Start stream process to handle images and
         # pass then to the callback function
@@ -63,12 +62,14 @@ def main():
         time.sleep(10)
 
     except KeyboardInterrupt:
-        MODULE_LOGGER.info("Stopping 'Camera Capture and stream mechanism'.")
+        LOGGER.info("Stopping 'Camera Capture and stream mechanism'.")
 
     finally:
         stream_processor.exit_now()
+        stream_processor.join()
+        cv2.destroyAllWindows()
 
-    MODULE_LOGGER.info("'Camera Capture and stream mechanism' Finished.")
+    LOGGER.info("'Camera Capture and stream mechanism' Finished.")
 
 
 if __name__ == "__main__":

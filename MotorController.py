@@ -64,7 +64,6 @@ class MotorController(object):
         Sets all motors off and sets GPIO to standard values
         """
         self.stop()
-        # GPIO.cleanup()
         MODULE_LOGGER.info("Cleaned up MotorController")
 
     def stop(self):

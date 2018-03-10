@@ -29,6 +29,7 @@ import SpeedSettings
 import ServoController
 import DualMotorController
 import UltrasonicSensorThread
+import CameraThread
 
 # Global values and their initial values
 global debug  # Used for processing time
@@ -48,80 +49,12 @@ debug_show_steering = True
 debug_show_tilt = True
 
 
-# Image capture thread
-class ImageCapture(threading.Thread):
-    """
-    Thread created from the processing thread to generate series of images
-    which is then passed back via an event.
-    """
-
-    def __init__(self, width, height, stream_processor):
-        """
-        Initialise the parameters required for the Image Capture thread
-        """
-        super(ImageCapture, self).__init__()
-        LOGGER.debug("ImageCapture constructor called")
-
-        self._stream_processor = stream_processor
-        self._exit_now = False
-
-        self.camera = picamera.PiCamera()
-        # Camera resolution defaults to the monitors resolution,
-        # but needs to be lower for speed of processing
-        self.camera.resolution = (width, height)
-        self.camera.framerate = 10  # If not set then defaults to 30fps
-        self.camera.vflip = True  # Needed for mounting of camera on pan/tilt
-        self.camera.hflip = True  # Needed for mounting of camera on pan/tilt
-        LOGGER.info('Waiting for the camera to wake up ...')
-        # Allow the camera time to warm-up
-        time.sleep(2)  # This is the value/line used in the PiBorg example
-
-        self.start()  # starts the thread by calling the run method.
-
-    def __del__(self):
-        """
-        Destructor
-        """
-        LOGGER.debug("ImageCapture destructor called")
-        del self.camera  # Is this needed?
-
-    def run(self):
-        """
-        The run() method is the entry point for a thread
-        This method runs in a separate thread
-        """
-        LOGGER.info("Starting the ImageCapture thread")
-
-        self.camera.capture_sequence(
-            self.trigger_stream(), format='bgr', use_video_port=True)
-
-        LOGGER.info("Finshed the ImageCapture thread")
-
-    def exit_now(self):
-        """
-        Request the thread to exit
-        """
-        LOGGER.info("Request to stop Image Capture thread")
-        self._exit_now = True
-
-    def trigger_stream(self):
-        """
-        Stream delegation loop
-        """
-
-        while not self._exit_now:
-            if self._stream_processor.event.is_set():
-                time.sleep(0.01)
-            else:
-                yield self._stream_processor.stream
-                self._stream_processor.event.set()
-
 
 # Image stream processing thread
 # For threading tutourials see
 # https://www.tutorialspoint.com/python/python_multithreading.htm
 # http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
-class StreamProcessor(threading.Thread):
+class Processor(object):
     """
     """
 
@@ -153,22 +86,11 @@ class StreamProcessor(threading.Thread):
         """
         Initialise the parameters required for StreamProcessor thread
         """
-        super(StreamProcessor, self).__init__()
         LOGGER.debug("StreamProcessor constructor called")
 
-        self.event = threading.Event()
-        self._exit_now = False
-        self.max_processing_delay = 0.0  # Initialsed for delay calculations
-        self.min_processing_delay = 100.0  # Initialsed for delay calculations
-        self._frames_processed = 0
         self.width = width
         self.height = height
         self.reached_marker = False
-
-        # Start the capture thread to generate images
-        self.capture_thread = ImageCapture(self.width, self.height, self)
-        self.stream = picamera.array.PiRGBArray(self.capture_thread.camera)
-
         self.servo_controller = ServoController.ServoController()
         self.servo_controller.start_servos()
         self.pan_angle = self.PAN_INTIAL
@@ -196,97 +118,36 @@ class StreamProcessor(threading.Thread):
             GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
             GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
 
-        self.start()  # starts the thread by calling the run method.
-
     def __del__(self):
         """
         Destructor
         """
-        cv2.destroyAllWindows()
+        self.cleanup()
 
-    def exit_now(self):
-        """
-        Blocking call to request the thread to exit.
-        Works by calling the subthread and when this is complete
-        joins and closes down this stream processor before returning
-        """
-        LOGGER.info("Request to stop Stream Processor thread")
-        self.capture_thread.exit_now()
-        self.capture_thread.join()
-        self._exit_now = True
+    def cleanup(self):
         self.servo_controller.stop_servos()
         self.FRONT_SENSOR.exit_now()
         self.FRONT_SENSOR.join()
         self.ROBOTMOVE.stop()
         self.ROBOTMOVE.cleanup()
-        self.join()
-        MODULE_LOGGER.info("Image processing delays min: " + format(
-            self.min_processing_delay * 1000, '.2f') + "ms"
-            " and max: " + format(
-            self.max_processing_delay * 1000, '.2f') + "ms")
-        MODULE_LOGGER.info(
-            "Frames processed: " + format(self._frames_processed, '.2f'))
 
-    def run(self):
-        """
-        The run() method is the entry point for a thread
-        This method runs in a separate thread
-        """
-        LOGGER.info("Starting the Stream Processing thread")
-
-        while not self._exit_now:
-            # Wait for an image to be written to the stream
-            # The wait() method takes an argument representing the
-            # number of seconds to wait for the event before timing out.
-            if self.event.wait(1):
-                try:
-                    # Read the image and do some processing on it
-                    self.stream.seek(0)
-                    self.process_image(self.stream.array)
-                finally:
-                    # Reset the stream and event
-                    self.stream.seek(0)
-                    self.stream.truncate()
-                    self.event.clear()
-
-        LOGGER.info("Finshed the Stream Processing thread")
-
-    def process_image(self, image):
+    def image_process_entry(self, bgr_image):
         """
         The main image processing function
         """
         global debug
         global debug_show_input
         global debug_show_output
-
-        # View the original image seen by the camera.
-        if self._show_input:
-            cv2.imshow('Original BGR', image)
-            # Capture a key press. The function waits argument in ms
-            # for any keyboard event
-            # For some reason image does not show without this!
-            key_one = cv2.waitKey(1) & 0xFF
-
-        e1 = cv2.getTickCount()
+        
+        key_one = cv2.waitKey(1) & 0xFF
 
         # Find chosen colour in image
         colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(
-            image)
+            bgr_image)
 
         # Find location of contour
         contour_detection, found_x, found_y, contour_marked_image = self.find_marker_contour(
             colour_filtered_mask, colour_filtered_output)
-
-        # Calculate image processing overhead
-        # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
-        e2 = cv2.getTickCount()
-        time = (e2 - e1) / cv2.getTickFrequency()
-        if time > self.max_processing_delay:
-            self.max_processing_delay = time
-        elif time < self.min_processing_delay:
-            self.min_processing_delay = time
-
-        self._frames_processed += 1
 
         if debug_show_output:
             cv2.imshow('Filtered image with marker contour',
@@ -621,8 +482,14 @@ def main():
     LOGGER.info("Press 'c' to change colour")
 
     try:
-        # Start stream process to handle images
-        stream_processor = StreamProcessor()
+        # Create the object that will process the images
+        # passed in to the image_process_entry function
+        image_processor = Processor(320, 240)
+
+        # Start stream process to handle images and
+        # pass then to the callback function
+        stream_processor = CameraThread.StreamProcessor(
+            320, 240, image_processor.image_process_entry, True)
 
         # Loop indefinitely until we are no longer running
         while True:
@@ -634,6 +501,9 @@ def main():
 
     finally:
         stream_processor.exit_now()
+        stream_processor.join()
+        image_processor.cleanup()
+        cv2.destroyAllWindows()
 
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")
 
