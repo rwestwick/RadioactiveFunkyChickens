@@ -96,8 +96,7 @@ class ServoController(object):
         """
         PIN_STRING = 'echo p1-'
         if pin == self.PAN_SERVO_ID:
-            PIN_STRING = PIN_STRING + str(
-                GPIOLayout.SERVO_PAN_PIN) + '='
+            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_PAN_PIN) + '='
 
         elif pin == self.TILT_SERVO_ID:
             PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_TILT_PIN) + '='

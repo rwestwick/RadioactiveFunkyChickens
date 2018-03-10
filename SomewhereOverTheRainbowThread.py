@@ -51,6 +51,8 @@ debug_show_tilt = True
 # Image capture thread
 class ImageCapture(threading.Thread):
     """
+    Thread created from the processing thread to generate series of images
+    which is then passed back via an event.
     """
 
     def __init__(self, width, height, stream_processor):
@@ -123,10 +125,6 @@ class StreamProcessor(threading.Thread):
     """
     """
 
-    CAMERA_WIDTH = 320  # 320 x 240 used in PiBorg has been tested with 640 * 480
-    CAMERA_HEIGHT = 240
-    IMAGE_CENTRE_X = CAMERA_WIDTH / 2.0
-    IMAGE_CENTRE_Y = CAMERA_HEIGHT / 2.0
     PAN_INTIAL = 0  # Initial pan angle in degrees
     TILT_INTIAL = 20  # Initial tilt angle in degrees
     TILT_CHANGE = 2  # Change in tilt angle in degrees to keep marker centred
@@ -151,7 +149,7 @@ class StreamProcessor(threading.Thread):
     NUM_OF_LARGEST_AREA_CONTOURS = 3
     MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 
-    def __init__(self):
+    def __init__(self, width, height):
         """
         Initialise the parameters required for StreamProcessor thread
         """
@@ -160,13 +158,15 @@ class StreamProcessor(threading.Thread):
 
         self.event = threading.Event()
         self._exit_now = False
-        self.max_processing_delay = 0  # Initialsed for delay calculations
-        self.min_processing_delay = 100  # Initialsed for delay calculations
+        self.max_processing_delay = 0.0  # Initialsed for delay calculations
+        self.min_processing_delay = 100.0  # Initialsed for delay calculations
+        self._frames_processed = 0
+        self.width = width
+        self.height = height
         self.reached_marker = False
 
         # Start the capture thread to generate images
-        self.capture_thread = ImageCapture(self.CAMERA_WIDTH,
-                                           self.CAMERA_HEIGHT, self)
+        self.capture_thread = ImageCapture(self.width, self.height, self)
         self.stream = picamera.array.PiRGBArray(self.capture_thread.camera)
 
         self.servo_controller = ServoController.ServoController()
@@ -202,15 +202,13 @@ class StreamProcessor(threading.Thread):
         """
         Destructor
         """
-        LOGGER.info("Image processing delays min and max " +
-                    format(self.min_processing_delay, '.2f') + " " +
-                    format(self.max_processing_delay, '.2f') + " sec")
         cv2.destroyAllWindows()
 
     def exit_now(self):
         """
-        Request the thread to exit, by calling the subthread and when this is complete
-        close down this stream processor
+        Blocking call to request the thread to exit.
+        Works by calling the subthread and when this is complete
+        joins and closes down this stream processor before returning
         """
         LOGGER.info("Request to stop Stream Processor thread")
         self.capture_thread.exit_now()
@@ -221,6 +219,13 @@ class StreamProcessor(threading.Thread):
         self.FRONT_SENSOR.join()
         self.ROBOTMOVE.stop()
         self.ROBOTMOVE.cleanup()
+        self.join()
+        MODULE_LOGGER.info("Image processing delays min: " + format(
+            self.min_processing_delay * 1000, '.2f') + "ms"
+            " and max: " + format(
+            self.max_processing_delay * 1000, '.2f') + "ms")
+        MODULE_LOGGER.info(
+            "Frames processed: " + format(self._frames_processed, '.2f'))
 
     def run(self):
         """
@@ -255,14 +260,14 @@ class StreamProcessor(threading.Thread):
         global debug_show_output
 
         # View the original image seen by the camera.
-        if debug_show_input:
+        if self._show_input:
             cv2.imshow('Original BGR', image)
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
             key_one = cv2.waitKey(1) & 0xFF
-        if debug:
-            e1 = cv2.getTickCount()
+
+        e1 = cv2.getTickCount()
 
         # Find chosen colour in image
         colour_filtered_output, colour_filtered_mask = self.find_HSV_colour(
@@ -274,13 +279,14 @@ class StreamProcessor(threading.Thread):
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
-        if debug:
-            e2 = cv2.getTickCount()
-            time = (e2 - e1) / cv2.getTickFrequency()
-            if time > self.max_processing_delay:
-                self.max_processing_delay = time
-            elif time < self.min_processing_delay:
-                self.min_processing_delay = time
+        e2 = cv2.getTickCount()
+        time = (e2 - e1) / cv2.getTickFrequency()
+        if time > self.max_processing_delay:
+            self.max_processing_delay = time
+        elif time < self.min_processing_delay:
+            self.min_processing_delay = time
+
+        self._frames_processed += 1
 
         if debug_show_output:
             cv2.imshow('Filtered image with marker contour',
@@ -462,8 +468,7 @@ class StreamProcessor(threading.Thread):
         """
         #  Up/down direction - Value between -1.0 to +1.0
         # -1.0 is top, +1.0 is bottom, 0.0 is centre
-        camera_direction = (
-            found_y - self.IMAGE_CENTRE_Y) / self.IMAGE_CENTRE_Y
+        camera_direction = (found_y - (self.height / 2)) / (self.height / 2.0)
 
         if camera_direction < -0.5:
             self.tilt_angle = self.tilt_angle + self.TILT_CHANGE
@@ -499,7 +504,7 @@ class StreamProcessor(threading.Thread):
 
             #  Left/right direction - Value between -1.0 to +1.0
             # -1.0 is far left, +1.0 is far right, 0.0 is centre
-            direction = (found_x - self.IMAGE_CENTRE_X) / self.IMAGE_CENTRE_X
+            direction = (found_x - (self.width / 2)) / (self.width / 2.0)
 
             if debug_show_steering:
                 LOGGER.info(
@@ -563,7 +568,7 @@ class StreamProcessor(threading.Thread):
 
             #  Left/right direction - Value between -1.0 to +1.0
             # -1.0 is far left, +1.0 is far right, 0.0 is centre
-            direction = (found_x - self.IMAGE_CENTRE_X) / self.IMAGE_CENTRE_X
+            direction = (found_x - (self.width / 2)) / (self.width / 2.0)
 
             if debug_show_steering:
                 LOGGER.info(
@@ -629,7 +634,6 @@ def main():
 
     finally:
         stream_processor.exit_now()
-        stream_processor.join()
 
     LOGGER.info("'Somewhere Over the Rainbow' Finished.")
 
