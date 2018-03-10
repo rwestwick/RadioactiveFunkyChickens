@@ -45,7 +45,7 @@ class UltrasonicSensor(object):
             ")"
         MODULE_LOGGER.info(log_string)
 
-        # Use physical pin numbering
+        # Use gpio numbering
         GPIO.setmode(GPIO.BCM)
 
         # Disable warnings

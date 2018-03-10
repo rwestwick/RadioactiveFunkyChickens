@@ -121,11 +121,12 @@ class Processor(object):
         self.cleanup()
 
     def cleanup(self):
-        self.servo_controller.stop_servos()
-        self.FRONT_SENSOR.exit_now()
-        self.FRONT_SENSOR.join()
+        LOGGER.debug("starting cleanup")
         self.ROBOTMOVE.stop()
         self.ROBOTMOVE.cleanup()
+        self.FRONT_SENSOR.exit_now()
+        self.FRONT_SENSOR.join()
+        self.servo_controller.stop_servos()
 
     def image_process_entry(self, bgr_image):
         """
@@ -488,11 +489,9 @@ def main():
             320, 240, image_processor.image_process_entry, True)
 
         # Loop indefinitely until we are no longer running
-        #while True:
-        #    # Wait for the interval period
-        #    time.sleep(1)
-        time.sleep(20)
-        
+        while True:
+            time.sleep(1)
+
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Somewhere Over the Rainbow'.")
 
