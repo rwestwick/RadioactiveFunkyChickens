@@ -176,7 +176,7 @@ class StreamProcessor(threading.Thread):
         """
         # View the original image seen by the camera.
         if self._show_input:
-            cv2.imshow('Original BGR', image)
+            cv2.imshow('Original', image)
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
@@ -185,7 +185,7 @@ class StreamProcessor(threading.Thread):
         e1 = cv2.getTickCount()
 
         if self._processing_cb is not None:
-            self._processing_cb(image)
+            self._processing_cb(image, self.width, self.height)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html

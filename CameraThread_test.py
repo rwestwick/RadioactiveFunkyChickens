@@ -17,14 +17,14 @@ class Processor(object):
     """
     """
 
-    def __init__(self, width, height):
+    def __init__(self):
         """
         Constructor
         """
         LOGGER.debug("Processor constructor called")
 
-        self.width = width
-        self.height = height
+        self.width = 320
+        self.height = 240
 
     def __del__(self):
         """
@@ -37,7 +37,7 @@ class Processor(object):
         Cleanup
         """
 
-    def image_process_entry(self, bgr_image):
+    def image_process_entry(self, bgr_image, width, height):
         """
         Called each time an image can be processed
         """
@@ -66,7 +66,7 @@ def main():
     try:
         # Create the object that will process the images
         # passed in to the image_process_entry function
-        image_processor = Processor(320, 240)
+        image_processor = Processor()
 
         # Start stream process to handle images and
         # pass then to the callback function
@@ -74,7 +74,7 @@ def main():
             320, 240, image_processor.image_process_entry, True)
 
         # Wait for the interval period for finishing
-        time.sleep(10)
+        time.sleep(30)
 
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Camera Capture and stream mechanism'.")

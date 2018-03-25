@@ -22,10 +22,10 @@ SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 servo_controller = ServoController.ServoController()
 
 # Laser gpio line
-laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO)
+laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO, False)
 
 # Motor gpio line
-motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO)
+motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO, False)
 
 RUMBLE_DELAY = 2.0  # Time of rumble in seconds trigger has to go full length
 NERF_TRIGGER_FORWARD = 45  # Angle of servo in forward position degrees
@@ -51,10 +51,10 @@ def toggle_laser_cb(currentWiimote):
     del currentWiimote
 
     if laser_gpio.is_on():
-        LOGGER.info("Laser Toggle Off")
+        LOGGER.info("Laser Toggle to Off")
         laser_gpio.switch_off()
     else:
-        LOGGER.info("Laser Toggle On")
+        LOGGER.info("Laser Toggle to On")
         laser_gpio.switch_on()
 
 
@@ -65,10 +65,10 @@ def toggle_motor_cb(currentWiimote):
     del currentWiimote
 
     if motor_gpio.is_on():
-        LOGGER.info("Motor Toggle Off")
+        LOGGER.info("Motor Toggle to Off")
         motor_gpio.switch_off()
     else:
-        LOGGER.info("Motor Toggle On")
+        LOGGER.info("Motor Toggle to On")
         motor_gpio.switch_on()
 
 

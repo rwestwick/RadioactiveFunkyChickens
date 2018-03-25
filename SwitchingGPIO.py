@@ -23,16 +23,18 @@ class SwitchingGPIO(object):
     Defines the interaction with a GPIO socket
     """
 
-    def __init__(self, bcm_num):
+    def __init__(self, bcm_num, active_high=True):
         """
         Initialise the parameters required for the switching base class
         """
-        MODULE_LOGGER.info("GPIO Class init on socket " + str(bcm_num))
+        MODULE_LOGGER.info("GPIO Class init on socket " + str(bcm_num) + \
+                           " active high " + str(active_high))
 
         # Use board pin numbering
         GPIO.setmode(GPIO.BCM)
 
         self.bcm_num = bcm_num
+        self.active_high = active_high
         self.socket = OutputDevice(bcm_num)
 
     def __del__(self):
@@ -47,22 +49,36 @@ class SwitchingGPIO(object):
         Switches socket on
         """
         MODULE_LOGGER.debug("Switching on " + str(self.bcm_num))
-        self.socket.on()
+        if active_high
+            self.socket.on()
+        else:
+            self.socket.off()
 
     def switch_off(self):
         """
         Switches socket off
         """
         MODULE_LOGGER.debug("Switching off " + str(self.bcm_num))
-        self.socket.off()
+        if active_high
+            self.socket.off()
+        else:
+            self.socket.on()
 
     def is_on(self):
         """
         Gets the state of the gpio line
         """
         if self.socket.is_active:
-            MODULE_LOGGER.debug("State is True")
-            return True
+            if active_high
+                MODULE_LOGGER.debug("State is True")
+                return True
+            else:
+                MODULE_LOGGER.debug("State is False")
+                return False
         else:
-            MODULE_LOGGER.debug("State is False")
-            return False
+            if active_high
+                MODULE_LOGGER.debug("State is False")
+                return False
+            else:
+                MODULE_LOGGER.debug("State is True")
+                return True

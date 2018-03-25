@@ -14,6 +14,7 @@ class OutputDevice(object):
         """
         Stub function
         """
+        self.active = False
 
     # pylint: disable=C0103
     def on(self):
@@ -35,3 +36,11 @@ class OutputDevice(object):
         """
         Stub function
         """
+        return self.active
+
+    def set_active(self, active):
+        """
+        Used to set whether the port is active, so as many branches as possible 
+        can be exercised
+        """
+        self.active = active

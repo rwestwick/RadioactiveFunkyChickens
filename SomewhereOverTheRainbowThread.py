@@ -78,14 +78,14 @@ class Processor(object):
     NUM_OF_LARGEST_AREA_CONTOURS = 3
     MIN_MARKER_AREA = 100  # Pixels - the final value to be decided from testing
 
-    def __init__(self, width, height):
+    def __init__(self):
         """
         Constructor
         """
         LOGGER.debug("StreamProcessor constructor called")
 
-        self.width = width
-        self.height = height
+        self.width = 320
+        self.height = 240
         self.reached_marker = False
         self.servo_controller = ServoController.ServoController()
         self.servo_controller.start_servos()
@@ -128,13 +128,15 @@ class Processor(object):
         self.FRONT_SENSOR.join()
         self.servo_controller.stop_servos()
 
-    def image_process_entry(self, bgr_image):
+    def image_process_entry(self, bgr_image, width, height):
         """
         The main image processing function
         """
         global debug
         global debug_show_input
         global debug_show_output
+        self.width = width
+        self.height = height
 
         key_one = cv2.waitKey(1) & 0xFF
 
@@ -481,7 +483,7 @@ def main():
     try:
         # Create the object that will process the images
         # passed in to the image_process_entry function
-        image_processor = Processor(320, 240)
+        image_processor = Processor()
 
         # Start stream process to handle images and
         # pass then to the callback function
