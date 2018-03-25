@@ -36,6 +36,7 @@ class SwitchingGPIO(object):
         self.bcm_num = bcm_num
         self.active_high = active_high
         self.socket = OutputDevice(bcm_num)
+        self.switch_off()
 
     def __del__(self):
         """
@@ -49,7 +50,7 @@ class SwitchingGPIO(object):
         Switches socket on
         """
         MODULE_LOGGER.debug("Switching on " + str(self.bcm_num))
-        if active_high
+        if self.active_high:
             self.socket.on()
         else:
             self.socket.off()
@@ -59,7 +60,7 @@ class SwitchingGPIO(object):
         Switches socket off
         """
         MODULE_LOGGER.debug("Switching off " + str(self.bcm_num))
-        if active_high
+        if self.active_high:
             self.socket.off()
         else:
             self.socket.on()
@@ -69,14 +70,14 @@ class SwitchingGPIO(object):
         Gets the state of the gpio line
         """
         if self.socket.is_active:
-            if active_high
+            if self.active_high:
                 MODULE_LOGGER.debug("State is True")
                 return True
             else:
                 MODULE_LOGGER.debug("State is False")
                 return False
         else:
-            if active_high
+            if self.active_high:
                 MODULE_LOGGER.debug("State is False")
                 return False
             else:
