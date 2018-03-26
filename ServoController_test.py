@@ -18,7 +18,7 @@ def test_servocontroller(sleep_len=0):
     try:
         SERVO_CONTROLLER = ServoController.ServoController()
         SERVO_CONTROLLER.create_config_file()
-        
+
         MODULE_LOGGER.debug("Starting")
         SERVO_CONTROLLER.start_servos()
         time.sleep(sleep_len)

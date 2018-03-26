@@ -52,7 +52,7 @@ class ServoController(object):
 
         self.set_pan_servo(0)
         self.set_tilt_servo(0)
-        self.set_fire_servo(0)
+        self.set_nerf_trigger_servo(0)
 
     def create_config_file(self):
         """
@@ -148,7 +148,7 @@ class ServoController(object):
             MODULE_LOGGER.warn("Pan using min level of " + str(self.pan_min))
             degrees = self.pan_min
         elif degrees > self.pan_max:
-            MODULE_LOGGER.warn("Pan sing above max level of " + str(self.pan_max))
+            MODULE_LOGGER.warn("Pan sing max level of " + str(self.pan_max))
             degrees = self.pan_max
         else:
             MODULE_LOGGER.info("Pan: " + str(degrees))
@@ -163,7 +163,7 @@ class ServoController(object):
             MODULE_LOGGER.warn("Tilt using min level of " + str(self.tilt_min))
             degrees = self.tilt_min
         elif degrees > self.tilt_max:
-            MODULE_LOGGER.warn("Tilt using above max level of " + str(self.tilt_max))
+            MODULE_LOGGER.warn("Tilt using max level of " + str(self.tilt_max))
             degrees = self.tilt_max
         else:
             MODULE_LOGGER.info("Tilt: " + str(degrees))
@@ -178,7 +178,7 @@ class ServoController(object):
             MODULE_LOGGER.warn("Fire using min level of " + str(self.fire_min))
             degrees = self.fire_min
         elif degrees > self.fire_max:
-            MODULE_LOGGER.warn("Fire using above max level of " + str(self.fire_max))
+            MODULE_LOGGER.warn("Fire using max level of " + str(self.fire_max))
             degrees = self.fire_max
         else:
             MODULE_LOGGER.info("Fire: " + str(degrees))
