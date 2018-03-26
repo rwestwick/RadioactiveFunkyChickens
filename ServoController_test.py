@@ -30,7 +30,7 @@ def test_servocontroller(sleep_len=0):
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_nerf_trigger_servo(90)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_nerf_trigger_servo(999) # Error case
+        SERVO_CONTROLLER.set_nerf_trigger_servo(999)  # Error case
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_nerf_trigger_servo(45)
         time.sleep(sleep_len)
@@ -40,7 +40,7 @@ def test_servocontroller(sleep_len=0):
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_nerf_trigger_servo(-90)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_nerf_trigger_servo(-999) # Error case
+        SERVO_CONTROLLER.set_nerf_trigger_servo(-999)  # Error case
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_nerf_trigger_servo(-45)
         time.sleep(sleep_len)
@@ -54,8 +54,8 @@ def test_servocontroller(sleep_len=0):
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(90)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_pan_servo(999) # Error case
-        time.sleep(sleep_len)        
+        SERVO_CONTROLLER.set_pan_servo(999)  # Error case
+        time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(45)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(0)
@@ -64,8 +64,8 @@ def test_servocontroller(sleep_len=0):
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(-90)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_pan_servo(-999) # Error case
-        time.sleep(sleep_len)        
+        SERVO_CONTROLLER.set_pan_servo(-999)  # Error case
+        time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(-45)
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_pan_servo(0)
@@ -78,7 +78,7 @@ def test_servocontroller(sleep_len=0):
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(90)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_tilt_servo(999) # Error case
+        SERVO_CONTROLLER.set_tilt_servo(999)  # Error case
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(45)
         time.sleep(sleep_len)
@@ -88,7 +88,7 @@ def test_servocontroller(sleep_len=0):
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(-75)
         time.sleep(sleep_len)
-        SERVO_CONTROLLER.set_tilt_servo(-999) # Error case
+        SERVO_CONTROLLER.set_tilt_servo(-999)  # Error case
         time.sleep(sleep_len)
         SERVO_CONTROLLER.set_tilt_servo(-45)
         time.sleep(sleep_len)

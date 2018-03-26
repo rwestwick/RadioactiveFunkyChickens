@@ -265,7 +265,7 @@ class Processor(object):
             cntCircularity = self.contour_circularity(cntWithMinArea)
 
             # Sort contours in order of circularity
-            (cntSortedByCirc, cntCircularity) = zip( * sorted(
+            (cntSortedByCirc, cntCircularity) = zip(*sorted(
                 zip(cntWithMinArea, cntCircularity),
                 key=lambda x: x[1],
                 reverse=True))

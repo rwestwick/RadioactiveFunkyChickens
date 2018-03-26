@@ -22,10 +22,12 @@ SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 servo_controller = ServoController.ServoController()
 
 # Laser gpio line
-laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO, False)
+laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO,
+                                         False)
 
 # Motor gpio line
-motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO, False)
+motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO,
+                                         False)
 
 RUMBLE_DELAY = 2.0  # Time of rumble in seconds trigger has to go full length
 NERF_TRIGGER_FORWARD = 45  # Angle of servo in forward position degrees
