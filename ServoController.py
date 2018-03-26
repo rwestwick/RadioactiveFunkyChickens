@@ -15,6 +15,7 @@ servod -help
 
 import logging
 import os
+import platform
 import ConfigParser # pylint: disable=E0401
 import GPIOLayout
 
@@ -118,7 +119,9 @@ class ServoController(object):
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             MODULE_LOGGER.debug(init_string)
-            os.system(init_string)
+            
+            if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+                os.system(init_string)
             self.servos_active = True
 
     def stop_servos(self):
@@ -200,4 +203,5 @@ class ServoController(object):
         PIN_STRING = PIN_STRING + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
         MODULE_LOGGER.debug(PIN_STRING)
-        os.system(PIN_STRING)
+        if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+            os.system(PIN_STRING)
