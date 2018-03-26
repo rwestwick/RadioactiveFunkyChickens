@@ -147,7 +147,7 @@ class ServoController(object):
         elif degrees > self.pan_max:
             MODULE_LOGGER.warn("Pan sing above max level of " + str(self.pan_max))
             degrees = self.pan_max
-        else
+        else:
             MODULE_LOGGER.info("Pan: " + str(degrees))
 
         self.set_servo(self.PAN_SERVO_ID, degrees + self.pan_offset)
@@ -162,7 +162,7 @@ class ServoController(object):
         elif degrees > self.tilt_max:
             MODULE_LOGGER.warn("Tilt using above max level of " + str(self.tilt_max))
             degrees = self.tilt_max
-        else
+        else:
             MODULE_LOGGER.info("Tilt: " + str(degrees))
 
         self.set_servo(self.TILT_SERVO_ID, degrees + self.tilt_offset)
@@ -177,7 +177,7 @@ class ServoController(object):
         elif degrees > self.fire_max:
             MODULE_LOGGER.warn("Fire using above max level of " + str(self.fire_max))
             degrees = self.fire_max
-        else
+        else:
             MODULE_LOGGER.info("Fire: " + str(degrees))
 
         self.set_servo(self.NERF_TRIGGER_ID, degrees + self.fire_offset)
