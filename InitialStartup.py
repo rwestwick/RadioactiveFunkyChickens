@@ -10,14 +10,12 @@ if platform.machine() == "armv6l" or platform.machine() == "armv7l":
     import RPi.GPIO as GPIO
 else:
     import GPIOStub as GPIO
-import KeyboardCharacterReader
 import DualMotorController
 import UltrasonicSensor
 import SetupConsoleLogger
 import ServoController
 import SwitchingGPIO
 import GPIOLayout
-
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
@@ -29,7 +27,7 @@ def initialise_servos():
     Initialise the three servos to their 0 degree position
     """
     MODULE_LOGGER.debug("  Initialising Servos")
-    
+
     servo_controller = ServoController.ServoController()
     servo_controller.start_servos()
     servo_controller.set_nerf_trigger_servo(0)
@@ -43,7 +41,7 @@ def initialise_motor_controllers():
     Initialise the motor controllers to outputs and all "off"
     """
     MODULE_LOGGER.debug("  Initialising Motor Controllers")
-    
+
     motor_controller = DualMotorController.DualMotorController(
         GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
         GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
@@ -55,19 +53,20 @@ def initialise_motor_controllers():
         GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
     motor_controller.stop()
     motor_controller.cleanup()
-    
-    
+
+
 def initialise_ultrasonics():
     """
     Initialise the ultrasonics to inputs and outputs and off if required
     """
     MODULE_LOGGER.debug("  Initialising Ultrasonics")
-    
-    prox_front = UltrasonicSensor.UltrasonicSensor(GPIOLayout.SONAR_FRONT_TX_GPIO)
+
+    prox_front = UltrasonicSensor.UltrasonicSensor(
+        GPIOLayout.SONAR_FRONT_TX_GPIO)
     prox_left = UltrasonicSensor.UltrasonicSensor(
-            GPIOLayout.SONAR_LEFT_RX_GPIO, GPIOLayout.SONAR_LEFT_TX_GPIO)
+        GPIOLayout.SONAR_LEFT_RX_GPIO, GPIOLayout.SONAR_LEFT_TX_GPIO)
     prox_right = UltrasonicSensor.UltrasonicSensor(
-            GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
+        GPIOLayout.SONAR_RIGHT_RX_GPIO, GPIOLayout.SONAR_RIGHT_TX_GPIO)
     prox_front.cleanup()
     prox_left.cleanup()
     prox_right.cleanup()
@@ -78,10 +77,12 @@ def initialise_other_gpio():
     Initialise the gpio (laser, motor etc) to outputs and off
     """
     MODULE_LOGGER.debug("  Initialising GPIO's")
-    
-    laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO, False)
+
+    laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO,
+                                             False)
     laser_gpio.switch_off()
-    motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO, False)
+    motor_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_MOTOR_GPIO,
+                                             False)
     motor_gpio.switch_off()
 
 
@@ -103,4 +104,3 @@ if __name__ == "__main__":
         LOGGER.info("Stopping the robot intialisation routine")
     finally:
         LOGGER.info("Completed the robot intialisation routine")
-
