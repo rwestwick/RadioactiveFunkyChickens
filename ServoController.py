@@ -122,7 +122,7 @@ class ServoController(object):
             MODULE_LOGGER.debug(init_string)
 
             if platform.machine() == "armv6l" or \
-	       platform.machine() == "armv7l":
+                    platform.machine() == "armv7l":
                 os.system(init_string)
             self.servos_active = True
 
