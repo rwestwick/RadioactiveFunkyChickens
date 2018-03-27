@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """
 JustDrive.py needs to be run from the command line
-This code is for the remote-controlled The Duck Shoot PiWars 2018 challenge
+This code is for the remote-controlled challenges
 http://piwars.org/
 """
 
