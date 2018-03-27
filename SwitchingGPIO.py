@@ -27,7 +27,7 @@ class SwitchingGPIO(object):
         """
         Initialise the parameters required for the switching base class
         """
-        MODULE_LOGGER.info("GPIO Class init on socket " + str(bcm_num) + \
+        MODULE_LOGGER.info("GPIO Class init on socket " + str(bcm_num) +
                            " active high " + str(active_high))
 
         # Use board pin numbering

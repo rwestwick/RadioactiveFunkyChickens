@@ -40,7 +40,7 @@ class OutputDevice(object):
 
     def set_active(self, active):
         """
-        Used to set whether the port is active, so as many branches as possible 
+        Used to set whether the port is active, so as many branches as possible
         can be exercised
         """
         self.active = active

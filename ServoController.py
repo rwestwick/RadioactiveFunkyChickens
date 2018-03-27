@@ -16,7 +16,7 @@ servod -help
 import logging
 import os
 import platform
-import ConfigParser # pylint: disable=E0401
+import ConfigParser  # pylint: disable=E0401
 import GPIOLayout
 
 MODULE_LOGGER = logging.getLogger("__main__.ServoController")
@@ -46,7 +46,7 @@ class ServoController(object):
         self.fire_offset = 0
         self.fire_min = -90
         self.fire_max = 90
-        
+
         if not self.read_config_file():
             self.create_config_file()
 
@@ -64,7 +64,8 @@ class ServoController(object):
         # lets create that config file for next time...
         config_file = open("config_servo.ini", 'w')
 
-        # add the settings to the structure of the file, and lets write it out...
+        # add the settings to the structure of the file, and lets write it
+        # out...
         config.add_section('Settings')
         config.set('Settings', 'PanOffset', str(self.pan_offset))
         config.set('Settings', 'PanMin', str(self.pan_min))
@@ -83,11 +84,11 @@ class ServoController(object):
         Read the current config file
         """
         found_config = True
-        
+
         try:
-            config_file = open("config_servo.ini", 'r')            
+            config_file = open("config_servo.ini", 'r')
             config = ConfigParser.ConfigParser()
-            config.readfp(config_file)           
+            config.readfp(config_file)
             self.pan_offset = config.getint('Settings', 'PanOffset')
             self.pan_min = config.getint('Settings', 'PanMin')
             self.pan_max = config.getint('Settings', 'PanMax')
@@ -96,15 +97,15 @@ class ServoController(object):
             self.tilt_max = config.getint('Settings', 'TiltMax')
             self.fire_offset = config.getint('Settings', 'FireOffset')
             self.fire_min = config.getint('Settings', 'FireMin')
-            self.fire_max = config.getint('Settings', 'FireMax')            
+            self.fire_max = config.getint('Settings', 'FireMax')
             config_file.close()
-            
+
         except IOError:
             found_config = False
             MODULE_LOGGER.warn("Existing config file not found")
-            
+
         return found_config
-        
+
     def start_servos(self):
         """
         Starts the servos using servod
@@ -119,7 +120,7 @@ class ServoController(object):
                 '"'  # With PWM hardware
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             MODULE_LOGGER.debug(init_string)
-            
+
             if platform.machine() == "armv6l" or platform.machine() == "armv7l":
                 os.system(init_string)
             self.servos_active = True
@@ -143,7 +144,7 @@ class ServoController(object):
     def set_pan_servo(self, degrees):
         """
         Sets the pan servo to a position
-        """        
+        """
         if degrees < self.pan_min:
             MODULE_LOGGER.warn("Pan using min level of " + str(self.pan_min))
             degrees = self.pan_min
