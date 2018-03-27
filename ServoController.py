@@ -121,7 +121,8 @@ class ServoController(object):
             init_string = "sudo " + script_path + servod_cmd + ' > /dev/null &'
             MODULE_LOGGER.debug(init_string)
 
-            if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+            if platform.machine() == "armv6l" or \
+	       platform.machine() == "armv7l":
                 os.system(init_string)
             self.servos_active = True
 
@@ -191,18 +192,18 @@ class ServoController(object):
         Uses the servoblaster device to set the required angle
         eg  echo p1-18=120 > /dev/servoblaster
         """
-        PIN_STRING = 'echo p1-'
+        pin_string = 'echo p1-'
         if pin == self.PAN_SERVO_ID:
-            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_PAN_PIN) + '='
+            pin_string = pin_string + str(GPIOLayout.SERVO_PAN_PIN) + '='
 
         elif pin == self.TILT_SERVO_ID:
-            PIN_STRING = PIN_STRING + str(GPIOLayout.SERVO_TILT_PIN) + '='
+            pin_string = pin_string + str(GPIOLayout.SERVO_TILT_PIN) + '='
 
         else:
-            PIN_STRING = PIN_STRING + str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + '='
+            pin_string = pin_string + str(GPIOLayout.DUCK_SHOOT_FIRE_PIN) + '='
 
-        PIN_STRING = PIN_STRING + str(50 + (
+        pin_string = pin_string + str(50 + (
             (90 - degrees) * 200 / 180)) + " > /dev/servoblaster"
-        MODULE_LOGGER.debug(PIN_STRING)
+        MODULE_LOGGER.debug(pin_string)
         if platform.machine() == "armv6l" or platform.machine() == "armv7l":
-            os.system(PIN_STRING)
+            os.system(pin_string)
