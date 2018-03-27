@@ -89,6 +89,7 @@ def initialise_other_gpio():
 
 def main():
     """
+    Main function to call each of the initialisation routines
     """
     initialise_servos()
     initialise_motor_controllers()
