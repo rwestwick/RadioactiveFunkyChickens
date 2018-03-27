@@ -5,6 +5,7 @@ used on the robot.
  - PiWars 2017 challenge http://piwars.org/
 """
 
+import platform
 import logging
 if platform.machine() == "armv6l" or platform.machine() == "armv7l":
     import RPi.GPIO as GPIO
@@ -26,7 +27,7 @@ def initialise_servos():
     """
     Initialise the three servos to their 0 degree position
     """
-    MODULE_LOGGER.debug("  Initialising Servos")
+    LOGGER.debug("  Initialising Servos")
 
     servo_controller = ServoController.ServoController()
     servo_controller.start_servos()
@@ -40,7 +41,7 @@ def initialise_motor_controllers():
     """
     Initialise the motor controllers to outputs and all "off"
     """
-    MODULE_LOGGER.debug("  Initialising Motor Controllers")
+    LOGGER.debug("  Initialising Motor Controllers")
 
     motor_controller = DualMotorController.DualMotorController(
         GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
@@ -59,7 +60,7 @@ def initialise_ultrasonics():
     """
     Initialise the ultrasonics to inputs and outputs and off if required
     """
-    MODULE_LOGGER.debug("  Initialising Ultrasonics")
+    LOGGER.debug("  Initialising Ultrasonics")
 
     prox_front = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_FRONT_TX_GPIO)
@@ -76,7 +77,7 @@ def initialise_other_gpio():
     """
     Initialise the gpio (laser, motor etc) to outputs and off
     """
-    MODULE_LOGGER.debug("  Initialising GPIO's")
+    LOGGER.debug("  Initialising GPIO's")
 
     laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO,
                                              False)
