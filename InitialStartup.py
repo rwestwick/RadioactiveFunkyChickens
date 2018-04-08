@@ -22,14 +22,14 @@ else:
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
-SetupConsoleLogger.setup_console_logger(LOGGER, level=logging.DEBUG)
+SetupConsoleLogger.setup_console_logger(LOGGER)
 
 
 def initialise_servos():
     """
     Initialise the three servos to their 0 degree position
     """
-    LOGGER.debug("  Initialising Servos")
+    LOGGER.info("  Initialising Servos")
 
     servo_controller = ServoController.ServoController()
     servo_controller.start_servos()
@@ -50,7 +50,7 @@ def initialise_motor_controllers():
     """
     Initialise the motor controllers to outputs and all "off"
     """
-    LOGGER.debug("  Initialising Motor Controllers")
+    LOGGER.info("  Initialising Motor Controllers")
 
     motor_controller = DualMotorController.DualMotorController(
         GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
@@ -69,7 +69,7 @@ def initialise_ultrasonics():
     """
     Initialise the ultrasonics to inputs and outputs and off if required
     """
-    LOGGER.debug("  Initialising Ultrasonics")
+    LOGGER.info("  Initialising Ultrasonics")
 
     prox_front = UltrasonicSensor.UltrasonicSensor(
         GPIOLayout.SONAR_FRONT_TX_GPIO)
@@ -86,7 +86,7 @@ def initialise_other_gpio():
     """
     Initialise the gpio (laser, motor etc) to outputs and off
     """
-    LOGGER.debug("  Initialising GPIO's")
+    LOGGER.info("  Initialising GPIO's")
 
     laser_gpio = SwitchingGPIO.SwitchingGPIO(GPIOLayout.DUCK_SHOOT_LASER_GPIO,
                                              False)

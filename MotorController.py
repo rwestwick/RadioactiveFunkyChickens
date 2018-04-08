@@ -24,14 +24,19 @@ class MotorController(object):
         """
         Initialises GPIO pins
         """
+        self.lf = left_forward
+        self.lb = left_backward
+        self.rf = right_forward
+        self.rb = right_backward
+        
         log_string = "Setting up MotorController Module (lf:" + \
-            str(left_forward) + \
+            str(self.lf) + \
             ", lb:" + \
-            str(left_backward) + \
+            str(self.lb) + \
             ", rf:" + \
-            str(right_forward) + \
+            str(self.rf) + \
             ", rb:" + \
-            str(right_backward) + \
+            str(self.rb) + \
             ")"
         MODULE_LOGGER.info(log_string)
 
@@ -42,21 +47,20 @@ class MotorController(object):
         GPIO.setwarnings(False)
 
         # use pwm on inputs so motors don't go too fast
-        GPIO.setup(left_forward, GPIO.OUT)
-        self.motor_left_forward = GPIO.PWM(left_forward, self.START_FREQ)
+        GPIO.setup(self.lf, GPIO.OUT)
+        self.motor_left_forward = GPIO.PWM(self.lf, self.START_FREQ)
         self.motor_left_forward.start(0)
 
-        GPIO.setup(left_backward, GPIO.OUT)
-        self.motor_left_backward = GPIO.PWM(left_backward, self.START_FREQ)
+        GPIO.setup(self.lb, GPIO.OUT)
+        self.motor_left_backward = GPIO.PWM(self.lb, self.START_FREQ)
         self.motor_left_backward.start(0)
 
-        GPIO.setup(right_forward, GPIO.OUT)
-        self.motor_right_forward = GPIO.PWM(right_forward, self.START_FREQ)
+        GPIO.setup(self.rf, GPIO.OUT)
+        self.motor_right_forward = GPIO.PWM(self.rf, self.START_FREQ)
         self.motor_right_forward.start(0)
 
-        GPIO.setup(right_backward, GPIO.OUT)
-        self.motor_right_backward = GPIO.PWM(right_backward, self.START_FREQ)
-
+        GPIO.setup(self.rb, GPIO.OUT)
+        self.motor_right_backward = GPIO.PWM(self.rb, self.START_FREQ)
         self.motor_right_backward.start(0)
 
     def cleanup(self):
@@ -64,7 +68,17 @@ class MotorController(object):
         Sets all motors off and sets GPIO to standard values
         """
         self.stop()
-        MODULE_LOGGER.info("Cleaned up MotorController")
+        log_string = "Cleaned up MotorController (lf:" + \
+            str(self.lf) + \
+            ", lb:" + \
+            str(self.lb) + \
+            ", rf:" + \
+            str(self.rf) + \
+            ", rb:" + \
+            str(self.rb) + \
+            ")"
+        MODULE_LOGGER.info(log_string)
+
 
     def stop(self):
         """
