@@ -145,8 +145,9 @@ class Processor(object):
             bgr_image)
 
         # Find location of contour
-        contour_detection, found_x, found_y, contour_marked_image = self.find_marker_contour(
-            colour_filtered_mask, colour_filtered_output)
+        contour_detection, found_x, found_y, contour_marked_image = 
+            self.find_marker_contour(
+                colour_filtered_mask, colour_filtered_output)
 
         if debug_show_output:
             cv2.imshow('Filtered image with marker contour',

@@ -7,16 +7,16 @@ used on the robot.
 
 import platform
 import logging
-if platform.machine() == "armv6l" or platform.machine() == "armv7l":
-    import RPi.GPIO as GPIO
-else:
-    import GPIOStub as GPIO
 import DualMotorController
 import UltrasonicSensor
 import SetupConsoleLogger
 import ServoController
 import SwitchingGPIO
 import GPIOLayout
+if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+    import RPi.GPIO as GPIO
+else:
+    import GPIOStub as GPIO
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)

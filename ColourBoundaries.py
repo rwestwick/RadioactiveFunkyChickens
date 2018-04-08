@@ -1,3 +1,6 @@
+"""
+Colour definitions used by the somewhere over the rainbow activity.
+"""
 # Define the colour boundaries in HSV
 LOWER_RED_LFT_HSV = [165, 50, 50]  # Left of 0deg Red = ~330deg to 359deg
 UPPER_RED_LFT_HSV = [179, 255, 255]  # Red

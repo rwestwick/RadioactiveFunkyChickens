@@ -14,18 +14,18 @@ from __future__ import division
 
 # Open relevant modules
 import logging
-import SetupConsoleLogger
-import KeyboardCharacterReader
-
-import ServoController
-import MotorController
-import GPIOLayout
-
 import cv2
 import numpy as np
 import time
 from picamera import PiCamera
 from picamera.array import PiRGBArray
+
+import SetupConsoleLogger
+import KeyboardCharacterReader
+import ServoController
+import DualMotorController
+import GPIOLayout
+
 
 # Set constants
 CAMERA_WIDTH = 640
@@ -70,14 +70,14 @@ ROBOTMOVE = DualMotorController.DualMotorController(
 # Produces a 3-dimensional RGB array from an RGB capture with the
 # dimensions (rows, columns, plane)
 # for example of size (CAMERA_HEIGHT, CAMERA_WIDTH, 3)
-rawCapture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
+raw_capture = PiRGBArray(camera, size=(CAMERA_WIDTH, CAMERA_HEIGHT))
 
 # Allow the camera time to warmup
 time.sleep(0.1)
 
 # Initialize rowValues array to do testing such that they are all
 # initialised to be white (255)
-MeanValues = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
+mean_values = np.ones([ROW_LENGTH, COL_LENGTH]) * 255
 
 # Performs the line following Camera algorithm
 LOGGER.info("Line Follower With Move")
@@ -86,8 +86,8 @@ LOGGER.info("Line Follower With Move")
 LOGGER.info("To start line following press 'Space' key.")
 
 while True:
-    keyp = KeyboardCharacterReader.readkey()
-    if keyp == ' ':
+    key_press = KeyboardCharacterReader.readkey()
+    if key_press == ' ':
         LOGGER.info("Go")
         break
 
@@ -99,7 +99,7 @@ while True:
 # parameters are the same as in capture()
 
 for frame in camera.capture_continuous(
-        rawCapture, format="rgb", use_video_port=True):
+        raw_capture, format="rgb", use_video_port=True):
     # grab the raw NumPy array representing the image,
     # then intialize the timestamp and occupied/unoccupied text
     image = frame.array
@@ -153,7 +153,7 @@ for frame in camera.capture_continuous(
             square = threshImg[startRow:stopRow, startCol:stopCol]
 
             # Mean of all the values in rectangular "square" array
-            MeanValues[j, i] = int(np.mean(square))
+            mean_values[j, i] = int(np.mean(square))
 
     # Find index of first minimum mean value per row
     # N.B. Black = 0, White = 255
@@ -164,13 +164,13 @@ for frame in camera.capture_continuous(
     # LOGGER.info("The rectangle with the most black pixels in top row is: ",
     #             str(smallSquareTop))
     smallSquareBottom = np.argmin(
-        MeanValues[(COL_LENGTH - 1), 0:(ROW_LENGTH - 1)])
+        mean_values[(COL_LENGTH - 1), 0:(ROW_LENGTH - 1)])
     LOGGER.info("The rectangle with the most black pixels in bottom row is: " +
                 str(smallSquareBottom))
 
     # http://picamera.readthedocs.io/en/release-1.10/api_array.html
     # Clear the stream in preperation for the next frame
-    rawCapture.truncate(0)
+    raw_capture.truncate(0)
 
     # Straight On
     if smallSquareBottom == int(ROW_LENGTH / 2) or smallSquareBottom == int(

@@ -4,11 +4,13 @@ Provides an algorithm for following a black line on a white background.
 """
 
 import logging
+import DualMotorController
 import LineFollowerSensor
 import SetupConsoleLogger
 import GPIOLayout
 import KeyboardCharacterReader
 import SpeedSettings
+
 
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
