@@ -7,6 +7,7 @@ used on the robot.
 
 import platform
 import logging
+import time
 import DualMotorController
 import UltrasonicSensor
 import SetupConsoleLogger
@@ -32,6 +33,7 @@ def initialise_servos():
 
     servo_controller = ServoController.ServoController()
     servo_controller.start_servos()
+    time.sleep(1)
     servo_controller.set_nerf_trigger_servo(-10)
     servo_controller.set_nerf_trigger_servo(10)
     servo_controller.set_nerf_trigger_servo(0)
