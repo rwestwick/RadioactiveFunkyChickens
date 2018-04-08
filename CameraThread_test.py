@@ -71,10 +71,10 @@ def main():
         # Start stream process to handle images and
         # pass then to the callback function
         stream_processor = CameraThread.StreamProcessor(
-            320, 240, image_processor.image_process_entry, True)
+            640, 480, image_processor.image_process_entry, True)
 
         # Wait for the interval period for finishing
-        time.sleep(30)
+        time.sleep(300)
 
     except KeyboardInterrupt:
         LOGGER.info("Stopping 'Camera Capture and stream mechanism'.")
