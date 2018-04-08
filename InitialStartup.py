@@ -18,9 +18,10 @@ if platform.machine() == "armv6l" or platform.machine() == "armv7l":
 else:
     import GPIOStub as GPIO
 
+
 # Create a logger to both file and stdout
 LOGGER = logging.getLogger(__name__)
-SetupConsoleLogger.setup_console_logger(LOGGER)
+SetupConsoleLogger.setup_console_logger(LOGGER, level=logging.DEBUG)
 
 
 def initialise_servos():
@@ -31,8 +32,14 @@ def initialise_servos():
 
     servo_controller = ServoController.ServoController()
     servo_controller.start_servos()
+    servo_controller.set_nerf_trigger_servo(-10)
+    servo_controller.set_nerf_trigger_servo(10)
     servo_controller.set_nerf_trigger_servo(0)
+    servo_controller.set_pan_servo(-45)
+    servo_controller.set_pan_servo(45)
     servo_controller.set_pan_servo(0)
+    servo_controller.set_tilt_servo(-45)
+    servo_controller.set_tilt_servo(45)
     servo_controller.set_tilt_servo(0)
     servo_controller.stop_servos()
 
@@ -101,8 +108,8 @@ if __name__ == "__main__":
     try:
         LOGGER.info("Starting the robot intialisation routine")
         main()
-        GPIO.cleanup()
     except KeyboardInterrupt:
         LOGGER.info("Stopping the robot intialisation routine")
     finally:
         LOGGER.info("Completed the robot intialisation routine")
+

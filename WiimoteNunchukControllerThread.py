@@ -235,10 +235,10 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
                     lengthX = SpeedSettings.SPEED_FASTEST * \
-                        (self.NUNCHUK_MID - NunchukStickX) / 
+                        (self.NUNCHUK_MID - NunchukStickX) / \
                         (self.NUNCHUK_MID - self.NUNCHUK_MIN)
                     lengthY = SpeedSettings.SPEED_FASTEST * \
-                        (NunchukStickY - self.NUNCHUK_MID) / 
+                        (NunchukStickY - self.NUNCHUK_MID) / \
                         (self.NUNCHUK_MAX - self.NUNCHUK_MID)
 
                     # self.speed is length of hypotenuse from Pythagoras
@@ -271,10 +271,10 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
                     lengthX = SpeedSettings.SPEED_FASTEST * \
-                        (self.NUNCHUK_MID - NunchukStickX) / 
+                        (self.NUNCHUK_MID - NunchukStickX) / \
                         (self.NUNCHUK_MID - self.NUNCHUK_MIN)
                     lengthY = SpeedSettings.SPEED_FASTEST * \
-                        (NunchukStickY - self.NUNCHUK_MID) / 
+                        (NunchukStickY - self.NUNCHUK_MID) / \
                         (self.NUNCHUK_MAX - self.NUNCHUK_MID)
 
                     # self.speed is length of hypotenuse from Pythagoras
@@ -307,10 +307,10 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
                     lengthX = SpeedSettings.SPEED_FASTEST * \
-                        (self.NUNCHUK_MID - NunchukStickX) / 
+                        (self.NUNCHUK_MID - NunchukStickX) / \
                         (self.NUNCHUK_MID - self.NUNCHUK_MIN)
                     lengthY = SpeedSettings.SPEED_FASTEST * \
-                        (self.NUNCHUK_MID - NunchukStickY) / 
+                        (self.NUNCHUK_MID - NunchukStickY) / \
                         (self.NUNCHUK_MID - self.NUNCHUK_MIN)
 
                     # self.speed is length of hypotenuse from Pythagoras
@@ -343,10 +343,10 @@ class WiimoteNunchukControllerThread(threading.Thread):
                     # Calculate lengths in range <100, min value depends on
                     # self.NUNCHUK_BUFFER value
                     lengthX = SpeedSettings.SPEED_FASTEST * \
-                        (self.NUNCHUK_MID - NunchukStickX) / 
+                        (self.NUNCHUK_MID - NunchukStickX) / \
                         (self.NUNCHUK_MID - self.NUNCHUK_MIN)
                     lengthY = SpeedSettings.SPEED_FASTEST * \
-                        (self.NUNCHUK_MID - NunchukStickY) / 
+                        (self.NUNCHUK_MID - NunchukStickY) / \
                         (self.NUNCHUK_MID - self.NUNCHUK_MIN)
 
                     # self.speed is length of hypotenuse from Pythagoras
