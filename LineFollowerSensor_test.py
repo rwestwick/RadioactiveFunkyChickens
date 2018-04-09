@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the LineFollowerSensor
 """
@@ -13,6 +14,9 @@ SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
 
 def test_linefollowersensor():
+    """
+    Tests the line follower module
+    """
     LINEFOLLOWER = None
 
     try:

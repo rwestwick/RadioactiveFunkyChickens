@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Class defines how to interact with the Ultrasonic sensor
 """
@@ -26,7 +27,6 @@ class UltrasonicSensor(object):
         """
         Initialises the class
         """
-
         # Running average settings
         self.qsize = qsize
 
@@ -63,7 +63,6 @@ class UltrasonicSensor(object):
         """
         Returns the distance in cm to the nearest reflecting object
         """
-
         for num_readings in range(0, self.qsize):
             num_readings = num_readings
             # If the two pins are actually the same, then
@@ -112,7 +111,7 @@ class UltrasonicSensor(object):
             self.queue.put(distance)
 
         # Calculate running average
-        total = 0
+        total = 0.0
         stringvals = ""
         for val in self.queue.queue:
             stringvals += format(val, '.2f') + " : "

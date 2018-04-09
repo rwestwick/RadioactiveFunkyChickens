@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the Camera Thread
 """
@@ -15,6 +16,8 @@ SetupConsoleLogger.setup_console_logger(LOGGER, logging.DEBUG)
 
 class Processor(object):
     """
+    Defines a class to apply additional processing to the image
+    returned by the callback
     """
 
     def __init__(self):

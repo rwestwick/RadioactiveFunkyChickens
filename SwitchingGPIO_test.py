@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the SwitchingGPIO class
 """
@@ -12,6 +13,9 @@ SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
 
 def run_test(gpio_if):
+    """
+    Performs on/ off and state check tests
+    """
     gpio_if.switch_on()
     gpio_if.socket.set_active(False)
     gpio_if.is_on()
@@ -26,6 +30,9 @@ def run_test(gpio_if):
 
 
 def test_switchinggpio():
+    """
+    Tests the switching gpio using both active low and active high modes
+    """
     try:
         active_high = SwitchingGPIO.SwitchingGPIO(1)
         run_test(active_high)

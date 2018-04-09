@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Class defines how to interact with an Ultrasonic sensor via a thread
 """
@@ -18,6 +19,7 @@ class UltrasonicSensorThread(threading.Thread):
     Defines the threading aspects for an ultrasonic sensor
     """
 
+    # pylint: disable=R0913
     def __init__(self, delay, callback, input_pin, output_pin=None, qsize=1):
         """
         Initialise the parameters required for UltrasonicSensorThread
@@ -60,14 +62,14 @@ class UltrasonicSensorThread(threading.Thread):
         Returns the temperature that has been read
         """
         distance = self._sensor.measurement()
-        MODULE_LOGGER.info('Timed Reading = {0:0.2f} cm '.format(distance))
+        MODULE_LOGGER.info('Timed Reading = %.2f cm ', distance)
         return distance
 
     def read_data(self):
         """
         Retrieves the data via a mutex from the class variable
         """
-        distance = 0
+        distance = 0.0
         self._mutex.acquire()
         try:
             # store_data

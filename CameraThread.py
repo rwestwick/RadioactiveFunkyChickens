@@ -1,18 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  SomewhereOverTheRainbowThread.py
-# http://piwars.org/2018-competition/challenges/somewhere-over-the-rainbow/
 """
 Sets up and generates images from a camera within two threads.
-These images are passed to the callback configured during initialisation
+The first thread grabs images and the second process the received
+images, which are then passed to the callback configured during
+initialisation.
 """
 
-# https://www.python.org/dev/peps/pep-0238/
-# The future division statement, spelled "from __future__ import division",
-# will change the / operator to mean true division throughout the module.
-# This is needed for the row and column calculations for rectangle arrays to
-# prevent rounding down to zero.
 from __future__ import division
 import logging
 import time
@@ -25,11 +19,10 @@ import picamera.array
 MODULE_LOGGER = logging.getLogger("__main__.CameraThread")
 
 
-# Image capture thread
 class ImageCapture(threading.Thread):
     """
-    Thread created from the processing thread to generate series of images
-    which is then passed back via an event.
+    Thread created from the stream processing thread to generate a
+    series of images which are then passed back via an event.
     """
 
     def __init__(self, width, height, stream_processor):
@@ -94,12 +87,11 @@ class ImageCapture(threading.Thread):
                 self._stream_processor.event.set()
 
 
-# Image stream processing thread
-# For threading tutourials see
-# https://www.tutorialspoint.com/python/python_multithreading.htm
-# http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php
+# pylint: disable=too-many-instance-attributes
 class StreamProcessor(threading.Thread):
     """
+    Image stream processing thread, which also starts the
+    image capture thread.
     """
 
     def __init__(self, width, height, processing_cb=None, show_input=False):
@@ -139,12 +131,10 @@ class StreamProcessor(threading.Thread):
         self.capture_thread.exit_now()
         self.capture_thread.join()
         self._exit_now = True
-        MODULE_LOGGER.info("Image processing delays min: " + format(
-            self.min_processing_delay * 1000, '.2f') + "ms"
-            " and max: " + format(
-            self.max_processing_delay * 1000, '.2f') + "ms")
         MODULE_LOGGER.info(
-            "Frames processed: " + format(self._frames_processed, '.2f'))
+            "Image processing delays min: %.2f ms and max: %.2f ms",
+            self.min_processing_delay * 1000, self.max_processing_delay * 1000)
+        MODULE_LOGGER.info("Frames processed: %.2f", self._frames_processed)
 
     def run(self):
         """
@@ -177,23 +167,25 @@ class StreamProcessor(threading.Thread):
         # View the original image seen by the camera.
         if self._show_input:
             cv2.imshow('Original', image)
+
             # Capture a key press. The function waits argument in ms
             # for any keyboard event
             # For some reason image does not show without this!
+            # pylint: disable=expression-not-assigned
             cv2.waitKey(1) & 0xFF
 
-        e1 = cv2.getTickCount()
+        start_time = cv2.getTickCount()
 
         if self._processing_cb is not None:
             self._processing_cb(image, self.width, self.height)
 
         # Calculate image processing overhead
         # https://docs.opencv.org/3.0.0/dc/d71/tutorial_py_optimization.html
-        e2 = cv2.getTickCount()
-        time = (e2 - e1) / cv2.getTickFrequency()
-        if time > self.max_processing_delay:
-            self.max_processing_delay = time
-        elif time < self.min_processing_delay:
-            self.min_processing_delay = time
+        end_time = cv2.getTickCount()
+        time_taken = (end_time - start_time) / cv2.getTickFrequency()
+        if time_taken > self.max_processing_delay:
+            self.max_processing_delay = time_taken
+        elif time_taken < self.min_processing_delay:
+            self.min_processing_delay = time_taken
 
         self._frames_processed += 1

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the Servo Controller
 """
@@ -13,6 +14,9 @@ SetupConsoleLogger.setup_console_logger(MODULE_LOGGER, logging.DEBUG)
 
 
 def test_servocontroller(sleep_len=0):
+    """
+    Tests the servo controller
+    """
     SERVO_CONTROLLER = None
 
     try:

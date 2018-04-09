@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the Ultrasonic Sensor
 """
@@ -13,6 +14,9 @@ SetupConsoleLogger.setup_console_logger(MODULE_LOGGER, logging.DEBUG)
 
 
 def test_ultrasonic():
+    """
+    Tests the simple ultrasonic sensor
+    """
     try:
         PROXITY_TWO_IO_LEFT = UltrasonicSensor.UltrasonicSensor(
             GPIOLayout.SONAR_LEFT_RX_GPIO, GPIOLayout.SONAR_LEFT_TX_GPIO)

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the Ultrasonic Sensor Thread
 """
@@ -17,6 +18,9 @@ DISTANCE = 0.0
 
 
 def __callback_UltrasonicSensorThread(data):
+    """
+    callback function for the ultrasonic thread
+    """
     MODULE_LOGGER.critical("UltrasonicSensorThread callback: " + str(data))
     global CALLBACK_CALLED, DISTANCE
     CALLBACK_CALLED = True
@@ -24,6 +28,9 @@ def __callback_UltrasonicSensorThread(data):
 
 
 def test_ultrasonicthread_poll(sleep_len=2):
+    """
+    Tests the ultrasonic thread polling mechanism
+    """
     MODULE_LOGGER.critical("test_ultrasonicthread_poll")
     try:
         SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(
@@ -42,6 +49,9 @@ def test_ultrasonicthread_poll(sleep_len=2):
 
 
 def test_ultrasonicthread_callback(sleep_len=2):
+    """
+    Tests the ultrasonic thread callback mechanism
+    """
     MODULE_LOGGER.info("test_ultrasonicthread_callback")
     try:
         global CALLBACK_CALLED, DISTANCE
@@ -64,6 +74,9 @@ def test_ultrasonicthread_callback(sleep_len=2):
 
 
 def test_ultrasonicthread_multiplesensors(sleep_len=2):
+    """
+    Tests using multiple ultrasonic sensors
+    """
     MODULE_LOGGER.critical("test_ultrasonicthread_multiplesensors")
     try:
         FRONT_SENSOR = UltrasonicSensorThread.UltrasonicSensorThread(

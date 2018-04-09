@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Class to interact with ir proximity sensors
 """
@@ -40,7 +41,8 @@ class IRSensor(object):  # pylint: disable=too-few-public-methods
         """
         return bool(GPIO.input(self.gpio_id) == 0)
 
-    def cleanup(self):
+    @staticmethod
+    def cleanup():
         """
         Cleans up the GPIO port
         """

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides ability to control the motors on the robot.
 """
@@ -24,19 +25,19 @@ class MotorController(object):
         """
         Initialises GPIO pins
         """
-        self.lf = left_forward
-        self.lb = left_backward
-        self.rf = right_forward
-        self.rb = right_backward
-        
+        self.left_forward = left_forward
+        self.left_backward = left_backward
+        self.right_forward = right_forward
+        self.right_backward = right_backward
+
         log_string = "Setting up MotorController Module (lf:" + \
-            str(self.lf) + \
+            str(self.left_forward) + \
             ", lb:" + \
-            str(self.lb) + \
+            str(self.left_backward) + \
             ", rf:" + \
-            str(self.rf) + \
+            str(self.right_forward) + \
             ", rb:" + \
-            str(self.rb) + \
+            str(self.right_backward) + \
             ")"
         MODULE_LOGGER.info(log_string)
 
@@ -47,20 +48,23 @@ class MotorController(object):
         GPIO.setwarnings(False)
 
         # use pwm on inputs so motors don't go too fast
-        GPIO.setup(self.lf, GPIO.OUT)
-        self.motor_left_forward = GPIO.PWM(self.lf, self.START_FREQ)
+        GPIO.setup(self.left_forward, GPIO.OUT)
+        self.motor_left_forward = GPIO.PWM(self.left_forward, self.START_FREQ)
         self.motor_left_forward.start(0)
 
-        GPIO.setup(self.lb, GPIO.OUT)
-        self.motor_left_backward = GPIO.PWM(self.lb, self.START_FREQ)
+        GPIO.setup(self.left_backward, GPIO.OUT)
+        self.motor_left_backward = GPIO.PWM(self.left_backward,
+                                            self.START_FREQ)
         self.motor_left_backward.start(0)
 
-        GPIO.setup(self.rf, GPIO.OUT)
-        self.motor_right_forward = GPIO.PWM(self.rf, self.START_FREQ)
+        GPIO.setup(self.right_forward, GPIO.OUT)
+        self.motor_right_forward = GPIO.PWM(self.right_forward,
+                                            self.START_FREQ)
         self.motor_right_forward.start(0)
 
-        GPIO.setup(self.rb, GPIO.OUT)
-        self.motor_right_backward = GPIO.PWM(self.rb, self.START_FREQ)
+        GPIO.setup(self.right_backward, GPIO.OUT)
+        self.motor_right_backward = GPIO.PWM(self.right_backward,
+                                             self.START_FREQ)
         self.motor_right_backward.start(0)
 
     def cleanup(self):
@@ -69,16 +73,15 @@ class MotorController(object):
         """
         self.stop()
         log_string = "Cleaned up MotorController (lf:" + \
-            str(self.lf) + \
+            str(self.left_forward) + \
             ", lb:" + \
-            str(self.lb) + \
+            str(self.left_backward) + \
             ", rf:" + \
-            str(self.rf) + \
+            str(self.right_forward) + \
             ", rb:" + \
-            str(self.rb) + \
+            str(self.right_backward) + \
             ")"
         MODULE_LOGGER.info(log_string)
-
 
     def stop(self):
         """

@@ -1,8 +1,9 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
-This code is used by Raspian on startup to initialise the various devices
+This code is used on startup to initialise the various devices
 used on the robot.
- - PiWars 2017 challenge http://piwars.org/
+ - PiWars 2018 challenge http://piwars.org/
 """
 
 import platform

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the IRSensor
 """
@@ -13,6 +14,9 @@ SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
 
 def test_irsensor():
+    """
+    Test a single IR sensor
+    """
     SENSOR = None
 
     try:

@@ -1,16 +1,11 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
-Python Module to externalise all Initio/RoboHAT specific hardware
-Created by Gareth Davies, Feb 2016
-Copyright 4tronix
+Servo controller command line functionality initially taken from:
+https://github.com/rich12321/pi_robot/blob/master/robohat.py
 
-This code is in the public domain and may be freely copied and used
-No warranty is provided or implied
-servo_controller Functions
-Pirocon/Microcon/RoboHAT use ServoD to control servos
-Old version?
-https://github.com/richardghirst/PiBits/tree/master/ServoBlaster
-servod -help
+The servoblaster (servod) was built from:
+https://github.com/srcshelton/servoblaster.git
 """
 
 import logging

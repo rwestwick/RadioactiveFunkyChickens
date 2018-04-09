@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides the test functionality for the MotorController
 """
@@ -15,6 +16,9 @@ SetupConsoleLogger.setup_console_logger(MODULE_LOGGER)
 
 
 def test_motorcontroller(sleep_len=0):
+    """
+    Tests the motor controller
+    """
     MCONTROLLER = None
 
     try:

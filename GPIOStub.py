@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides a test version of the GPIO class for platforms where
 it doesn't exist.

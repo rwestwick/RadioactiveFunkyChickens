@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Reading single character by forcing stdin to raw mode
 """
@@ -9,25 +10,32 @@ import termios
 
 
 def readchar():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
+    """
+    Read a single character from stdin
+    """
+    filedes = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(filedes)
     try:
         tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
+        character = sys.stdin.read(1)
     finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    if ch == '0x03':
+        termios.tcsetattr(filedes, termios.TCSADRAIN, old_settings)
+    if ord(character) == 3:
         raise KeyboardInterrupt
-    return ch
+    return character
 
 
 def readkey(getchar_fn=None):
+    """
+    Reads from stdin but removes escaped characters if they exist
+    """
     getchar = getchar_fn or readchar
-    c1 = getchar()
-    if ord(c1) != 0x1b:
-        return c1
-    c2 = getchar()
-    if ord(c2) != 0x5b:
-        return c1
-    c3 = getchar()
-    return chr(0x10 + ord(c3) - 65)  # 16=Up, 17=Down, 18=Right, 19=Left arrows
+    char1 = getchar()
+    if ord(char1) != 0x1b:  # 27 - Escape
+        return char1
+    char2 = getchar()
+    if ord(char2) != 0x5b:  # 91 - [
+        return char1
+    char3 = getchar()
+    # 16=Up, 17=Down, 18=Right, 19=Left arrows
+    return chr(0x10 + ord(char3) - 65)

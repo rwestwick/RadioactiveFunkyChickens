@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Provides a test version of the GPIOZero.GPIODevice class for platforms where
 it doesn't exist.
@@ -14,6 +15,7 @@ class OutputDevice(object):
         """
         Stub function
         """
+        del param1
         self.active = False
 
     # pylint: disable=C0103

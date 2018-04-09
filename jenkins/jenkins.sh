@@ -11,6 +11,8 @@ rm -f flake8.txt
 #--------------------------------------------------------------
 echo "**************** $(date) - Running pylint ****************"
 find . -name \*.py ! -path '*test*' | xargs pylint --rcfile=jenkins/pylint.cfg > pylint.txt
+more pylint.txt | grep -v "Relative import" | grep -v "Unable to import" > pylint2.txt
+mv pylint2.txt pylint.txt
 echo "**************** $(date) - pylint complete ****************"
 
 
@@ -37,10 +39,6 @@ echo "**************** $(date) - cloc complete ****************"
 # Create coverage report
 #--------------------------------------------------------------
 coverage erase
-#coverage run -a --omit=/usr/*,*_test.py MotorController_test.py 
-#coverage run -a --omit=/usr/*,*_test.py DualMotorController.py
-#coverage run -a --omit=/usr/*,*_test.py MecanumController.py 
-#coverage xml -o coverage.xml
 pytest --junit-xml unittest.xml -s --cov=. --cov-config ./jenkins/.coveragerc \
        --cov-report=xml --cov-report=html --cov-report term-missing \
        MotorController_test.py \
