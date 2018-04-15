@@ -20,7 +20,7 @@ def main():
     """
     """
     LOGGER.info("Just Drive")
-    WIIMOTE_CONTROLLER = 
+    WIIMOTE_CONTROLLER = \
         WiimoteNunchukControllerThread.WiimoteNunchukControllerThread(
         None, None, None, None)
     try:
