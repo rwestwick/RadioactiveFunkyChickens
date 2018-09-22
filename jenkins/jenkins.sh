@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=$PATH:/home/bodgeit/.local/bin/
 
 rm -f *.xml
 rm -f *.sc
