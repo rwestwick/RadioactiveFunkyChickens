@@ -145,7 +145,7 @@ class ServoController(object):
             MODULE_LOGGER.warn("Pan using min level of " + str(self.pan_min))
             degrees = self.pan_min
         elif degrees > self.pan_max:
-            MODULE_LOGGER.warn("Pan sing max level of " + str(self.pan_max))
+            MODULE_LOGGER.warn("Pan using max level of " + str(self.pan_max))
             degrees = self.pan_max
         else:
             MODULE_LOGGER.info("Pan: " + str(degrees))
