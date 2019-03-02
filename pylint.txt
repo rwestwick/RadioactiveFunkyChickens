@@ -1,0 +1,756 @@
+************* Module RadioactiveFunkyChickens.SomewhereOverTheRainbowThread
+SomewhereOverTheRainbowThread.py:148: [E0001(syntax-error), ] invalid syntax
+************* Module RadioactiveFunkyChickens.KeyboardCharacterReader
+KeyboardCharacterReader.py:11: [C0111(missing-docstring), readchar] Missing function docstring
+KeyboardCharacterReader.py:12: [C0103(invalid-name), readchar] Invalid variable name "fd"
+KeyboardCharacterReader.py:16: [C0103(invalid-name), readchar] Invalid variable name "ch"
+KeyboardCharacterReader.py:24: [C0111(missing-docstring), readkey] Missing function docstring
+KeyboardCharacterReader.py:26: [C0103(invalid-name), readkey] Invalid variable name "c1"
+KeyboardCharacterReader.py:29: [C0103(invalid-name), readkey] Invalid variable name "c2"
+KeyboardCharacterReader.py:32: [C0103(invalid-name), readkey] Invalid variable name "c3"
+************* Module RadioactiveFunkyChickens.JustDriving
+JustDriving.py:23: [E0001(syntax-error), ] invalid syntax
+************* Module RadioactiveFunkyChickens.LineFollowerCameraAlg
+LineFollowerCameraAlg.py:17: [E0401(import-error), ] Unable to import 'cv2'
+LineFollowerCameraAlg.py:20: [E0401(import-error), ] Unable to import 'picamera'
+LineFollowerCameraAlg.py:21: [E0401(import-error), ] Unable to import 'picamera.array'
+LineFollowerCameraAlg.py:23: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+LineFollowerCameraAlg.py:24: [W0403(relative-import), ] Relative import 'KeyboardCharacterReader', should be 'RadioactiveFunkyChickens.KeyboardCharacterReader'
+LineFollowerCameraAlg.py:25: [W0403(relative-import), ] Relative import 'ServoController', should be 'RadioactiveFunkyChickens.ServoController'
+LineFollowerCameraAlg.py:26: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+LineFollowerCameraAlg.py:27: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+LineFollowerCameraAlg.py:50: [C0103(invalid-name), ] Invalid constant name "camera"
+LineFollowerCameraAlg.py:73: [C0103(invalid-name), ] Invalid constant name "raw_capture"
+LineFollowerCameraAlg.py:80: [C0103(invalid-name), ] Invalid constant name "mean_values"
+LineFollowerCameraAlg.py:89: [C0103(invalid-name), ] Invalid constant name "key_press"
+LineFollowerCameraAlg.py:180: [E0602(undefined-variable), ] Undefined variable 'MotorController'
+LineFollowerCameraAlg.py:186: [E1101(no-member), ] Instance of 'DualMotorController' has no 'one_wheel_left' member
+LineFollowerCameraAlg.py:186: [E0602(undefined-variable), ] Undefined variable 'MotorController'
+LineFollowerCameraAlg.py:191: [E1101(no-member), ] Instance of 'DualMotorController' has no 'one_wheel_left' member
+LineFollowerCameraAlg.py:191: [E0602(undefined-variable), ] Undefined variable 'MotorController'
+LineFollowerCameraAlg.py:197: [E1101(no-member), ] Instance of 'DualMotorController' has no 'one_wheel_right' member
+LineFollowerCameraAlg.py:197: [E0602(undefined-variable), ] Undefined variable 'MotorController'
+LineFollowerCameraAlg.py:202: [E1101(no-member), ] Instance of 'DualMotorController' has no 'one_wheel_right' member
+LineFollowerCameraAlg.py:202: [E0602(undefined-variable), ] Undefined variable 'MotorController'
+LineFollowerCameraAlg.py:19: [C0411(wrong-import-order), ] standard import "import time" comes before "import cv2"
+************* Module RadioactiveFunkyChickens.UltrasonicSensor
+UltrasonicSensor.py:13: [E0401(import-error), ] Unable to import 'RPi.GPIO'
+UltrasonicSensor.py:15: [W0403(relative-import), ] Relative import 'GPIOStub', should be 'RadioactiveFunkyChickens.GPIOStub'
+************* Module RadioactiveFunkyChickens.UltrasonicSensorThread
+UltrasonicSensorThread.py:11: [W0403(relative-import), ] Relative import 'UltrasonicSensor', should be 'RadioactiveFunkyChickens.UltrasonicSensor'
+UltrasonicSensorThread.py:21: [R0913(too-many-arguments), UltrasonicSensorThread.__init__] Too many arguments (6/5)
+UltrasonicSensorThread.py:63: [W1202(logging-format-interpolation), UltrasonicSensorThread.__get_distance] Use % formatting in logging functions and pass the % parameters as arguments
+UltrasonicSensorThread.py:74: [R0204(redefined-variable-type), UltrasonicSensorThread.read_data] Redefinition of distance type from int to float
+************* Module RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm
+TestDriverTwoControllersAlgorithm.py:8: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+TestDriverTwoControllersAlgorithm.py:9: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+TestDriverTwoControllersAlgorithm.py:10: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+TestDriverTwoControllersAlgorithm.py:11: [W0403(relative-import), ] Relative import 'KeyboardCharacterReader', should be 'RadioactiveFunkyChickens.KeyboardCharacterReader'
+TestDriverTwoControllersAlgorithm.py:12: [W0403(relative-import), ] Relative import 'SpeedSettings', should be 'RadioactiveFunkyChickens.SpeedSettings'
+TestDriverTwoControllersAlgorithm.py:30: [C0112(empty-docstring), keyboard_movements] Empty function docstring
+TestDriverTwoControllersAlgorithm.py:40: [C0103(invalid-name), keyboard_movements] Invalid variable name "x"
+TestDriverTwoControllersAlgorithm.py:107: [C0103(invalid-name), keyboard_movements] Invalid variable name "x"
+TestDriverTwoControllersAlgorithm.py:113: [C0103(invalid-name), keyboard_movements] Invalid variable name "x"
+TestDriverTwoControllersAlgorithm.py:30: [R0912(too-many-branches), keyboard_movements] Too many branches (23/12)
+TestDriverTwoControllersAlgorithm.py:30: [R0915(too-many-statements), keyboard_movements] Too many statements (71/50)
+TestDriverTwoControllersAlgorithm.py:126: [C0103(invalid-name), one_wheel_movements] Invalid variable name "x"
+TestDriverTwoControllersAlgorithm.py:182: [C0103(invalid-name), main_movements] Invalid variable name "x"
+************* Module videoCapture
+openCV/videoCapture.py:1: [C0103(invalid-name), ] Invalid module name "videoCapture"
+openCV/videoCapture.py:1: [C0111(missing-docstring), ] Missing module docstring
+openCV/videoCapture.py:1: [E0401(import-error), ] Unable to import 'picamera'
+openCV/videoCapture.py:4: [C0103(invalid-name), ] Invalid constant name "camera"
+openCV/videoCapture.py:18: [W0104(pointless-statement), ] Statement seems to have no effect
+openCV/videoCapture.py:2: [C0411(wrong-import-order), ] standard import "from time import sleep" comes before "from picamera import PiCamera"
+************* Module openCVlineTests
+openCV/openCVlineTests.py:60: [C0301(line-too-long), ] Line too long (103/80)
+openCV/openCVlineTests.py:1: [C0103(invalid-name), ] Invalid module name "openCVlineTests"
+openCV/openCVlineTests.py:1: [C0111(missing-docstring), ] Missing module docstring
+openCV/openCVlineTests.py:2: [E0401(import-error), ] Unable to import 'cv2'
+openCV/openCVlineTests.py:6: [C0103(invalid-name), ] Invalid constant name "img"
+openCV/openCVlineTests.py:16: [C0103(invalid-name), ] Invalid constant name "px"
+openCV/openCVlineTests.py:25: [C0103(invalid-name), ] Invalid constant name "square"
+openCV/openCVlineTests.py:35: [C0103(invalid-name), ] Invalid constant name "tidbit"
+openCV/openCVlineTests.py:43: [C0103(invalid-name), ] Invalid constant name "ret"
+openCV/openCVlineTests.py:43: [C0103(invalid-name), ] Invalid constant name "threshImg"
+openCV/openCVlineTests.py:53: [C0103(invalid-name), ] Invalid constant name "threshImgAd"
+************* Module openCVcolorDetectLeftAndRight
+openCV/openCVcolorDetectLeftAndRight.py:5: [C0301(line-too-long), ] Line too long (85/80)
+openCV/openCVcolorDetectLeftAndRight.py:15: [C0301(line-too-long), ] Line too long (124/80)
+openCV/openCVcolorDetectLeftAndRight.py:52: [C0301(line-too-long), ] Line too long (88/80)
+openCV/openCVcolorDetectLeftAndRight.py:53: [C0301(line-too-long), ] Line too long (81/80)
+openCV/openCVcolorDetectLeftAndRight.py:55: [C0301(line-too-long), ] Line too long (92/80)
+openCV/openCVcolorDetectLeftAndRight.py:89: [C0301(line-too-long), ] Line too long (98/80)
+openCV/openCVcolorDetectLeftAndRight.py:92: [C0301(line-too-long), ] Line too long (98/80)
+openCV/openCVcolorDetectLeftAndRight.py:141: [C0301(line-too-long), ] Line too long (99/80)
+openCV/openCVcolorDetectLeftAndRight.py:157: [C0301(line-too-long), ] Line too long (117/80)
+openCV/openCVcolorDetectLeftAndRight.py:163: [C0301(line-too-long), ] Line too long (83/80)
+openCV/openCVcolorDetectLeftAndRight.py:246: [C0301(line-too-long), ] Line too long (81/80)
+openCV/openCVcolorDetectLeftAndRight.py:306: [C0325(superfluous-parens), ] Unnecessary parens after 'print' keyword
+openCV/openCVcolorDetectLeftAndRight.py:316: [C0301(line-too-long), ] Line too long (104/80)
+openCV/openCVcolorDetectLeftAndRight.py:1: [C0103(invalid-name), ] Invalid module name "openCVcolorDetectLeftAndRight"
+openCV/openCVcolorDetectLeftAndRight.py:22: [E0401(import-error), ] Unable to import 'cv2'
+openCV/openCVcolorDetectLeftAndRight.py:24: [E0401(import-error), ] Unable to import 'matplotlib'
+openCV/openCVcolorDetectLeftAndRight.py:26: [E0401(import-error), ] Unable to import 'picamera'
+openCV/openCVcolorDetectLeftAndRight.py:27: [E0401(import-error), ] Unable to import 'picamera.array'
+openCV/openCVcolorDetectLeftAndRight.py:114: [C0103(invalid-name), ] Invalid constant name "colourArrayCntr"
+openCV/openCVcolorDetectLeftAndRight.py:128: [C0103(invalid-name), ] Invalid constant name "camera"
+openCV/openCVcolorDetectLeftAndRight.py:137: [C0103(invalid-name), ] Invalid constant name "imageNum"
+openCV/openCVcolorDetectLeftAndRight.py:143: [C0103(invalid-name), ] Invalid constant name "rawCapture"
+openCV/openCVcolorDetectLeftAndRight.py:152: [C0103(invalid-name), ] Invalid constant name "MeanValuesBGR"
+openCV/openCVcolorDetectLeftAndRight.py:153: [C0103(invalid-name), ] Invalid constant name "MeanValuesHSV"
+openCV/openCVcolorDetectLeftAndRight.py:25: [C0411(wrong-import-order), ] standard import "import time" comes before "import cv2"
+************* Module openCVlineTestsVideo
+openCV/openCVlineTestsVideo.py:12: [C0301(line-too-long), ] Line too long (124/80)
+openCV/openCVlineTestsVideo.py:37: [C0301(line-too-long), ] Line too long (99/80)
+openCV/openCVlineTestsVideo.py:52: [C0301(line-too-long), ] Line too long (117/80)
+openCV/openCVlineTestsVideo.py:58: [C0301(line-too-long), ] Line too long (83/80)
+openCV/openCVlineTestsVideo.py:68: [C0301(line-too-long), ] Line too long (109/80)
+openCV/openCVlineTestsVideo.py:69: [C0301(line-too-long), ] Line too long (95/80)
+openCV/openCVlineTestsVideo.py:98: [C0301(line-too-long), ] Line too long (101/80)
+openCV/openCVlineTestsVideo.py:99: [C0301(line-too-long), ] Line too long (94/80)
+openCV/openCVlineTestsVideo.py:120: [C0301(line-too-long), ] Line too long (95/80)
+openCV/openCVlineTestsVideo.py:1: [C0103(invalid-name), ] Invalid module name "openCVlineTestsVideo"
+openCV/openCVlineTestsVideo.py:19: [E0401(import-error), ] Unable to import 'cv2'
+openCV/openCVlineTestsVideo.py:22: [E0401(import-error), ] Unable to import 'picamera'
+openCV/openCVlineTestsVideo.py:23: [E0401(import-error), ] Unable to import 'picamera.array'
+openCV/openCVlineTestsVideo.py:28: [C0103(invalid-name), ] Invalid constant name "camera"
+openCV/openCVlineTestsVideo.py:39: [C0103(invalid-name), ] Invalid constant name "rawCapture"
+openCV/openCVlineTestsVideo.py:48: [C0103(invalid-name), ] Invalid constant name "MeanValues"
+openCV/openCVlineTestsVideo.py:21: [C0411(wrong-import-order), ] standard import "import time" comes before "import cv2"
+************* Module RadioactiveFunkyChickens.MinimalMazeAlgorithm
+MinimalMazeAlgorithm.py:10: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+MinimalMazeAlgorithm.py:11: [W0403(relative-import), ] Relative import 'UltrasonicSensor', should be 'RadioactiveFunkyChickens.UltrasonicSensor'
+MinimalMazeAlgorithm.py:12: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+MinimalMazeAlgorithm.py:13: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+MinimalMazeAlgorithm.py:14: [W0403(relative-import), ] Relative import 'KeyboardCharacterReader', should be 'RadioactiveFunkyChickens.KeyboardCharacterReader'
+MinimalMazeAlgorithm.py:15: [W0403(relative-import), ] Relative import 'SpeedSettings', should be 'RadioactiveFunkyChickens.SpeedSettings'
+MinimalMazeAlgorithm.py:41: [C0111(missing-docstring), turn_left] Missing function docstring
+MinimalMazeAlgorithm.py:48: [C0111(missing-docstring), turn_right] Missing function docstring
+MinimalMazeAlgorithm.py:55: [C0111(missing-docstring), follow_wall] Missing function docstring
+MinimalMazeAlgorithm.py:55: [R0912(too-many-branches), follow_wall] Too many branches (14/12)
+MinimalMazeAlgorithm.py:55: [R0915(too-many-statements), follow_wall] Too many statements (51/50)
+MinimalMazeAlgorithm.py:155: [C0103(invalid-name), main] Invalid variable name "LEFT_SIDE_BUFFER"
+MinimalMazeAlgorithm.py:156: [C0103(invalid-name), main] Invalid variable name "RIGHT_SIDE_BUFFER"
+************* Module RadioactiveFunkyChickens.WiimoteNunchukControllerThread
+WiimoteNunchukControllerThread.py:111: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+WiimoteNunchukControllerThread.py:159: [C0330(bad-continuation), ] Wrong continued indentation before block (add 4 spaces).
+                    (self.NUNCHUK_MID + self.NUNCHUK_BUFFER)
+                    ^   |
+WiimoteNunchukControllerThread.py:191: [C0301(line-too-long), ] Line too long (81/80)
+WiimoteNunchukControllerThread.py:265: [C0301(line-too-long), ] Line too long (81/80)
+WiimoteNunchukControllerThread.py:301: [C0301(line-too-long), ] Line too long (82/80)
+WiimoteNunchukControllerThread.py:337: [C0301(line-too-long), ] Line too long (81/80)
+WiimoteNunchukControllerThread.py:378: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+WiimoteNunchukControllerThread.py:386: [C0325(superfluous-parens), ] Unnecessary parens after 'elif' keyword
+WiimoteNunchukControllerThread.py:394: [C0325(superfluous-parens), ] Unnecessary parens after 'elif' keyword
+WiimoteNunchukControllerThread.py:402: [C0325(superfluous-parens), ] Unnecessary parens after 'elif' keyword
+WiimoteNunchukControllerThread.py:410: [C0325(superfluous-parens), ] Unnecessary parens after 'elif' keyword
+WiimoteNunchukControllerThread.py:420: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+WiimoteNunchukControllerThread.py:426: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+WiimoteNunchukControllerThread.py:432: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+WiimoteNunchukControllerThread.py:14: [E0401(import-error), ] Unable to import 'cwiid'
+WiimoteNunchukControllerThread.py:15: [W0403(relative-import), ] Relative import 'ServoController', should be 'RadioactiveFunkyChickens.ServoController'
+WiimoteNunchukControllerThread.py:16: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+WiimoteNunchukControllerThread.py:17: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+WiimoteNunchukControllerThread.py:18: [W0403(relative-import), ] Relative import 'SpeedSettings', should be 'RadioactiveFunkyChickens.SpeedSettings'
+WiimoteNunchukControllerThread.py:83: [C0103(invalid-name), WiimoteNunchukControllerThread.__init__] Invalid attribute name "wm"
+WiimoteNunchukControllerThread.py:254: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid attribute name "speedLeftWheel"
+WiimoteNunchukControllerThread.py:255: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid attribute name "speedRightWheel"
+WiimoteNunchukControllerThread.py:23: [R0902(too-many-instance-attributes), WiimoteNunchukControllerThread] Too many instance attributes (14/7)
+WiimoteNunchukControllerThread.py:151: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "NunchukStickX"
+WiimoteNunchukControllerThread.py:153: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "NunchukStickY"
+WiimoteNunchukControllerThread.py:237: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthX"
+WiimoteNunchukControllerThread.py:240: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:251: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:273: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthX"
+WiimoteNunchukControllerThread.py:276: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:287: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:309: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthX"
+WiimoteNunchukControllerThread.py:312: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:323: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:345: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthX"
+WiimoteNunchukControllerThread.py:348: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:359: [C0103(invalid-name), WiimoteNunchukControllerThread.run] Invalid variable name "lengthY"
+WiimoteNunchukControllerThread.py:137: [R0912(too-many-branches), WiimoteNunchukControllerThread.run] Too many branches (38/12)
+WiimoteNunchukControllerThread.py:137: [R0915(too-many-statements), WiimoteNunchukControllerThread.run] Too many statements (134/50)
+WiimoteNunchukControllerThread.py:254: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedLeftWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:290: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedLeftWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:326: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedLeftWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:362: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedLeftWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:255: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedRightWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:291: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedRightWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:327: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedRightWheel' defined outside __init__
+WiimoteNunchukControllerThread.py:363: [W0201(attribute-defined-outside-init), WiimoteNunchukControllerThread.run] Attribute 'speedRightWheel' defined outside __init__
+************* Module RadioactiveFunkyChickens.GPIOZeroStub
+GPIOZeroStub.py:13: [W0613(unused-argument), OutputDevice.__init__] Unused argument 'param1'
+************* Module RadioactiveFunkyChickens.DualMotorController
+DualMotorController.py:7: [W0403(relative-import), ] Relative import 'MotorController', should be 'RadioactiveFunkyChickens.MotorController'
+DualMotorController.py:17: [R0913(too-many-arguments), DualMotorController.__init__] Too many arguments (9/5)
+************* Module RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm
+StraightLineSpeedTestAlgorithm.py:91: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+StraightLineSpeedTestAlgorithm.py:97: [C0325(superfluous-parens), ] Unnecessary parens after 'elif' keyword
+StraightLineSpeedTestAlgorithm.py:11: [W0403(relative-import), ] Relative import 'KeyboardCharacterReader', should be 'RadioactiveFunkyChickens.KeyboardCharacterReader'
+StraightLineSpeedTestAlgorithm.py:12: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+StraightLineSpeedTestAlgorithm.py:13: [W0403(relative-import), ] Relative import 'UltrasonicSensor', should be 'RadioactiveFunkyChickens.UltrasonicSensor'
+StraightLineSpeedTestAlgorithm.py:14: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+StraightLineSpeedTestAlgorithm.py:15: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+StraightLineSpeedTestAlgorithm.py:16: [W0403(relative-import), ] Relative import 'SpeedSettings', should be 'RadioactiveFunkyChickens.SpeedSettings'
+StraightLineSpeedTestAlgorithm.py:23: [C0103(invalid-name), ] Invalid constant name "speed"
+StraightLineSpeedTestAlgorithm.py:24: [C0103(invalid-name), ] Invalid constant name "arcSpeed"
+StraightLineSpeedTestAlgorithm.py:26: [C0103(invalid-name), ] Invalid constant name "wallWidth"
+StraightLineSpeedTestAlgorithm.py:27: [C0103(invalid-name), ] Invalid constant name "robotWidth"
+StraightLineSpeedTestAlgorithm.py:28: [C0103(invalid-name), ] Invalid constant name "firstBufferWidth"
+StraightLineSpeedTestAlgorithm.py:29: [C0103(invalid-name), ] Invalid constant name "secondBufferWidth"
+StraightLineSpeedTestAlgorithm.py:31: [C0103(invalid-name), ] Invalid constant name "loopTime"
+StraightLineSpeedTestAlgorithm.py:33: [C0103(invalid-name), ] Invalid constant name "correctionTime"
+StraightLineSpeedTestAlgorithm.py:36: [C0103(invalid-name), ] Invalid constant name "robotmove"
+StraightLineSpeedTestAlgorithm.py:47: [C0112(empty-docstring), main] Empty function docstring
+StraightLineSpeedTestAlgorithm.py:51: [C0103(invalid-name), main] Invalid variable name "viewLeft"
+StraightLineSpeedTestAlgorithm.py:53: [C0103(invalid-name), main] Invalid variable name "viewRight"
+StraightLineSpeedTestAlgorithm.py:57: [C0103(invalid-name), main] Invalid variable name "initialLeftDistance"
+StraightLineSpeedTestAlgorithm.py:58: [C0103(invalid-name), main] Invalid variable name "initialRightDistance"
+StraightLineSpeedTestAlgorithm.py:82: [C0103(invalid-name), main] Invalid variable name "leftDistance"
+StraightLineSpeedTestAlgorithm.py:86: [C0103(invalid-name), main] Invalid variable name "rightDistance"
+************* Module RadioactiveFunkyChickens.DuckShootAlgoithm
+DuckShootAlgoithm.py:82: [C0301(line-too-long), ] Line too long (87/80)
+DuckShootAlgoithm.py:11: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+DuckShootAlgoithm.py:12: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+DuckShootAlgoithm.py:13: [W0403(relative-import), ] Relative import 'ServoController', should be 'RadioactiveFunkyChickens.ServoController'
+DuckShootAlgoithm.py:14: [W0403(relative-import), ] Relative import 'SwitchingGPIO', should be 'RadioactiveFunkyChickens.SwitchingGPIO'
+DuckShootAlgoithm.py:15: [W0403(relative-import), ] Relative import 'WiimoteNunchukControllerThread', should be 'RadioactiveFunkyChickens.WiimoteNunchukControllerThread'
+DuckShootAlgoithm.py:22: [C0103(invalid-name), ] Invalid constant name "servo_controller"
+DuckShootAlgoithm.py:25: [C0103(invalid-name), ] Invalid constant name "laser_gpio"
+DuckShootAlgoithm.py:29: [C0103(invalid-name), ] Invalid constant name "motor_gpio"
+DuckShootAlgoithm.py:37: [C0103(invalid-name), fire_cb] Invalid argument name "currentWiimote"
+DuckShootAlgoithm.py:49: [C0103(invalid-name), toggle_laser_cb] Invalid argument name "currentWiimote"
+DuckShootAlgoithm.py:63: [C0103(invalid-name), toggle_motor_cb] Invalid argument name "currentWiimote"
+DuckShootAlgoithm.py:77: [C0112(empty-docstring), main] Empty function docstring
+DuckShootAlgoithm.py:82: [C0103(invalid-name), main] Invalid variable name "WIIMOTE_CONTROLLER"
+************* Module RadioactiveFunkyChickens.InitialStartup
+InitialStartup.py:11: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+InitialStartup.py:12: [W0403(relative-import), ] Relative import 'UltrasonicSensor', should be 'RadioactiveFunkyChickens.UltrasonicSensor'
+InitialStartup.py:13: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+InitialStartup.py:14: [W0403(relative-import), ] Relative import 'ServoController', should be 'RadioactiveFunkyChickens.ServoController'
+InitialStartup.py:15: [W0403(relative-import), ] Relative import 'SwitchingGPIO', should be 'RadioactiveFunkyChickens.SwitchingGPIO'
+InitialStartup.py:16: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+InitialStartup.py:18: [E0401(import-error), ] Unable to import 'RPi.GPIO'
+InitialStartup.py:20: [W0403(relative-import), ] Relative import 'GPIOStub', should be 'RadioactiveFunkyChickens.GPIOStub'
+InitialStartup.py:18: [W0611(unused-import), ] Unused RPi.GPIO imported as GPIO
+InitialStartup.py:20: [W0611(unused-import), ] Unused GPIOStub imported as GPIO
+InitialStartup.py:20: [C0412(ungrouped-imports), ] Imports from package RadioactiveFunkyChickens are not grouped
+************* Module RadioactiveFunkyChickens.CameraThread
+CameraThread.py:144: [C0330(bad-continuation), ] Wrong continued indentation.
+            " and max: " + format(
+            ^              |                           |
+CameraThread.py:145: [C0330(bad-continuation), ] Wrong hanging indentation (add 4 spaces).
+            self.max_processing_delay * 1000, '.2f') + "ms")
+            ^   |
+CameraThread.py:20: [E0401(import-error), ] Unable to import 'cv2'
+CameraThread.py:21: [E0401(import-error), ] Unable to import 'picamera'
+CameraThread.py:22: [E0401(import-error), ] Unable to import 'picamera.array'
+CameraThread.py:101: [C0112(empty-docstring), StreamProcessor] Empty class docstring
+CameraThread.py:101: [R0902(too-many-instance-attributes), StreamProcessor] Too many instance attributes (11/7)
+CameraThread.py:193: [W0621(redefined-outer-name), StreamProcessor.process_image] Redefining name 'time' from outer scope (line 18)
+CameraThread.py:183: [W0106(expression-not-assigned), StreamProcessor.process_image] Expression "(cv2.waitKey(1)) & (255)" is assigned to nothing
+CameraThread.py:185: [C0103(invalid-name), StreamProcessor.process_image] Invalid variable name "e1"
+CameraThread.py:192: [C0103(invalid-name), StreamProcessor.process_image] Invalid variable name "e2"
+************* Module RadioactiveFunkyChickens.LineFollowerSensor
+LineFollowerSensor.py:8: [W0403(relative-import), ] Relative import 'IRSensor', should be 'RadioactiveFunkyChickens.IRSensor'
+************* Module RadioactiveFunkyChickens.SwitchingGPIO
+SwitchingGPIO.py:9: [E0401(import-error), ] Unable to import 'RPi.GPIO'
+SwitchingGPIO.py:15: [W0403(relative-import), ] Relative import 'GPIOZeroStub', should be 'RadioactiveFunkyChickens.GPIOZeroStub'
+SwitchingGPIO.py:16: [W0403(relative-import), ] Relative import 'GPIOStub', should be 'RadioactiveFunkyChickens.GPIOStub'
+************* Module RadioactiveFunkyChickens.HammingCodeTest
+HammingCodeTest.py:8: [E0401(import-error), ] Unable to import 'cv2'
+HammingCodeTest.py:9: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+HammingCodeTest.py:10: [W0403(relative-import), ] Relative import 'CameraThread', should be 'RadioactiveFunkyChickens.CameraThread'
+HammingCodeTest.py:11: [E0611(no-name-in-module), ] No name 'hamming' in module 'ar_markers'
+HammingCodeTest.py:11: [E0401(import-error), ] Unable to import 'ar_markers.hamming.detect'
+HammingCodeTest.py:17: [C0112(empty-docstring), Processor] Empty class docstring
+HammingCodeTest.py:54: [W0106(expression-not-assigned), Processor.image_process_entry] Expression "(cv2.waitKey(1)) & (255)" is assigned to nothing
+************* Module RadioactiveFunkyChickens.SetupConsoleLogger
+SetupConsoleLogger.py:1: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:2: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:3: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:4: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:5: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:6: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:7: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:8: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:9: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:10: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:11: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:12: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:13: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:14: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:15: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:16: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:17: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:18: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:19: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:20: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:21: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:21: [C0301(line-too-long), ] Line too long (147/80)
+SetupConsoleLogger.py:22: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:23: [C0304(missing-final-newline), ] Final newline missing
+SetupConsoleLogger.py:24: [C0304(missing-final-newline), ] Final newline missing
+************* Module RadioactiveFunkyChickens.ServoController
+ServoController.py:20: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+ServoController.py:25: [R0902(too-many-instance-attributes), ServoController] Too many instance attributes (10/7)
+************* Module RadioactiveFunkyChickens.IRSensor
+IRSensor.py:9: [E0401(import-error), ] Unable to import 'RPi.GPIO'
+IRSensor.py:11: [W0403(relative-import), ] Relative import 'GPIOStub', should be 'RadioactiveFunkyChickens.GPIOStub'
+IRSensor.py:43: [R0201(no-self-use), IRSensor.cleanup] Method could be a function
+************* Module RadioactiveFunkyChickens.MecanumController
+MecanumController.py:7: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+MecanumController.py:17: [R0913(too-many-arguments), MecanumController.__init__] Too many arguments (9/5)
+************* Module RadioactiveFunkyChickens.LineFollowingAlgorithm
+LineFollowingAlgorithm.py:7: [W0403(relative-import), ] Relative import 'DualMotorController', should be 'RadioactiveFunkyChickens.DualMotorController'
+LineFollowingAlgorithm.py:8: [W0403(relative-import), ] Relative import 'LineFollowerSensor', should be 'RadioactiveFunkyChickens.LineFollowerSensor'
+LineFollowingAlgorithm.py:9: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+LineFollowingAlgorithm.py:10: [W0403(relative-import), ] Relative import 'GPIOLayout', should be 'RadioactiveFunkyChickens.GPIOLayout'
+LineFollowingAlgorithm.py:11: [W0403(relative-import), ] Relative import 'KeyboardCharacterReader', should be 'RadioactiveFunkyChickens.KeyboardCharacterReader'
+LineFollowingAlgorithm.py:12: [W0403(relative-import), ] Relative import 'SpeedSettings', should be 'RadioactiveFunkyChickens.SpeedSettings'
+LineFollowingAlgorithm.py:55: [C0103(invalid-name), main] Invalid variable name "LSTATE"
+LineFollowingAlgorithm.py:56: [C0103(invalid-name), main] Invalid variable name "MSTATE"
+LineFollowingAlgorithm.py:57: [C0103(invalid-name), main] Invalid variable name "RSTATE"
+LineFollowingAlgorithm.py:31: [R0912(too-many-branches), main] Too many branches (16/12)
+LineFollowingAlgorithm.py:31: [R0915(too-many-statements), main] Too many statements (61/50)
+************* Module RadioactiveFunkyChickens.LineFollowerCamera
+LineFollowerCamera.py:17: [W0403(relative-import), ] Relative import 'ServoController', should be 'RadioactiveFunkyChickens.ServoController'
+LineFollowerCamera.py:18: [W0403(relative-import), ] Relative import 'SetupConsoleLogger', should be 'RadioactiveFunkyChickens.SetupConsoleLogger'
+LineFollowerCamera.py:19: [E0401(import-error), ] Unable to import 'cv2'
+LineFollowerCamera.py:22: [E0401(import-error), ] Unable to import 'picamera'
+LineFollowerCamera.py:23: [E0401(import-error), ] Unable to import 'picamera.array'
+LineFollowerCamera.py:74: [C0103(invalid-name), LineFollowerCamera.__init__] Invalid attribute name "MeanValues"
+LineFollowerCamera.py:48: [C0103(invalid-name), LineFollowerCamera.__init__] Invalid attribute name "SERVO_CONTROLLER"
+LineFollowerCamera.py:66: [C0103(invalid-name), LineFollowerCamera.__init__] Invalid attribute name "rawCapture"
+LineFollowerCamera.py:76: [C0103(invalid-name), LineFollowerCamera.getLinePosition] Invalid method name "getLinePosition"
+LineFollowerCamera.py:97: [C0103(invalid-name), LineFollowerCamera.cleanUp] Invalid method name "cleanUp"
+LineFollowerCamera.py:89: [W0201(attribute-defined-outside-init), LineFollowerCamera.getLinePosition] Attribute 'key' defined outside __init__
+LineFollowerCamera.py:80: [W0201(attribute-defined-outside-init), LineFollowerCamera.getLinePosition] Attribute 'frame' defined outside __init__
+LineFollowerCamera.py:85: [W0201(attribute-defined-outside-init), LineFollowerCamera.getLinePosition] Attribute 'image' defined outside __init__
+LineFollowerCamera.py:109: [C0103(invalid-name), ] Invalid constant name "AngleCamera"
+LineFollowerCamera.py:112: [C0103(invalid-name), ] Invalid constant name "position"
+LineFollowerCamera.py:21: [C0411(wrong-import-order), ] standard import "import time" comes before "import ServoController"
+************* Module RadioactiveFunkyChickens.MotorController
+MotorController.py:31: [C0303(trailing-whitespace), ] Trailing whitespace
+MotorController.py:9: [E0401(import-error), ] Unable to import 'RPi.GPIO'
+MotorController.py:11: [W0403(relative-import), ] Relative import 'GPIOStub', should be 'RadioactiveFunkyChickens.GPIOStub'
+MotorController.py:27: [C0103(invalid-name), MotorController.__init__] Invalid attribute name "lf"
+MotorController.py:28: [C0103(invalid-name), MotorController.__init__] Invalid attribute name "lb"
+MotorController.py:29: [C0103(invalid-name), MotorController.__init__] Invalid attribute name "rf"
+MotorController.py:30: [C0103(invalid-name), MotorController.__init__] Invalid attribute name "rb"
+MotorController.py:16: [R0902(too-many-instance-attributes), MotorController] Too many instance attributes (8/7)
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.LineFollowingAlgorithm:20
+==RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm:36
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
+
+
+def main():
+    """
+    """
+    # Create necessary sensor objects
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.LineFollowerCameraAlg:141
+==openCVlineTestsVideo:102
+    for j in range(COL_LENGTH):
+
+        # Loop over all columns
+        for i in range(ROW_LENGTH):
+
+            # Image region of interest (ROI)
+            startRow = int((j / COL_LENGTH) * CAMERA_HEIGHT)
+            stopRow = int(((j + 1) / COL_LENGTH) * CAMERA_HEIGHT) - 1.0
+            startCol = int((i / ROW_LENGTH) * CAMERA_WIDTH)
+            stopCol = int(((i + 1) / ROW_LENGTH) * CAMERA_WIDTH) - 1.0
+
+            square = threshImg[startRow:stopRow, startCol:stopCol]
+
+            # Mean of all the values in rectangular "square" array
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 3 files
+==RadioactiveFunkyChickens.LineFollowerCameraAlg:57
+==RadioactiveFunkyChickens.LineFollowingAlgorithm:19
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:29
+ROBOTMOVE = DualMotorController.DualMotorController(
+    GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+    GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
+
+
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 3 files
+==RadioactiveFunkyChickens.LineFollowerCameraAlg:141
+==openCVcolorDetectLeftAndRight:214
+==openCVlineTestsVideo:102
+    for j in range(COL_LENGTH):
+
+        # Loop over all columns
+        for i in range(ROW_LENGTH):
+
+            # Image region of interest (ROI)
+            startRow = int((j / COL_LENGTH) * CAMERA_HEIGHT)
+            stopRow = int(((j + 1) / COL_LENGTH) * CAMERA_HEIGHT) - 1.0
+            startCol = int((i / ROW_LENGTH) * CAMERA_WIDTH)
+            stopCol = int(((i + 1) / ROW_LENGTH) * CAMERA_WIDTH) - 1.0
+
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:11
+==RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm:8
+import SetupConsoleLogger
+import GPIOLayout
+import KeyboardCharacterReader
+import SpeedSettings
+
+# Create a logger to both file and stdout
+LOGGER = logging.getLogger(__name__)
+SetupConsoleLogger.setup_console_logger(LOGGER)
+
+# Initialise motors
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 6 files
+==RadioactiveFunkyChickens.LineFollowerCameraAlg:58
+==RadioactiveFunkyChickens.LineFollowingAlgorithm:20
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:30
+==RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm:36
+==RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm:19
+==RadioactiveFunkyChickens.WiimoteNunchukControllerThread:60
+            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
+
+        # Initialise ServoController
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.LineFollowerCamera:18
+==openCVlineTestsVideo:18
+import cv2
+import numpy as np
+import time
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+
+# Set constants
+CAMERA_WIDTH = 640
+CAMERA_HEIGHT = 480
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 7 files
+==RadioactiveFunkyChickens.InitialStartup:50
+==RadioactiveFunkyChickens.LineFollowerCameraAlg:58
+==RadioactiveFunkyChickens.LineFollowingAlgorithm:20
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:30
+==RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm:36
+==RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm:19
+==RadioactiveFunkyChickens.WiimoteNunchukControllerThread:60
+            GPIOLayout.MOTOR_LEFT_FRONT_FORWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_FRONT_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_FRONT_FORWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_FRONT_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_REAR_FORWARD_GPIO,
+            GPIOLayout.MOTOR_LEFT_REAR_BACKWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_REAR_FORWARD_GPIO,
+            GPIOLayout.MOTOR_RIGHT_REAR_BACKWARD_GPIO)
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 3 files
+==RadioactiveFunkyChickens.IRSensor:5
+==RadioactiveFunkyChickens.MotorController:5
+==RadioactiveFunkyChickens.UltrasonicSensor:9
+import logging
+import platform
+if platform.machine() == "armv6l" or platform.machine() == "armv7l":
+    import RPi.GPIO as GPIO
+else:
+    import GPIOStub as GPIO
+
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.LineFollowingAlgorithm:113
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:211
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        LOGGER.info("Stopping the race")
+    finally:
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.LineFollowingAlgorithm:39
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:164
+    while True:
+        keyp = KeyboardCharacterReader.readkey()
+        if keyp == ' ':
+            LOGGER.info("Go")
+            break
+
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 3 files
+==RadioactiveFunkyChickens.LineFollowerCamera:18
+==RadioactiveFunkyChickens.LineFollowerCameraAlg:16
+==openCVlineTestsVideo:18
+import cv2
+import numpy as np
+import time
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.InitialStartup:8
+==RadioactiveFunkyChickens.MinimalMazeAlgorithm:7
+import logging
+import time
+import DualMotorController
+import UltrasonicSensor
+import SetupConsoleLogger
+MotorController.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==RadioactiveFunkyChickens.ColourBoundaries:7
+==openCVcolorDetectLeftAndRight:66
+UPPER_RED_HSV = [15, 255, 255]  # Red
+LOWER_BLUE_HSV = [80, 50, 50]  # Blue = ~180deg to ~260deg
+UPPER_BLUE_HSV = [140, 255, 255]  # Blue
+LOWER_GREEN_HSV = [45, 50, 50]  # Green = ~90deg to ~150deg
+UPPER_GREEN_HSV = [75, 255, 255]  # Green
+
+
+Report
+======
+1830 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |32     |34         |-2.00      |93.75       |12.50    |
++---------+-------+-----------+-----------+------------+---------+
+|class    |16     |17         |-1.00      |87.50       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |107    |119        |-12.00     |100.00      |3.74     |
++---------+-------+-----------+-----------+------------+---------+
+|function |29     |31         |-2.00      |72.41       |3.45     |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    RadioactiveFunkyChickens 
+      \-CameraThread (RadioactiveFunkyChickens.HammingCodeTest)
+      \-DualMotorController (RadioactiveFunkyChickens.LineFollowingAlgorithm,RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm,RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.LineFollowerCameraAlg,RadioactiveFunkyChickens.WiimoteNunchukControllerThread,RadioactiveFunkyChickens.MinimalMazeAlgorithm,RadioactiveFunkyChickens.MecanumController,RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm)
+      \-GPIOLayout (RadioactiveFunkyChickens.LineFollowingAlgorithm,RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm,RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.LineFollowerCameraAlg,RadioactiveFunkyChickens.WiimoteNunchukControllerThread,RadioactiveFunkyChickens.MinimalMazeAlgorithm,RadioactiveFunkyChickens.ServoController,RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm,RadioactiveFunkyChickens.DuckShootAlgoithm)
+      \-GPIOStub (RadioactiveFunkyChickens.UltrasonicSensor,RadioactiveFunkyChickens.IRSensor,RadioactiveFunkyChickens.SwitchingGPIO,RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.MotorController)
+      \-GPIOZeroStub (RadioactiveFunkyChickens.SwitchingGPIO)
+      \-IRSensor (RadioactiveFunkyChickens.LineFollowerSensor)
+      \-KeyboardCharacterReader (RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm,RadioactiveFunkyChickens.LineFollowingAlgorithm,RadioactiveFunkyChickens.MinimalMazeAlgorithm,RadioactiveFunkyChickens.LineFollowerCameraAlg,RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm)
+      \-LineFollowerSensor (RadioactiveFunkyChickens.LineFollowingAlgorithm)
+      \-ServoController (RadioactiveFunkyChickens.WiimoteNunchukControllerThread,RadioactiveFunkyChickens.LineFollowerCameraAlg,RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.DuckShootAlgoithm,RadioactiveFunkyChickens.LineFollowerCamera)
+      \-SetupConsoleLogger (RadioactiveFunkyChickens.LineFollowingAlgorithm,RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm,RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.LineFollowerCameraAlg,RadioactiveFunkyChickens.MinimalMazeAlgorithm,RadioactiveFunkyChickens.HammingCodeTest,RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm,RadioactiveFunkyChickens.DuckShootAlgoithm,RadioactiveFunkyChickens.LineFollowerCamera)
+      \-SpeedSettings (RadioactiveFunkyChickens.WiimoteNunchukControllerThread,RadioactiveFunkyChickens.MinimalMazeAlgorithm,RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm,RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm,RadioactiveFunkyChickens.LineFollowingAlgorithm)
+      \-SwitchingGPIO (RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.DuckShootAlgoithm)
+      \-UltrasonicSensor (RadioactiveFunkyChickens.MinimalMazeAlgorithm,RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm,RadioactiveFunkyChickens.InitialStartup,RadioactiveFunkyChickens.UltrasonicSensorThread)
+      \-WiimoteNunchukControllerThread (RadioactiveFunkyChickens.DuckShootAlgoithm)
+    colorlog (RadioactiveFunkyChickens.SetupConsoleLogger)
+    numpy (RadioactiveFunkyChickens.LineFollowerCameraAlg,openCVcolorDetectLeftAndRight,openCVlineTestsVideo,RadioactiveFunkyChickens.LineFollowerCamera,openCVlineTests)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |2134   |54.34 |2445     |-311.00    |
++----------+-------+------+---------+-----------+
+|docstring |610    |15.53 |665      |-55.00     |
++----------+-------+------+---------+-----------+
+|comment   |533    |13.57 |609      |-76.00     |
++----------+-------+------+---------+-----------+
+|empty     |650    |16.55 |728      |-78.00     |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |237   |345      |-108.00    |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |6.085 |7.818    |-1.73      |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |178    |255      |-77.00     |
++-----------+-------+---------+-----------+
+|refactor   |31     |36       |-5.00      |
++-----------+-------+---------+-----------+
+|warning    |77     |94       |-17.00     |
++-----------+-------+---------+-----------+
+|error      |38     |35       |+3.00      |
++-----------+-------+---------+-----------+
+
+
+
+% errors / warnings by module
+-----------------------------
+
++-----------------------------------------------------------+------+--------+---------+-----------+
+|module                                                     |error |warning |refactor |convention |
++===========================================================+======+========+=========+===========+
+|RadioactiveFunkyChickens.LineFollowerCameraAlg             |31.58 |6.49    |0.00     |2.81       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|openCVcolorDetectLeftAndRight                              |10.53 |0.00    |0.00     |11.80      |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.LineFollowerCamera                |7.89  |6.49    |0.00     |4.49       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.HammingCodeTest                   |7.89  |3.90    |0.00     |0.56       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.CameraThread                      |7.89  |2.60    |3.23     |2.81       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|openCVlineTestsVideo                                       |7.89  |0.00    |0.00     |7.87       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.WiimoteNunchukControllerThread    |2.63  |15.58   |9.68     |17.42      |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.InitialStartup                    |2.63  |11.69   |0.00     |0.56       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.SwitchingGPIO                     |2.63  |2.60    |0.00     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.MotorController                   |2.63  |1.30    |48.39    |2.81       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.IRSensor                          |2.63  |1.30    |3.23     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|videoCapture                                               |2.63  |1.30    |0.00     |2.25       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.UltrasonicSensor                  |2.63  |1.30    |0.00     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|openCVlineTests                                            |2.63  |0.00    |0.00     |5.62       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.SomewhereOverTheRainbowThread     |2.63  |0.00    |0.00     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.JustDriving                       |2.63  |0.00    |0.00     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.MinimalMazeAlgorithm              |0.00  |7.79    |6.45     |2.81       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.LineFollowingAlgorithm            |0.00  |7.79    |6.45     |1.69       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.StraightLineSpeedTestAlgorithm    |0.00  |7.79    |0.00     |10.11      |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.TestDriverTwoControllersAlgorithm |0.00  |6.49    |6.45     |3.37       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.DuckShootAlgoithm                 |0.00  |6.49    |0.00     |5.06       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.UltrasonicSensorThread            |0.00  |2.60    |6.45     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.ServoController                   |0.00  |1.30    |3.23     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.MecanumController                 |0.00  |1.30    |3.23     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.DualMotorController               |0.00  |1.30    |3.23     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.LineFollowerSensor                |0.00  |1.30    |0.00     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.GPIOZeroStub                      |0.00  |1.30    |0.00     |0.00       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.SetupConsoleLogger                |0.00  |0.00    |0.00     |14.04      |
++-----------------------------------------------------------+------+--------+---------+-----------+
+|RadioactiveFunkyChickens.KeyboardCharacterReader           |0.00  |0.00    |0.00     |3.93       |
++-----------------------------------------------------------+------+--------+---------+-----------+
+
+
+
+Messages
+--------
+
++-------------------------------+------------+
+|message id                     |occurrences |
++===============================+============+
+|invalid-name                   |92          |
++-------------------------------+------------+
+|relative-import                |58          |
++-------------------------------+------------+
+|line-too-long                  |28          |
++-------------------------------+------------+
+|import-error                   |26          |
++-------------------------------+------------+
+|missing-final-newline          |24          |
++-------------------------------+------------+
+|duplicate-code                 |14          |
++-------------------------------+------------+
+|superfluous-parens             |12          |
++-------------------------------+------------+
+|attribute-defined-outside-init |11          |
++-------------------------------+------------+
+|missing-docstring              |7           |
++-------------------------------+------------+
+|wrong-import-order             |5           |
++-------------------------------+------------+
+|undefined-variable             |5           |
++-------------------------------+------------+
+|empty-docstring                |5           |
++-------------------------------+------------+
+|too-many-statements            |4           |
++-------------------------------+------------+
+|too-many-instance-attributes   |4           |
++-------------------------------+------------+
+|too-many-branches              |4           |
++-------------------------------+------------+
+|no-member                      |4           |
++-------------------------------+------------+
+|too-many-arguments             |3           |
++-------------------------------+------------+
+|bad-continuation               |3           |
++-------------------------------+------------+
+|unused-import                  |2           |
++-------------------------------+------------+
+|syntax-error                   |2           |
++-------------------------------+------------+
+|expression-not-assigned        |2           |
++-------------------------------+------------+
+|unused-argument                |1           |
++-------------------------------+------------+
+|ungrouped-imports              |1           |
++-------------------------------+------------+
+|trailing-whitespace            |1           |
++-------------------------------+------------+
+|redefined-variable-type        |1           |
++-------------------------------+------------+
+|redefined-outer-name           |1           |
++-------------------------------+------------+
+|pointless-statement            |1           |
++-------------------------------+------------+
+|no-self-use                    |1           |
++-------------------------------+------------+
+|no-name-in-module              |1           |
++-------------------------------+------------+
+|logging-format-interpolation   |1           |
++-------------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.40/10 (previous run: 7.32/10, +0.07)
+
